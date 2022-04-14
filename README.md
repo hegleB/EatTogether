@@ -9,7 +9,7 @@
 #### 혼밥러들의 위해 밥 메이트를 구할 수 있도록 도와주는 앱이다.
 
 <!-- <a href="https://play.google.com/store/apps/details?id=com.quere.moodra" target="_blank">
-  <img src="https://user-images.githubusercontent.com/39490416/146238625-5a502ad6-4bc3-47dc-bb53-1bcd878036c4.png" width="250">
+  <img src="https://user-images.githubusercontent.com/39490416/163449923-06d4b787-9fc9-438c-a9c9-dc035b9cec78.png" width="250">
 </a> -->
 
 <br></br>
