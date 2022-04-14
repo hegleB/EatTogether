@@ -19,14 +19,15 @@
 <p align="center">
 <br>
 <img width="200" alt="2022-04-14_03-37-22" src="https://user-images.githubusercontent.com/39490416/163447815-d1316b5e-d4b4-4d59-a958-db03397855ae.png">
-<img width="200" alt="2022-04-14_03-37-23" src="https://user-images.githubusercontent.com/39490416/163447847-e44ac533-c5e7-4a43-97fc-c37f9a9f94d4.png">
-<img width="200" alt="2022-04-14_03-37-24" src="https://user-images.githubusercontent.com/39490416/163447871-895b8e68-54d0-4aa6-9773-b289635f1731.png">
+<img width="200" alt="2022-04-14_03-37-26" src="https://user-images.githubusercontent.com/39490416/163447882-dc6c4d91-c828-41be-9c50-5daa8277adcf.png">
+<img width="200" alt="2022-04-14_03-37-27" src="https://user-images.githubusercontent.com/39490416/163447893-3ea6d72c-f02e-4d20-89fd-269fc0cf5842.png">
 
 </br>
 
 <br>
-<img width="200" alt="2022-04-14_03-37-26" src="https://user-images.githubusercontent.com/39490416/163447882-dc6c4d91-c828-41be-9c50-5daa8277adcf.png">
-<img width="200" alt="2022-04-14_03-37-27" src="https://user-images.githubusercontent.com/39490416/163447893-3ea6d72c-f02e-4d20-89fd-269fc0cf5842.png">
+
+<img width="200" alt="2022-04-14_03-37-23" src="https://user-images.githubusercontent.com/39490416/163447847-e44ac533-c5e7-4a43-97fc-c37f9a9f94d4.png">
+<img width="200" alt="2022-04-14_03-37-24" src="https://user-images.githubusercontent.com/39490416/163447871-895b8e68-54d0-4aa6-9773-b289635f1731.png">
 <img width="200" alt="2022-04-14_03-37-28" src="https://user-images.githubusercontent.com/39490416/163447905-f3ace466-2884-4451-a871-12ed28c49ab8.png">
 </br>
 </p>
