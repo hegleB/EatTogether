@@ -1,6 +1,6 @@
 
 <p align="center">
-<img width="150" alt="2021-12-13_22-09-52" src="https://user-images.githubusercontent.com/39490416/146238613-0affece2-6f08-4b65-aeb3-b9f00f8840b3.png">
+<img width="150" alt="2021-12-13_22-09-52" src="https://user-images.githubusercontent.com/39490416/163446456-592b85b1-2f6f-4070-a7d9-ea252472367f.png">
   </p>
 
 ## 가치드실
