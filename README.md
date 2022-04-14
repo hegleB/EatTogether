@@ -38,10 +38,9 @@
 |||
 |---|---|
 |아키텍쳐(Architecture), 디자인 패턴(Design Pattern)|MVVM, Repository Pattern|
-|네트워크(Network)|Retrofit2|
 |비동기처리(Async)|Coroutine, Flow|
 |의존성 주입(Dependency Injection)|Dagger Hilt|
-|DB(DataBase)|FirebaseStore|
+|DB(DataBase)|Firebase|
 |이미지 처리(Image Load & Download)|Glide|
 |JetPack|ViewModel, Data Binding, Lifecycles, LiveData, Navigation|
 |Other|ViewPager2, CardView, RecyclerView|
