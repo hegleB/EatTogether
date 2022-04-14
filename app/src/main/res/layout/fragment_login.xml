@@ -1,0 +1,106 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <FrameLayout
+        android:id="@+id/login_framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_half_round"
+        android:theme="@style/CustomBottomSheetDialogTheme"
+        android:orientation="vertical">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:layout_marginTop="152dp"
+                android:text="로그인"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/buttonGoogle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.675" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/google_btn"
+                android:layout_width="201dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <Button
+                android:id="@+id/buttonGoogle"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="168dp"
+                android:backgroundTint="@android:color/white"
+                android:drawableLeft="@drawable/shape_google"
+                android:gravity="center"
+                android:text="구글로 로그인"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/facebook_btn"
+                android:layout_width="201dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <Button
+                android:id="@+id/buttonFacebook"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#5890FF"
+                android:drawableLeft="@drawable/shape_facebook"
+                android:gravity="center"
+                android:text="Facebook으로 로그인"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonGoogle"
+                app:layout_constraintVertical_bias="0.212" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/login_progressbar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:visibility="gone"
+                app:SpinKit_Color="@color/black"
+                app:SpinKit_Style="FadingCircle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.092" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>
