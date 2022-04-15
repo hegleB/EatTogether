@@ -2,14 +2,15 @@
 <p align="center">
 <img width="150" alt="2021-12-13_22-09-52" src="https://user-images.githubusercontent.com/39490416/163447035-d57c7234-f3ed-462a-8702-6986d18d68d1.png">
   </p>
+<head>
+    <meta name="og:image" content="https://user-images.githubusercontent.com/39490416/163449923-06d4b787-9fc9-438c-a9c9-dc035b9cec78.png">
+</head>
 
 ## 가치드실
 
 
 #### 혼밥러들의 위해 밥 메이트를 구할 수 있도록 도와주는 앱이다.
-<head>
-    <meta name="og:image" content="https://user-images.githubusercontent.com/39490416/163449923-06d4b787-9fc9-438c-a9c9-dc035b9cec78.png">
-</head>
+
 <!-- <a href="https://play.google.com/store/apps/details?id=com.quere.moodra" target="_blank">
   <img src="https://user-images.githubusercontent.com/39490416/163449923-06d4b787-9fc9-438c-a9c9-dc035b9cec78.png" width="250">
 </a> -->
