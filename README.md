@@ -2,9 +2,6 @@
 <p align="center">
 <img width="150" alt="2021-12-13_22-09-52" src="https://user-images.githubusercontent.com/39490416/163447035-d57c7234-f3ed-462a-8702-6986d18d68d1.png">
   </p>
-<head>
-    <meta name="og:image" content="https://user-images.githubusercontent.com/39490416/163449923-06d4b787-9fc9-438c-a9c9-dc035b9cec78.png">
-</head>
 
 ## 가치드실
 
