@@ -27,9 +27,9 @@ class AuthViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getMessageTokenUseCase: GetMessageTokenUseCase,
     private val firebaseStorage: FirebaseStorage,
-    private val setFireStoreUserUseCase: SetFireStoreUserUseCase,
-    private val setFireStoreSettingUseCase: SetFireStoreSettingUseCase,
-    private val setFireStoreMeetingUseCase: SetFireStoreMeetingUseCase
+    private val useFireStoreMeetingUseCase: UseFireStoreMeetingUseCase,
+    private val useFireStoreSettingUseCase: UseFireStoreSettingUseCase,
+    private val useFireStoreUserUseCase: UseFireStoreUserUseCase
 
 ) : ViewModel() {
 
@@ -194,17 +194,17 @@ class AuthViewModel @Inject constructor(
 
     fun setFireStoreUser() =
         viewModelScope.launch {
-            setFireStoreUserUseCase.setFireStoreUser().set(setUserProfile(), SetOptions.merge())
+            useFireStoreUserUseCase.setFireStoreUser().set(setUserProfile(), SetOptions.merge())
         }
 
     fun setFireStoreSetting(now : Long) =
         viewModelScope.launch {
-            setFireStoreSettingUseCase.setFireStoreSetting().set(Setting(true,true,true, now))
+            useFireStoreSettingUseCase.setFireStoreSetting().set(Setting(true,true,true, now))
         }
 
     fun setFireStoreMeeting() =
         viewModelScope.launch {
-            setFireStoreMeetingUseCase.setFireStoreMeeting().set(BarcodeScan(0))
+            useFireStoreMeetingUseCase.setFireStoreMeeting().set(BarcodeScan(0))
         }
 
     fun moveToHome() {
