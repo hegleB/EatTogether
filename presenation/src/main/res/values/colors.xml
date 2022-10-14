@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="orange1">#FFC107</color>
+    <color name="orange2">#F8D059</color>
+    <color name="orange3">#FDE451</color>
+    <color name="like_color">#F3AD0A</color>
+    <color name="light_red">@android:color/holo_red_light</color>
+    <color name="dark_red">@android:color/holo_red_dark</color>
 </resources>

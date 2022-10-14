@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">presenation</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">295717509019615</string>
+    <string name="fb_login_protocol_scheme">09466a173084151fdd87f356171af8f3</string>
 </resources>
