@@ -194,17 +194,17 @@ class AuthViewModel @Inject constructor(
 
     fun setFireStoreUser() =
         viewModelScope.launch {
-            useFireStoreUserUseCase.setFireStoreUser().set(setUserProfile(), SetOptions.merge())
+            useFireStoreUserUseCase.useFireStoreUser().set(setUserProfile(), SetOptions.merge())
         }
 
     fun setFireStoreSetting(now : Long) =
         viewModelScope.launch {
-            useFireStoreSettingUseCase.setFireStoreSetting().set(Setting(true,true,true, now))
+            useFireStoreSettingUseCase.useFireStoreSetting().set(Setting(true,true,true, now))
         }
 
     fun setFireStoreMeeting() =
         viewModelScope.launch {
-            useFireStoreMeetingUseCase.setFireStoreMeeting().set(BarcodeScan(0))
+            useFireStoreMeetingUseCase.useFireStoreMeeting().set(BarcodeScan(0))
         }
 
     fun moveToHome() {

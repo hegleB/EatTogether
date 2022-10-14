@@ -4,7 +4,7 @@ import com.google.firebase.firestore.DocumentReference
 
 interface FireStoreRepository {
 
-    suspend fun setFireStoreUser() : DocumentReference
-    suspend fun setFireStoreSetting() : DocumentReference
-    suspend fun setFireStoreMeeting() : DocumentReference
+    suspend fun useFireStoreUser() : DocumentReference
+    suspend fun useFireStoreSetting() : DocumentReference
+    suspend fun useFireStoreMeeting() : DocumentReference
 }

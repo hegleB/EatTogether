@@ -6,5 +6,5 @@ import javax.inject.Inject
 class UseFireStoreUserUseCase @Inject constructor(
     private val fireStoreRepository: FireStoreRepository
 ) {
-    suspend fun setFireStoreUser() = fireStoreRepository.setFireStoreUser()
+    suspend fun useFireStoreUser() = fireStoreRepository.useFireStoreUser()
 }

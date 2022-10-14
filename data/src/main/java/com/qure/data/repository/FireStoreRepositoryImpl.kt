@@ -14,15 +14,15 @@ class FireStoreRepositoryImpl @Inject constructor(
 
     private val uid = firebaseAuth.currentUser?.uid
 
-    override suspend fun setFireStoreUser(): DocumentReference {
+    override suspend fun useFireStoreUser(): DocumentReference {
         return firestore.collection("users").document(uid?:"")
     }
 
-    override suspend fun setFireStoreSetting(): DocumentReference {
+    override suspend fun useFireStoreSetting(): DocumentReference {
         return firestore.collection("setting").document(uid?:"")
     }
 
-    override suspend fun setFireStoreMeeting(): DocumentReference {
+    override suspend fun useFireStoreMeeting(): DocumentReference {
         return firestore.collection("meeting").document(uid?:"")
     }
 
