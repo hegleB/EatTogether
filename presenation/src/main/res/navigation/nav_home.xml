@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/homePeopleFragment">
+
+    <keep_state_fragment
+        android:id="@+id/homePeopleFragment"
+        android:name="com.qure.presenation.view.people.PeopleContainerFragment"
+        android:label="PeopleFragment" />
+    <keep_state_fragment
+        android:id="@+id/homeChatFragment"
+        android:name="com.qure.presenation.view.chat.ChatFragment"
+        android:label="ChatFragment" />
+    <keep_state_fragment
+        android:id="@+id/homePostFragment"
+        android:name="com.qure.presenation.view.post.PostFragment"
+        android:label="PostFragment" />
+    <keep_state_fragment
+        android:id="@+id/homeSettingFragment"
+        android:name="com.qure.presenation.view.setting.SettingFragment"
+        android:label="SettingFragment" />
+</navigation>
