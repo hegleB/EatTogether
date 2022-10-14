@@ -1,11 +1,25 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'androidx.navigation.safeargs'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 android {
 
     compileSdkVersion 32
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'build.xml'
+    }
 
     defaultConfig {
         applicationId "com.qure.presenation"
@@ -30,9 +44,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
+
+    implementation project(path:':domain')
+    implementation project(path:':data')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -41,4 +62,48 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+
+    implementation platform(Firebase.FIREBASE_BOM)
+    implementation (Firebase.FIREBASE_PLAY_SERVICES)
+    implementation (Firebase.FIREBASE_AUTH)
+    implementation (Firebase.FIREBASE)
+    implementation (Firebase.FIREBASE_CONFIG)
+    implementation (Firebase.FIREBASE_MESSAGING)
+    implementation (Firebase.FIREBASE_STORAGE)
+
+    implementation (NavComponent.NAVIGATION_FRAGMENT)
+    implementation (NavComponent.NAVIGATION_UI)
+    implementation (NavComponent.NAVIGATION_DYNAMIC_FEATURES_FRAGMENT)
+    androidTestImplementation (NavComponent.NAVIGATION_TESTING)
+    implementation (NavComponent.NAVIGATION_COMPOSE)
+
+    implementation (AndroidX.LIFECYCLE_VIEW_MODEL)
+    implementation (AndroidX.LIFECYCLE_LIVEDATA)
+    implementation (AndroidX.LIFECYCLE_RUNTIME)
+
+    implementation (Paging.PAGING_COMMON)
+    implementation (Paging.PAGING_RUNTIME)
+
+    implementation (Glide.GLIDE)
+    implementation (Glide.GLIDE_COMPILER)
+    implementation (Glide.GLIDE_BLUR)
+
+    implementation (DaggerHilt.DAGGER_HILT)
+    kapt (DaggerHilt.DAGGER_HILT_COMPILER)
+    implementation (DaggerHilt.DAGGER_HILT_VIEW_MODEL)
+    kapt (DaggerHilt.DAGGER_HILT_ANDROIDX_COMPILER)
+
+    implementation (Coroutines.COROUTINES)
+    implementation (Coroutines.COROUTINES_SERVICES)
+    implementation (Coroutines.COROUTINES_ANDROID)
+
+    implementation (SpinKit.SPINKIT)
+
+    implementation (CircleImageView.CIRCLE)
+
+    implementation (Ted.TED_PERMISSION)
+    implementation (Ted.TED_BOTTOM_PICKER)
+
 }

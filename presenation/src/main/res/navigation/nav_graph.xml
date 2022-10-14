@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.qure.presenation.view.login.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_loginBottomSheetDialog"
+            app:destination="@id/loginBottomSheetDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/loginBottomSheetDialog"
+        android:name="com.qure.presenation.view.login.LoginBottomSheetDialog"
+        android:label="LoginBottomSheetDialog"
+        tools:layout="@layout/dialog_login">
+
+        <action
+            android:id="@+id/action_loginBottomSheetDialog_to_profileSettingFragment"
+            app:destination="@+id/profileSettingFragment"/>
+
+    </dialog>
+    <fragment
+        android:id="@+id/profileSettingFragment"
+        android:name="com.qure.presenation.view.login.ProfileSettingFragment"
+        android:label="ProfileSettingFragment"
+        tools:layout="@layout/fragment_profile_setting"/>
+</navigation>
