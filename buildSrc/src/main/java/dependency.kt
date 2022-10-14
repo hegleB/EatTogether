@@ -32,7 +32,9 @@ object AndroidX {
 }
 
 object Firebase {
-    const val FIREBASE_AUTH = "com.google.firebase:firebase-auth-ktx:21.0.1"
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:30.4.1"
+    const val FIREBASE_AUTH = "com.google.firebase:firebase-auth-ktx"
+    const val FIREBASE_PLAY_SERVICES = "com.google.android.gms:play-services-auth:20.3.0"
     const val FIREBASE = "com.google.firebase:firebase-firestore-ktx:24.0.0"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config-ktx:21.0.1"
     const val FIREBASE_STORAGE = "com.google.firebase:firebase-storage-ktx:20.0.0"
@@ -59,6 +61,8 @@ object DaggerHilt {
 
 object Coroutines {
     const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+    const val COROUTINES_SERVICES = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.2"
+    const val COROUTINES_ANDROID =  "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
 }
 
 object SpinKit {
@@ -66,7 +70,7 @@ object SpinKit {
 }
 
 object CircleImageView {
-    const val CIRCLE = "io.github.informramiz:simplecircleimageview:1.2.0"
+    const val CIRCLE = "de.hdodenhof:circleimageview:3.1.0"
 }
 
 object Ted {
