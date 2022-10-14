@@ -87,3 +87,7 @@ object RollingText {
     const val ROLLING_TEXT = "com.github.YvesCheung.RollingText:RollingText:1.2.11"
 }
 
+object Preference {
+    const val PREFERENCE = "androidx.preference:preference:1.1.0"
+}
+
