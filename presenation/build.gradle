@@ -106,4 +106,5 @@ dependencies {
     implementation (Ted.TED_PERMISSION)
     implementation (Ted.TED_BOTTOM_PICKER)
 
+    implementation (RollingText.ROLLING_TEXT)
 }
