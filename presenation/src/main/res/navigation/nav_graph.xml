@@ -3,7 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.qure.presenation.view.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_peopleContainerFragment"
+            app:destination="@id/peopleContainerFragment" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/loginFragment"
@@ -28,10 +42,46 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
+        <action
+            android:id="@+id/action_loginBottomSheetDialog_to_peopleContainerFragment"
+            app:destination="@+id/profileSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </dialog>
+
     <fragment
         android:id="@+id/profileSettingFragment"
         android:name="com.qure.presenation.view.login.ProfileSettingFragment"
         android:label="ProfileSettingFragment"
-        tools:layout="@layout/fragment_profile_setting"/>
+        tools:layout="@layout/fragment_profile_setting">
+        <action
+            android:id="@+id/action_profileSettingFragment_to_peopleContainerFragment"
+            app:destination="@id/peopleContainerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/peopleContainerFragment"
+        android:name="com.qure.presenation.view.people.PeopleContainerFragment"
+        android:label="fragment_people_container"
+        tools:layout="@layout/fragment_people_container" />
+    <fragment
+        android:id="@+id/postContainerFragment"
+        android:name="com.qure.presenation.view.post.PostContainerFragment"
+        android:label="fragment_post_container"
+        tools:layout="@layout/fragment_post_container" />
+    <fragment
+        android:id="@+id/chatContainerFragment"
+        android:name="com.qure.presenation.view.chat.ChatContainerFragment"
+        android:label="fragment_chat_container"
+        tools:layout="@layout/fragment_chat_container" />
+    <fragment
+        android:id="@+id/settingContainerFragment"
+        android:name="com.qure.presenation.view.setting.SettingContainerFragment"
+        android:label="fragment_setting_container"
+        tools:layout="@layout/fragment_setting_container" />
+
+
 </navigation>
