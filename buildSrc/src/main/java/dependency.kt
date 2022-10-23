@@ -35,7 +35,7 @@ object Firebase {
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:30.4.1"
     const val FIREBASE_AUTH = "com.google.firebase:firebase-auth-ktx"
     const val FIREBASE_PLAY_SERVICES = "com.google.android.gms:play-services-auth:20.3.0"
-    const val FIREBASE = "com.google.firebase:firebase-firestore-ktx:24.0.0"
+    const val FIREBASE = "com.google.firebase:firebase-firestore-ktx"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config-ktx:21.0.1"
     const val FIREBASE_STORAGE = "com.google.firebase:firebase-storage-ktx:20.0.0"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging-ktx:23.0.1"
@@ -80,7 +80,7 @@ object Ted {
 }
 
 object Zxing {
-    const val ZXING = "com.journeyapps:zxing-android-embedded:3.5.0"
+    const val ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
 }
 
 object RollingText {
