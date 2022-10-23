@@ -1,10 +1,13 @@
 package com.qure.presenation.view.login
 
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.quer.presenation.base.BaseFragment
 import com.qure.presenation.R
 import com.qure.presenation.databinding.FragmentLoginBinding
+import com.qure.presenation.utils.OnBackPressedListener
+import com.qure.presenation.view.MainActivity
 import com.qure.presenation.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,6 +19,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     override fun init() {
         initViewModel()
         observeViewModel()
+        OnBackPressedListener().finish(requireActivity(),requireActivity())
     }
 
     private fun initViewModel() {
@@ -29,6 +33,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             it.consume()
         }
     }
+
 
 
 }
