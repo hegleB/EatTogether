@@ -1,24 +1,25 @@
 package com.qure.presenation.view.login
 
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageException
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
 import com.qure.presenation.R
 import com.qure.presenation.databinding.FragmentProfileSettingBinding
-import com.qure.presenation.view.home.HomeActivity
+import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import gun0912.tedbottompicker.TedBottomPicker
 import gun0912.tedbottompicker.TedBottomSheetDialogFragment
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileSettingFragment :
@@ -29,6 +30,7 @@ class ProfileSettingFragment :
     override fun init() {
         initViewModel()
         observeViewModel()
+        OnBackPressedListener().back(requireActivity(), findNavController())
     }
 
     private fun initViewModel() {
@@ -59,11 +61,7 @@ class ProfileSettingFragment :
     }
 
     private fun moveToHome() {
-        activity?.let {
-            val intent = Intent(context, HomeActivity::class.java)
-            startActivity(intent)
-            activity?.finish()
-        }
+        findNavController().navigate(R.id.action_profileSettingFragment_to_peopleContainerFragment)
     }
 
     private fun checkProfileName() : Boolean {
@@ -127,6 +125,7 @@ class ProfileSettingFragment :
                     binding.spinKitViewFragmentProfileSettingLoading.visibility = View.GONE
                     addFirebaseStore()
                     moveToHome()
+
                 }
 
                 is Resource.Loading -> {
@@ -144,11 +143,7 @@ class ProfileSettingFragment :
     private fun addFirebaseStore() {
 
         val now = System.currentTimeMillis()
-
-        authViewModel.apply {
-            setFireStoreMeeting()
-            setFireStoreUser()
-            setFireStoreSetting(now)
-        }
+        authViewModel.setFireStoreUser(now)
     }
+
 }

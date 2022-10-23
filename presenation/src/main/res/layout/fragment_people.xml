@@ -5,6 +5,11 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewmodel"
+            type="com.qure.presenation.viewmodel.PeopleViewModel" />
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -38,6 +43,8 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/shape_user_bg"
+            app:userImage="@{viewmodel.myImage}"
+            android:onClick="@{() -> viewmodel.moveMyProfile()}"
             app:civ_border_color="@color/white"
             app:civ_border_overlay="true"
             app:civ_border_width="2dp"
@@ -56,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text=""
+            android:text="@{viewmodel.myName}"
             android:textSize="22dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/toolBar_fragmentPeople"
@@ -69,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text=""
+            android:text="@{viewmodel.myMsg}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_fragmentPeople_myName" />
@@ -91,9 +98,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="5dp"
-                android:text="0"
                 android:textSize="20dp"
                 android:textStyle="bold"
+                app:rollingText="@{viewmodel.postCount}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
 
@@ -112,9 +119,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="0"
                 android:textSize="20dp"
                 android:textStyle="bold"
+                app:rollingText="@{viewmodel.meetingCount}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
@@ -135,9 +142,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="50dp"
-                android:text="0"
                 android:textSize="20dp"
                 android:textStyle="bold"
+                app:rollingText="@{viewmodel.likeCount}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/constraintLayout_fragmentPeople_view"
                 app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
@@ -184,7 +191,7 @@
             android:id="@+id/spinKitView_fragmentPeople_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:SpinKit_Color="#0063DC"
             app:SpinKit_Style="Circle"
             app:layout_constraintBottom_toBottomOf="parent"

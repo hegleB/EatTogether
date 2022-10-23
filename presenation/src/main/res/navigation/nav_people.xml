@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_people"
+    app:startDestination="@id/peopleFragment">
+
+    <fragment
+        android:id="@+id/peopleFragment"
+        android:name="com.qure.presenation.view.people.PeopleFragment"
+        android:label="PeopleFragment"
+        tools:layout="@layout/fragment_people">
+
+        <action
+            android:id="@+id/action_peopleFragment_to_profileDialogFragment"
+            app:destination="@id/profileDialogFragment" />
+        <action
+            android:id="@+id/action_peopleFragment_to_profileDetailFragment"
+            app:destination="@id/profileDetailFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_bottom"/>
+
+    </fragment>
+
+
+    <dialog
+        android:id="@+id/profileDialogFragment"
+        android:name="com.qure.presenation.view.people.ProfileDialogFragment"
+        android:label="ProfileDialogFragment"
+        tools:layout="@layout/dialog_profile">
+
+        <argument
+            android:name="people_other_person_uid"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_profileDialogFragment_to_profileDetailFragment"
+            app:destination="@id/profileDetailFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_bottom"/>
+
+    </dialog>
+    <fragment
+        android:id="@+id/profileDetailFragment"
+        android:name="com.qure.presenation.view.people.ProfileDetailFragment"
+        android:label="ProfileDetailFragment"
+        tools:layout="@layout/fragment_profile_detail">
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+
+
+</navigation>

@@ -3,19 +3,18 @@ package com.qure.presenation.viewmodel
 import android.net.Uri
 import androidx.lifecycle.*
 import com.facebook.AccessToken
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.qure.domain.model.BarcodeScan
 import com.qure.domain.model.Setting
 import com.qure.domain.model.User
 import com.qure.domain.usecase.*
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,10 +25,11 @@ class AuthViewModel @Inject constructor(
     private val isJoinUseCase: IsJoinUserCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getMessageTokenUseCase: GetMessageTokenUseCase,
+    private val setUserUseCase: SetUserUseCase,
+    private val setSettingUseCase: SetSettingUseCase,
+    private val setMeetingCountUseCase: SetMeetingCountUseCase,
     private val firebaseStorage: FirebaseStorage,
-    private val useFireStoreMeetingUseCase: UseFireStoreMeetingUseCase,
-    private val useFireStoreSettingUseCase: UseFireStoreSettingUseCase,
-    private val useFireStoreUserUseCase: UseFireStoreUserUseCase
+
 
 ) : ViewModel() {
 
@@ -91,10 +91,14 @@ class AuthViewModel @Inject constructor(
     val buttonSettingSubmit: LiveData<Event<Unit>>
         get() = _buttonSettingSubmit
 
-    fun accessGoogle(account: GoogleSignInAccount) {
+    private val _snackBarMsg: MutableLiveData<PeopleViewModel.MessageSet> = MutableLiveData()
+    val snackBarMsg: LiveData<PeopleViewModel.MessageSet>
+        get() = _snackBarMsg
+
+    fun accessGoogle(credential : AuthCredential) {
 
         _signInGoogleState.value = Resource.Loading()
-        signWithGoogleUseCase.signWithGoogle(account).addOnCompleteListener {
+        signWithGoogleUseCase.signWithGoogle(credential).addOnCompleteListener {
             if (it.isSuccessful) {
 
                 _signInGoogleState.value =
@@ -186,26 +190,49 @@ class AuthViewModel @Inject constructor(
                         _settingState.value = Resource.Success(setUserProfile())
                     }
                 }
+            } else {
+                _settingState.value = Resource.Success(setUserProfile())
             }
         } catch (e: Exception) {
             _settingState.value = Resource.Error(e.message)
         }
     }
 
-    fun setFireStoreUser() =
-        viewModelScope.launch {
-            useFireStoreUserUseCase.useFireStoreUser().set(setUserProfile(), SetOptions.merge())
-        }
+    fun setSetting(now : Long) = viewModelScope.launch {
+        setSettingUseCase(currentUser.value?.uid?:"",Setting(true,true,true, now))
+            .collectLatest {
+                when (it) {
+                    is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                }
+            }
+    }
 
-    fun setFireStoreSetting(now : Long) =
-        viewModelScope.launch {
-            useFireStoreSettingUseCase.useFireStoreSetting().set(Setting(true,true,true, now))
-        }
+    fun setUser() = viewModelScope.launch {
+        setUserUseCase(currentUser.value?.uid?:"", setUserProfile())
+            .collectLatest {
+                when (it) {
+                    is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                }
+            }
+    }
 
-    fun setFireStoreMeeting() =
-        viewModelScope.launch {
-            useFireStoreMeetingUseCase.useFireStoreMeeting().set(BarcodeScan(0))
-        }
+    fun setMeeting() = viewModelScope.launch {
+        setMeetingCountUseCase(currentUser.value?.uid?:"", 0)
+            .collectLatest {
+                when (it) {
+                    is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                }
+            }
+    }
+
+    fun setFireStoreUser(now : Long) {
+        setSetting(now)
+        setUser()
+        setMeeting()
+    }
 
     fun moveToHome() {
         _buttonSettingSubmit.value = Event(Unit)

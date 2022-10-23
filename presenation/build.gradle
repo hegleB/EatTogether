@@ -107,4 +107,8 @@ dependencies {
     implementation (Ted.TED_BOTTOM_PICKER)
 
     implementation (RollingText.ROLLING_TEXT)
+
+    implementation (Preference.PREFERENCE)
+
+    implementation (Zxing.ZXING)
 }

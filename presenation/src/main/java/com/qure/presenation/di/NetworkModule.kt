@@ -1,6 +1,9 @@
 package com.qure.presenation.di
 
 import android.content.Context
+import android.provider.Settings.Secure.getString
+import com.google.android.gms.auth.api.identity.GetSignInIntentRequest
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -19,15 +22,14 @@ import org.intellij.lang.annotations.PrintFormat
 object NetworkModule {
 
     @Provides
-    fun provideGso(@ApplicationContext context: Context): GoogleSignInOptions =
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id))
-            .requestEmail()
+    fun provideSignInIntentRequest(@ApplicationContext context: Context) : GetSignInIntentRequest =
+        GetSignInIntentRequest.builder()
+            .setServerClientId(context.getString(R.string.default_web_client_id))
             .build()
 
     @Provides
-    fun provideSigninClient(@ApplicationContext context: Context, gso: GoogleSignInOptions) =
-        GoogleSignIn.getClient(context, gso)
+    fun provideSigninClient(@ApplicationContext context: Context) =
+        Identity.getSignInClient(context)
 
     @Provides
     fun provideFirestore() = FirebaseFirestore.getInstance()

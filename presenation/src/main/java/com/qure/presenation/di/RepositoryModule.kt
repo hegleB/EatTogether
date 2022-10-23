@@ -2,10 +2,9 @@ package com.qure.presenation.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.qure.data.repository.AuthRepositoryImpl
-import com.qure.data.repository.FireStoreRepositoryImpl
-import com.qure.domain.repository.AuthRepository
-import com.qure.domain.repository.FireStoreRepository
+import com.qure.data.repository.*
+import com.qure.domain.model.Setting
+import com.qure.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,10 +23,46 @@ object RepositoryModule {
     }
 
     @Provides
-    fun provideFireStoreRepository(
-        firebaseAuth: FirebaseAuth,
+    fun provideUserRepository(
         firestore: FirebaseFirestore
-    ) : FireStoreRepository {
-        return FireStoreRepositoryImpl(firestore,firebaseAuth)
+    ) : UserRepository {
+        return UserRepositoryImpl(firestore)
     }
+
+    @Provides
+    fun providePostRepository(
+        firestore: FirebaseFirestore
+    ) : PostRepository {
+        return PostRepositoryImpl(firestore)
+    }
+
+    @Provides
+    fun provideBarcodeRepository(
+        firestore: FirebaseFirestore
+    ) : BarcodeRepository {
+        return BarcodeRepositoryImpl(firestore)
+    }
+
+    @Provides
+    fun provideMeetingRepository(
+        firestore: FirebaseFirestore
+    ) : MeetingRepository {
+        return MeetingRepositoryImpl(firestore)
+    }
+
+    @Provides
+    fun provideSettingRepository(
+        firestore: FirebaseFirestore
+    ) : SettingRepository {
+        return SettingRepositoryImpl(firestore)
+    }
+
+    @Provides
+    fun provideCommentsRepository(
+        firestore: FirebaseFirestore
+    ) : CommentRepository {
+        return CommentRepositoryImpl(firestore)
+    }
+
+
 }
