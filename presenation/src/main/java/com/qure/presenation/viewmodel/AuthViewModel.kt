@@ -10,7 +10,14 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Setting
 import com.qure.domain.model.User
-import com.qure.domain.usecase.*
+import com.qure.domain.usecase.auth.SignInWithFacebookUseCase
+import com.qure.domain.usecase.auth.SignWithGoogleUseCase
+import com.qure.domain.usecase.people.GetMessageTokenUseCase
+import com.qure.domain.usecase.people.IsJoinUserCase
+import com.qure.domain.usecase.profile.GetCurrentUserUseCase
+import com.qure.domain.usecase.profile.SetMeetingCountUseCase
+import com.qure.domain.usecase.profile.SetUserUseCase
+import com.qure.domain.usecase.setting.SetSettingUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +38,7 @@ class AuthViewModel @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
 
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _bottomsSheetLogin: MutableLiveData<Event<Unit>> = MutableLiveData()
     val bottomsSheetLogin: LiveData<Event<Unit>>

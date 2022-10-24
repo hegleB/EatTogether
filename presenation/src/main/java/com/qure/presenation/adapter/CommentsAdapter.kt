@@ -1,35 +1,21 @@
 package com.qure.presenation.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.qure.domain.model.Comments
-import com.qure.domain.usecase.CheckCommentUseCase
-import com.qure.domain.usecase.CheckReCommentUseCase
-import com.qure.domain.usecase.GetReCommentsUseCase
-import com.qure.domain.usecase.UpdateRecommentLikeUseCase
-import com.qure.domain.utils.Resource
-import com.qure.presenation.R
+import com.qure.domain.usecase.comment.CheckCommentUseCase
+import com.qure.domain.usecase.comment.CheckReCommentUseCase
+import com.qure.domain.usecase.comment.GetReCommentsUseCase
 import com.qure.presenation.databinding.ItemCommentsBinding
-import com.qure.presenation.generated.callback.OnClickListener.Listener
 import com.qure.presenation.viewmodel.PostViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class CommentsAdapter(
     val itemClick: (Comments) -> Unit,

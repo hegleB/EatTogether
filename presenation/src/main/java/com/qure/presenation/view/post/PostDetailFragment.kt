@@ -1,23 +1,18 @@
 package com.qure.presenation.view.post
 
-import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.firebase.firestore.FirebaseFirestore
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.model.Comments
-import com.qure.domain.usecase.CheckCommentUseCase
-import com.qure.domain.usecase.CheckReCommentUseCase
-import com.qure.domain.usecase.GetReCommentsUseCase
-import com.qure.domain.usecase.UpdateRecommentLikeUseCase
+import com.qure.domain.usecase.comment.CheckCommentUseCase
+import com.qure.domain.usecase.comment.CheckReCommentUseCase
+import com.qure.domain.usecase.comment.GetReCommentsUseCase
+import com.qure.domain.usecase.comment.UpdateRecommentLikeUseCase
 import com.qure.presenation.R
 import com.qure.presenation.adapter.CommentsAdapter
-import com.qure.presenation.adapter.ReCommentsAdapter
 import com.qure.presenation.databinding.FragmentPostDetailBinding
 import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.KeyboardEvent

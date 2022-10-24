@@ -2,6 +2,7 @@ package com.qure.presenation.view.post
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.quer.presenation.base.BaseFragment
@@ -9,11 +10,13 @@ import com.qure.presenation.R
 import com.qure.presenation.databinding.FragmentPostCreateBinding
 import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.OnBackPressedListener
+import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.fragment_post_create) {
 
+    private val postViewModel : PostViewModel by activityViewModels()
 
     override fun init() {
         BottomNavigationEvent().hideBottomNavigation(activity!!)
@@ -22,6 +25,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
     }
 
     private fun initViewModel() {
+        binding.viewmodel = postViewModel
 
     }
 

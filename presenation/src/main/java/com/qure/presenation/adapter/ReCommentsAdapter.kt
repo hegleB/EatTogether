@@ -1,6 +1,5 @@
 package com.qure.presenation.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -10,12 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.qure.domain.model.Comments
-import com.qure.domain.usecase.CheckReCommentUseCase
-import com.qure.domain.usecase.UpdateRecommentLikeUseCase
+import com.qure.domain.usecase.comment.CheckReCommentUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.databinding.ItemRecommentsBinding
 import com.qure.presenation.viewmodel.PostViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ReCommentsAdapter(

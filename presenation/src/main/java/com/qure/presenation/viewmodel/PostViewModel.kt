@@ -9,7 +9,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.model.User
-import com.qure.domain.usecase.*
+import com.qure.domain.usecase.comment.*
+import com.qure.domain.usecase.people.GetUserInfoUseCase
+import com.qure.domain.usecase.post.CheckPostUseCase
+import com.qure.domain.usecase.post.GetAllPostUseCase
+import com.qure.domain.usecase.post.SetPostUseCase
+import com.qure.domain.usecase.post.UpdateLikeCountUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
@@ -20,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val getAllPostUseCase: GetAllPostUseCase,
+    private val setPostUseCase: SetPostUseCase,
     private val getCommentsUseCase: GetCommentsUseCase,
     private val setCommentsUseCase: SetCommentsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,

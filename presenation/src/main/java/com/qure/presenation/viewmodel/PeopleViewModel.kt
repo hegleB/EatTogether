@@ -1,21 +1,19 @@
 package com.qure.presenation.viewmodel
 
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.*
-import com.qure.domain.usecase.*
+import com.qure.domain.usecase.people.GetAllUserUseCase
+import com.qure.domain.usecase.people.GetUserInfoUseCase
+import com.qure.domain.usecase.post.GetLikeCountUseCase
+import com.qure.domain.usecase.post.GetPostCountUseCase
+import com.qure.domain.usecase.profile.*
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
