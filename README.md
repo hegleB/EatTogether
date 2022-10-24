@@ -2,6 +2,17 @@
 <p align="center">
 <img width="150" alt="2021-12-13_22-09-52" src="https://user-images.githubusercontent.com/39490416/163447035-d57c7234-f3ed-462a-8702-6986d18d68d1.png">
   </p>
+  
+<p align="center">
+<img src="https://img.shields.io/badge/Kotlin-1.6.21-005AF0&style= flat?color=blue">
+<img src="https://img.shields.io/badge/AGP-4.1.3-005AF0&style= flat?color=blue">
+<img src="https://img.shields.io/badge/Gradle-6.5-005AF0&style= flat&?color=blue">
+</p>
+<p align="center">
+<img src="https://img.shields.io/badge/minSdkVersion-21-005AF0&style= flat&?color=DDE072">
+<img src="https://img.shields.io/badge/compileSdkVersion-30-005AF0&style= flat&?color=FF7328">
+<p>
+
 
 ## 가치드실
 
@@ -37,7 +48,7 @@
 # Specifications used
 |||
 |---|---|
-|아키텍쳐(Architecture), 디자인 패턴(Design Pattern)|MVVM, Repository Pattern|
+|아키텍쳐(Architecture), 디자인 패턴(Design Pattern)| Clean Architecture, MVVM, Repository Pattern|
 |비동기처리(Async)|Coroutine, Flow|
 |의존성 주입(Dependency Injection)|Dagger Hilt|
 |DB(DataBase)|Firebase|
