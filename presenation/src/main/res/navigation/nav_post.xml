@@ -43,7 +43,15 @@
         android:id="@+id/postCreateFragment"
         android:name="com.qure.presenation.view.post.PostCreateFragment"
         android:label="PostCreateFragment"
-        tools:layout="@layout/fragment_post_create"/>
+        tools:layout="@layout/fragment_post_create">
+        <action
+            android:id="@+id/action_postCreateFragment_to_postCreateCategoryFragment"
+            app:destination="@id/postCreateCategoryFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
     <fragment
         android:id="@+id/reCommentsFragment"
@@ -54,4 +62,8 @@
             android:name="recomment"
             app:argType="com.qure.domain.model.Comments" />
     </fragment>
+    <fragment
+        android:id="@+id/postCreateCategoryFragment"
+        android:name="com.qure.presenation.view.post.PostCreateCategoryFragment"
+        android:label="PostCreateCategoryFragment" />
 </navigation>

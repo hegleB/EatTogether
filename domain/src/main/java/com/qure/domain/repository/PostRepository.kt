@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
 
+    suspend fun setPost(post : PostModel.Post) : Flow<Resource<String, String>>
     suspend fun getLikeCount(uid : String) : Flow<Resource<Int,String>>
     suspend fun getPostCount(uid : String) : Flow<Resource<Int, String>>
     suspend fun getAllPost() : Flow<Resource<List<PostModel.Post>,String>>

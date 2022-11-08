@@ -78,4 +78,10 @@ object TextBindingAdapter {
             textView.setText(diffTime.toString() + "개월 전")
         }
     }
+
+    @BindingAdapter("createImageText")
+    @JvmStatic
+    fun createImageText(textView: TextView, count : Int) {
+        textView.setText("${count}/3")
+    }
 }

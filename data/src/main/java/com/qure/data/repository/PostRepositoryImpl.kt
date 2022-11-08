@@ -15,6 +15,21 @@ class PostRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : PostRepository{
 
+    override suspend fun setPost(post: Post): Flow<Resource<String, String>> {
+        return callbackFlow {
+            val callback = firestore.collection("posts").document(post.key).set(post)
+                .addOnSuccessListener {
+                    this.trySendBlocking(Resource.Success("게시물 생성 성공"))
+                }
+                .addOnFailureListener {
+                    this.trySendBlocking(Resource.Error("게시물 생성 실패"))
+                }
+            awaitClose {
+                callback.isCanceled
+            }
+        }
+    }
+
     override suspend fun getLikeCount(uid: String): Flow<Resource<Int, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())

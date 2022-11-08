@@ -1,27 +1,31 @@
 package com.qure.presenation.adapter.bindingadapter
 
-import android.graphics.Bitmap
-import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.qure.presenation.R
-import de.hdodenhof.circleimageview.CircleImageView
 
 object ImageBindingAdapter {
 
     @BindingAdapter("userImage")
     @JvmStatic
-    fun userImage(imageView: ImageView, uri : String?){
+    fun userImage(imageView: ImageView, uri: String?) {
         Glide.with(imageView.context).load(uri).error(R.drawable.ic_user).into(imageView)
+    }
+
+    @BindingAdapter("postCreateImage")
+    @JvmStatic
+    fun postCreateImage(imageView: ImageView, uri: String?) {
+        Glide.with(imageView.context).load(uri).into(imageView)
     }
 
     @BindingAdapter("barcodeImage")
     @JvmStatic
-    fun barcodeImage(imageView: ImageView, text : String?){
+    fun barcodeImage(imageView: ImageView, text: String?) {
         val multiFormatWriter = MultiFormatWriter()
         val bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200)
         val barcodeEncoder = BarcodeEncoder()
@@ -31,7 +35,23 @@ object ImageBindingAdapter {
 
     @BindingAdapter("postImage")
     @JvmStatic
-    fun postImage(imageView: ImageView, image : String?){
+    fun postImage(imageView: ImageView, image: String?) {
         Glide.with(imageView.context).load(image).into(imageView)
+    }
+
+    @BindingAdapter("setNavigationOnClick")
+    @JvmStatic
+    fun MaterialToolbar.setNavigationOnClick(back: () -> Unit) {
+        setNavigationOnClickListener {
+            back()
+        }
+    }
+
+    @BindingAdapter(value = ["deleteCreateImage", "item"], requireAll = false)
+    @JvmStatic
+    fun deleteCreateImage(imageView: ImageView, imageList : ArrayList<String>, item : String) {
+        imageView.setOnClickListener {
+            imageList.remove(item)
+        }
     }
 }

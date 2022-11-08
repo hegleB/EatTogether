@@ -1,11 +1,14 @@
 package com.qure.presenation.viewmodel
 
-import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.model.User
@@ -38,7 +41,8 @@ class PostViewModel @Inject constructor(
     private val getReCommentsUseCase: GetReCommentsUseCase,
     private val setReCommentsUseCase: SetReCommentsUseCase,
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage
 ) : BaseViewModel() {
 
     val currentUid = firebaseAuth.currentUser?.uid ?: ""
@@ -47,13 +51,37 @@ class PostViewModel @Inject constructor(
     val post: LiveData<Post>
         get() = _post
 
+    private val _category: MutableLiveData<String> = MutableLiveData("카테고리 선택")
+    val category: LiveData<String>
+        get() = _category
+
     private val _postList: MutableLiveData<List<Post>> = MutableLiveData()
     val postList: LiveData<List<Post>>
         get() = _postList
 
-    private val _writerComment: MutableLiveData<User> = MutableLiveData()
-    val writerComment: LiveData<User>
-        get() = _writerComment
+    private val _writer: MutableLiveData<User> = MutableLiveData()
+    val writer: LiveData<User>
+        get() = _writer
+
+    private val _buttonDeleteImage: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val buttonDeleteImage: LiveData<Event<Unit>>
+        get() = _buttonDeleteImage
+
+    val createPostTitle: MutableLiveData<String> = MutableLiveData()
+    val createPostContent: MutableLiveData<String> = MutableLiveData()
+
+    private val _createPostKey: MutableLiveData<String> = MutableLiveData()
+    val createPostKey: MutableLiveData<String>
+        get() = _createPostKey
+
+    private val _updatedState: MutableLiveData<Resource<String, String>> = MutableLiveData()
+    val updatedState: MutableLiveData<Resource<String, String>>
+        get() = _updatedState
+
+    private val _createPostImage: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    val createPostImage: MutableLiveData<ArrayList<String>>
+        get() = _createPostImage
+
 
     private val _postKey: MutableLiveData<String> = MutableLiveData()
     val postKey: LiveData<String>
@@ -135,6 +163,18 @@ class PostViewModel @Inject constructor(
     val toolbarBack: LiveData<Event<Unit>>
         get() = _toolbarBack
 
+    private val _buttonCategory: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val buttonCategory: LiveData<Event<Unit>>
+        get() = _buttonCategory
+
+    private val _buttonUploadImage: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val buttonUploadImage: LiveData<Event<Unit>>
+        get() = _buttonUploadImage
+
+    private val _toolbarPostCreate: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val toolbarPostCreate: LiveData<Event<Unit>>
+        get() = _toolbarPostCreate
+
     private val _postImageList: MutableLiveData<List<String>> = MutableLiveData(listOf())
     val postImageList: LiveData<List<String>>
         get() = _postImageList
@@ -154,12 +194,41 @@ class PostViewModel @Inject constructor(
             }
     }
 
+    fun setPost() = viewModelScope.launch {
+        _createPostKey.value = firestore.collection("posts").document().id
+        val post = Post(
+            currentUid,
+            _writer.value?.usernm ?: "",
+            createPostTitle.value ?: "",
+            category.value ?: "",
+            createPostContent.value ?: "",
+            _writer.value?.userphoto ?: "",
+            System.currentTimeMillis().toString(),
+            _createPostKey.value ?: "",
+            arrayListOf(),
+            "0",
+            arrayListOf()
+        )
+
+        setPostUseCase(post)
+            .collect {
+                when (it) {
+                    is Resource.Success -> {
+                        _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
+                        createPost()
+                    }
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                }
+            }
+    }
+
+
     fun getUserInfo() = viewModelScope.launch {
         getUserInfoUseCase(currentUid)
             .collect {
                 when (it) {
                     is Resource.Success -> {
-                        _writerComment.value = it.data
+                        _writer.value = it.data
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
@@ -235,7 +304,7 @@ class PostViewModel @Inject constructor(
 
     }
 
-    fun checkReComment(recomment : Comments) = viewModelScope.launch {
+    fun checkReComment(recomment: Comments) = viewModelScope.launch {
         _recomment.value = recomment
         checkReCommentUseCase(recomment)
             .collect {
@@ -408,8 +477,8 @@ class PostViewModel @Inject constructor(
     fun writeComments(content: String) = viewModelScope.launch {
         val commentId = firestore.collection("comments").document().id
 
-        if (writerComment.value != null) {
-            val writer = writerComment.value!!
+        if (writer.value != null) {
+            val writer = writer.value!!
             val recomments = Comments(
                 writer.uid,
                 writer.usernm,
@@ -436,10 +505,9 @@ class PostViewModel @Inject constructor(
     }
 
     fun writeReComments(content: String) = viewModelScope.launch {
-        val commentId = _recomment.value?.comments_commentskey?:""
-        Log.d("commentId", "${commentId}")
-        if (writerComment.value != null) {
-            val writer = writerComment.value!!
+        val commentId = _recomment.value?.comments_commentskey ?: ""
+        if (writer.value != null) {
+            val writer = writer.value!!
             val comments = Comments(
                 writer.uid,
                 writer.usernm,
@@ -465,11 +533,63 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun createPost() = viewModelScope.launch {
+        val key = createPostKey.value ?: ""
+        try {
+            val createImages = createPostImage.value ?: arrayListOf()
+            val imageList = arrayListOf<String>()
+            if (createImages.isNotEmpty()) {
+                _updatedState.value = Resource.Loading()
+                for (i in createImages.indices) {
+                    val riverRef: StorageReference =
+                        firebaseStorage.getReference()
+                            .child("post_image/" + key + "/" + i + ".jpg")
+                    val uploadTask: UploadTask = riverRef.putFile(createImages.get(i).toUri())
+                    uploadTask.addOnSuccessListener {
+                        riverRef.downloadUrl.addOnSuccessListener { uri ->
+                            imageList.add(uri.toString())
+                            firestore.collection("posts").document(key).update("postImages", imageList)
+
+                        }
+                    }
+                    uploadTask.addOnProgressListener {
+                        val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+                        if (progress == 100.0) {
+                            _updatedState.value = Resource.Success("업로드 성공")
+                            _createPostImage.value = arrayListOf()
+                            createPostTitle.value = ""
+                            _category.value = "카테고리 선택"
+                            createPostContent.value = ""
+                        }
+                    }
+                }
+
+            } else {
+                _updatedState.value = Resource.Success("")
+                _createPostImage.value = arrayListOf()
+                createPostTitle.value = ""
+                _category.value = "카테고리 선택"
+                createPostContent.value = ""
+            }
+
+        } catch (e: Exception) {
+            _updatedState.value = Resource.Error(e.message)
+        }
+    }
+
     fun showPostCreate() {
         _postCreate.value = Event((Unit))
     }
 
     fun backPostDetail() {
+        _toolbarBack.value = Event(Unit)
+    }
+
+    fun backPostCreat() {
+        _toolbarBack.value = Event(Unit)
+    }
+
+    fun backPostCategory() {
         _toolbarBack.value = Event(Unit)
     }
 
@@ -495,24 +615,38 @@ class PostViewModel @Inject constructor(
         _commentKey.value = commentKey
     }
 
-    fun getCommentLike(isCommentLike : Boolean) {
-        _isCommentLike.value = isCommentLike
+    fun deletePostCreateImage(image: String) {
+        val images = createPostImage.value ?: arrayListOf()
+        images.remove(image)
+        _createPostImage.value = images
     }
 
-    fun getCommentLkeList(commentLikeList : ArrayList<String>) {
-        _commentsLikeList.value = commentLikeList
-    }
-
-    fun getReCommentList(recommentList : List<Comments>) {
-        _recommentsList.value = recommentList
-    }
-
-    fun getReCommentLike(isReCommentLike : Boolean) {
+    fun getReCommentLike(isReCommentLike: Boolean) {
         _isReCommentLike.value = isReCommentLike
     }
 
-    fun getReCommentLkeList(recommentLikeList : ArrayList<String>) {
+    fun getReCommentLkeList(recommentLikeList: ArrayList<String>) {
         _reCommentsLikeList.value = recommentLikeList
     }
 
+    fun getPostCreateImage(images: ArrayList<String>) {
+        _createPostImage.value = images
+    }
+
+    fun buttonUploadImage() {
+        _buttonUploadImage.value = Event(Unit)
+        _createPostImage.value = arrayListOf()
+    }
+
+    fun getCategory(category: String) {
+        _category.value = category
+    }
+
+    fun moveToPostCreateCategory() {
+        _buttonCategory.value = Event(Unit)
+    }
+
+    fun setUpdatedState(resource: Resource<String, String>) {
+        _updatedState.value = resource
+    }
 }

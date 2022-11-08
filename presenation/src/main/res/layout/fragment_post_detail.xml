@@ -26,7 +26,7 @@
         tools:context=".view.post.DetailPostFragment">
 
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolBar_fragmentPostDetail"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
@@ -34,7 +34,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:navigationIcon="@drawable/ic_back"
-            android:onClick="@{() -> viewmodel.backPostDetail()}"
+            setOnMenuItemClick=""
+            setNavigationOnClick="@{() -> viewmodel.backPostDetail()}"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
