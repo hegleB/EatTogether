@@ -13,5 +13,6 @@ interface PostRepository {
     suspend fun getAllPost() : Flow<Resource<List<PostModel.Post>,String>>
     suspend fun updateLike(likeList : ArrayList<String>, postKey : String) : Flow<Resource<String, String>>
     suspend fun checkPost(postKey: String) : Flow<Resource<PostModel.Post, String>>
+    suspend fun getCategoryPost(categoryName : String) : Flow<Resource<List<PostModel.Post>,String>>
 
 }

@@ -49,9 +49,27 @@ object ImageBindingAdapter {
 
     @BindingAdapter(value = ["deleteCreateImage", "item"], requireAll = false)
     @JvmStatic
-    fun deleteCreateImage(imageView: ImageView, imageList : ArrayList<String>, item : String) {
+    fun deleteCreateImage(imageView: ImageView, imageList: ArrayList<String>, item: String) {
         imageView.setOnClickListener {
             imageList.remove(item)
         }
+    }
+
+    @BindingAdapter("postCategoryImage")
+    @JvmStatic
+    fun postCategoryImage(imageView: ImageView, categoryName: String) {
+        val categoryImages = mapOf(
+            "한식" to R.drawable.img_korean_food,
+            "중식" to R.drawable.img_chinese_food,
+            "분식" to R.drawable.img_school_food,
+            "일식" to R.drawable.img_sushi,
+            "양식" to R.drawable.img_spagetti,
+            "치킨" to R.drawable.img_chicken,
+            "피자" to R.drawable.img_pizza,
+            "카페/디저트" to R.drawable.img_cake,
+            "기타" to R.color.orange2
+        )
+        val image = categoryImages[categoryName] ?: R.drawable.img_error
+        imageView.setImageResource(image)
     }
 }

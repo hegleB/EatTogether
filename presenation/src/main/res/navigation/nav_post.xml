@@ -22,6 +22,14 @@
             app:destination="@id/postCreateFragment"
             app:enterAnim="@anim/slide_in_bottom"
             app:popExitAnim="@anim/slide_out_bottom"/>
+        <action
+            android:id="@+id/action_postFragment_to_postCategoryFragment"
+            app:destination="@id/postCategoryFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
     <fragment
         android:id="@+id/postDetailFragment"
@@ -65,5 +73,22 @@
     <fragment
         android:id="@+id/postCreateCategoryFragment"
         android:name="com.qure.presenation.view.post.PostCreateCategoryFragment"
-        android:label="PostCreateCategoryFragment" />
+        android:label="PostCreateCategoryFragment"
+        tools:layout="@layout/fragment_post_create_category"/>
+    <fragment
+        android:id="@+id/postCategoryFragment"
+        android:name="com.qure.presenation.view.post.PostCategoryFragment"
+        android:label="PostCategoryFragment"
+        tools:layout="@layout/fragment_post_category">
+        <argument
+            android:name="categoryname"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_postCategoryFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
 </navigation>

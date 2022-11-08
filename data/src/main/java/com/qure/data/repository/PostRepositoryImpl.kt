@@ -136,5 +136,30 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCategoryPost(categoryName: String): Flow<Resource<List<Post>, String>> {
+        return callbackFlow {
+            this.trySendBlocking(Resource.Loading())
+            val callback = firestore.collection("posts").whereEqualTo("category", categoryName).addSnapshotListener { snapshot, e ->
+
+                if (e==null) {
+                    val isEmpty = snapshot?.isEmpty ?: false
+
+                    if (!isEmpty) {
+                        val post = snapshot?.toObjects(Post::class.java)!!
+
+                        this.trySendBlocking(Resource.Success(post))
+                    } else {
+                        this.trySendBlocking(Resource.Success(listOf()))
+                    }
+                } else {
+                    this.trySendBlocking(Resource.Error(e.message))
+                }
+            }
+            awaitClose {
+                callback.remove()
+            }
+        }
+    }
+
 
 }

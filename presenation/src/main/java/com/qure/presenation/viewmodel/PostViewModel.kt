@@ -14,10 +14,7 @@ import com.qure.domain.model.PostModel.Post
 import com.qure.domain.model.User
 import com.qure.domain.usecase.comment.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
-import com.qure.domain.usecase.post.CheckPostUseCase
-import com.qure.domain.usecase.post.GetAllPostUseCase
-import com.qure.domain.usecase.post.SetPostUseCase
-import com.qure.domain.usecase.post.UpdateLikeCountUseCase
+import com.qure.domain.usecase.post.*
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
@@ -40,6 +37,7 @@ class PostViewModel @Inject constructor(
     private val checkReCommentUseCase: CheckReCommentUseCase,
     private val getReCommentsUseCase: GetReCommentsUseCase,
     private val setReCommentsUseCase: SetReCommentsUseCase,
+    private val getCategoryPostUseCase: GetCategoryPostUseCase,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage
@@ -55,9 +53,17 @@ class PostViewModel @Inject constructor(
     val category: LiveData<String>
         get() = _category
 
+    private val _categoryName: MutableLiveData<String> = MutableLiveData("")
+    val categoryName: LiveData<String>
+        get() = _categoryName
+
     private val _postList: MutableLiveData<List<Post>> = MutableLiveData()
     val postList: LiveData<List<Post>>
         get() = _postList
+
+    private val _categoryPostList: MutableLiveData<List<Post>> = MutableLiveData()
+    val categoryPostList: LiveData<List<Post>>
+        get() = _categoryPostList
 
     private val _writer: MutableLiveData<User> = MutableLiveData()
     val writer: LiveData<User>
@@ -185,6 +191,22 @@ class PostViewModel @Inject constructor(
                 when (it) {
                     is Resource.Success -> {
                         _postList.value = it.data
+                        hideProgress()
+                    }
+                    is Resource.Loading -> showProgress()
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                }
+            }
+    }
+
+    fun getCategoryPost() = viewModelScope.launch {
+
+        getCategoryPostUseCase(categoryName.value ?: "")
+            .collect {
+                when(it) {
+                    is Resource.Success -> {
+                        _categoryPostList.value = it.data
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
@@ -640,6 +662,10 @@ class PostViewModel @Inject constructor(
 
     fun getCategory(category: String) {
         _category.value = category
+    }
+
+    fun getCategoryName(category: String) {
+        _categoryName.value = category
     }
 
     fun moveToPostCreateCategory() {

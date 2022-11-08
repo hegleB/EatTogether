@@ -15,21 +15,24 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
 
-    private val postViewModel : PostViewModel by activityViewModels()
+    private val postViewModel: PostViewModel by activityViewModels()
     private val postAdapter: PostAdapter by lazy {
         PostAdapter {
             val direction = PostFragmentDirections.actionPostFragmentToPostDetailFragment(it)
             findNavController().navigate(direction)
         }
     }
-    private val postCategoryAdapter : PostCategoryAdapter by lazy {
-        PostCategoryAdapter(resources.getStringArray(R.array.categey_name), {
-        })
+    private val postCategoryAdapter: PostCategoryAdapter by lazy {
+        PostCategoryAdapter(resources.getStringArray(R.array.categey_name),
+            {
+                val direction = PostFragmentDirections.actionPostFragmentToPostCategoryFragment(it)
+                findNavController().navigate(direction)
+            })
     }
 
     override fun init() {
         BottomNavigationEvent().showBottomNavigation(activity!!)
-        OnBackPressedListener().finish(requireActivity(),requireActivity())
+        OnBackPressedListener().finish(requireActivity(), requireActivity())
         initViewModel()
         observeViewModel()
         initAdapter()
@@ -46,6 +49,7 @@ class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
             recyclerViewFragmentPostCategory.adapter = postCategoryAdapter
         }
     }
+
     private fun observeViewModel() {
 
         postViewModel.postList.observe(viewLifecycleOwner) {
