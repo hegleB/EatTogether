@@ -14,4 +14,5 @@ interface CommentRepository {
     suspend fun checkReComment(recomments : Comments) : Flow<Resource<Comments, String>>
     suspend fun updateCommentLike(commentKey : String, commentLikeList : ArrayList<String>) : Flow<Resource<String, String>>
     suspend fun updateRecommentLike(comments: Comments, count: ArrayList<String>) : Flow<Resource<String, String>>
+    suspend fun updateCommentsCount(postKey: String, count : String) : Flow<Resource<String, String>>
 }

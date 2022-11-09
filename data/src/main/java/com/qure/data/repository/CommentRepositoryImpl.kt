@@ -1,6 +1,5 @@
 package com.qure.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.qure.domain.model.Comments
@@ -89,14 +88,15 @@ class CommentRepositoryImpl @Inject constructor(
     override suspend fun setReComments(recomments: Comments): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("comments").document(recomments.comments_commentskey)
-                .collection("reply")
-                .document()
-                .set(recomments).addOnSuccessListener {
-                    this.trySendBlocking(Resource.Success("댓글 추가 성공"))
-                }.addOnFailureListener {
-                    this.trySendBlocking(Resource.Error(it.message))
-                }
+            val callback =
+                firestore.collection("comments").document(recomments.comments_commentskey)
+                    .collection("reply")
+                    .document()
+                    .set(recomments).addOnSuccessListener {
+                        this.trySendBlocking(Resource.Success("댓글 추가 성공"))
+                    }.addOnFailureListener {
+                        this.trySendBlocking(Resource.Error(it.message))
+                    }
             awaitClose {
                 callback.isCanceled
             }
@@ -142,7 +142,6 @@ class CommentRepositoryImpl @Inject constructor(
 
                         if (!isEmpty) {
                             val comment = snapshot?.toObjects(Comments::class.java)!!.get(0)
-                            Log.d("Recomment", "${comment}")
                             this.trySendBlocking(Resource.Success(comment))
                         } else {
                             this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
@@ -205,6 +204,28 @@ class CommentRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun updateCommentsCount(
+        postKey: String,
+        count: String
+    ): Flow<Resource<String, String>> {
+        return callbackFlow {
+            this.trySendBlocking(Resource.Loading())
+
+            val callback =
+                firestore.collection("posts")
+                    .document(postKey)
+                    .update("commentsCount", count)
+                    .addOnSuccessListener { snapshot ->
+                        this.trySendBlocking(Resource.Success("업데이트 성공"))
+                    }
+            awaitClose {
+                callback.isCanceled
+            }
+        }
+
+    }
 }
+
 
 
