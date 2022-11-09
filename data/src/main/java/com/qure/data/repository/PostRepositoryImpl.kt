@@ -2,6 +2,8 @@ package com.qure.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.qure.domain.model.Comments
+import com.qure.domain.model.PostModel
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.repository.PostRepository
 import com.qure.domain.utils.Resource
@@ -161,5 +163,88 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getProfileCreatedPosts(uid: String): Flow<Resource<List<Post>, String>> {
+        return callbackFlow {
+            this.trySendBlocking(Resource.Loading())
+            val callback = firestore.collection("posts")
+                .whereEqualTo("uid", uid).orderBy("timestamp",Query.Direction.DESCENDING)
+                .addSnapshotListener { snapshot, e ->
+                if (e==null) {
+                    val isEmpty = snapshot?.isEmpty ?: false
 
+                    if (!isEmpty) {
+                        val post = snapshot?.toObjects(Post::class.java)!!
+
+                        this.trySendBlocking(Resource.Success(post))
+                    } else {
+                        this.trySendBlocking(Resource.Success(listOf()))
+                    }
+                } else {
+                    this.trySendBlocking(Resource.Error(e.message))
+                }
+            }
+            awaitClose {
+                callback.remove()
+            }
+        }
+    }
+
+    override suspend fun getProfileLikedPosts(uid: String): Flow<Resource<List<Post>, String>> {
+        return callbackFlow {
+            this.trySendBlocking(Resource.Loading())
+            val callback =  firestore.collection("posts")
+                .whereArrayContains("likecount", uid)
+                .orderBy("timestamp",Query.Direction.DESCENDING)
+                .addSnapshotListener { snapshot, e ->
+                    if (e==null) {
+                        val isEmpty = snapshot?.isEmpty ?: false
+
+                        if (!isEmpty) {
+                            val post = snapshot?.toObjects(Post::class.java)!!
+
+                            this.trySendBlocking(Resource.Success(post))
+                        } else {
+                            this.trySendBlocking(Resource.Success(listOf()))
+                        }
+                    } else {
+                        this.trySendBlocking(Resource.Error(e.message))
+                    }
+                }
+            awaitClose {
+                callback.remove()
+            }
+        }
+    }
+
+    override suspend fun getProfileCommentsCreatedPosts(uid: String): Flow<Resource<List<Post>, String>> {
+
+        return callbackFlow {
+            this.trySendBlocking(Resource.Loading())
+            val commentCreatedsPost = mutableListOf<PostModel.Post>()
+            val callback =
+                firestore.collection("posts").orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get().addOnCompleteListener { post ->
+                        firestore.collection("comments").whereEqualTo("comments_uid", uid)
+                            .get().addOnCompleteListener { snapshot ->
+                                val posts = post.result.toObjects(Post::class.java)
+                                val commentsPost = snapshot.result.toObjects(Comments::class.java)
+                                for (j in posts) {
+                                    for (i in commentsPost) {
+                                        if (j.key.equals(i.comments_postkey) && !commentCreatedsPost.contains(j)) {
+                                            commentCreatedsPost.add(j)
+                                        }
+                                    }
+                                }
+                                if (!commentsPost.isEmpty()) {
+                                    this.trySendBlocking(Resource.Success(commentCreatedsPost))
+                                } else {
+                                    this.trySendBlocking(Resource.Success(listOf()))
+                                }
+                            }
+                    }
+            awaitClose {
+                callback.isCanceled
+            }
+        }
+    }
 }

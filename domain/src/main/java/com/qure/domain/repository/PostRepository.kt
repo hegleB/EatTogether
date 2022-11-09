@@ -14,5 +14,7 @@ interface PostRepository {
     suspend fun updateLike(likeList : ArrayList<String>, postKey : String) : Flow<Resource<String, String>>
     suspend fun checkPost(postKey: String) : Flow<Resource<PostModel.Post, String>>
     suspend fun getCategoryPost(categoryName : String) : Flow<Resource<List<PostModel.Post>,String>>
-
+    suspend fun getProfileCreatedPosts(uid : String) : Flow<Resource<List<PostModel.Post>,String>>
+    suspend fun getProfileLikedPosts(uid : String) :  Flow<Resource<List<PostModel.Post>,String>>
+    suspend fun getProfileCommentsCreatedPosts(uid : String) : Flow<Resource<List<PostModel.Post>,String>>
 }

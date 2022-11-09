@@ -47,7 +47,42 @@
         tools:layout="@layout/fragment_profile_detail">
         <argument
             android:name="uid"
-            app:argType="string" />
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_profileDetailFragment_to_profilePostDetailFragment"
+            app:destination="@id/profilePostDetailFragment"
+            app:popUpTo="@id/profilePostDetailFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/postCommentsTabFragment"
+        android:name="com.qure.presenation.view.people.PostCommentsTabFragment"
+        android:label="PostCommentsTabFragment"
+        tools:layout="@layout/fragment_post_comments_tab"/>
+    <fragment
+        android:id="@+id/postLikeTabFragment"
+        android:name="com.qure.presenation.view.people.PostLikeTabFragment"
+        android:label="PostLikeTabFragment"
+        tools:layout="@layout/fragment_post_like_tab"/>
+    <fragment
+        android:id="@+id/postWriteTabFragment"
+        android:name="com.qure.presenation.view.people.PostWriteTabFragment"
+        android:label="PostWriteTabFragment"
+        tools:layout="@layout/fragment_post_write_tab"/>
+    <fragment
+        android:id="@+id/profilePostDetailFragment"
+        android:name="com.qure.presenation.view.post.PostDetailFragment"
+        android:label="PostDetailFragment"
+        tools:layout="@layout/fragment_post_detail">
+
+        <argument
+            android:name="post"
+            app:argType="com.qure.domain.model.PostModel$Post" />
     </fragment>
 
 

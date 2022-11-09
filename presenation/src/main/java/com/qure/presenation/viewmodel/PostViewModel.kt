@@ -19,6 +19,7 @@ import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +39,10 @@ class PostViewModel @Inject constructor(
     private val getReCommentsUseCase: GetReCommentsUseCase,
     private val setReCommentsUseCase: SetReCommentsUseCase,
     private val getCategoryPostUseCase: GetCategoryPostUseCase,
+    private val getProfileCreatedPostsUseCase: GetProfileCreatedPostsUseCase,
+    private val getProfileLikedPostsUseCase: GetProfileLikedPostsUseCase,
+    private val getProfileCommentsCreatedPostsUseCase: GetProfileCommentsCreatedPostsUseCase,
+    private val updateCommentsCountUseCase: UpdateCommentsCountUseCase,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage
@@ -65,9 +70,25 @@ class PostViewModel @Inject constructor(
     val categoryPostList: LiveData<List<Post>>
         get() = _categoryPostList
 
+    private val _profileCreatedPost: MutableLiveData<List<Post>> = MutableLiveData()
+    val profileCreatedPost: LiveData<List<Post>>
+        get() = _profileCreatedPost
+
+    private val _profileLikedPost: MutableLiveData<List<Post>> = MutableLiveData()
+    val profileLikedPost: LiveData<List<Post>>
+        get() = _profileLikedPost
+
+    private val _profileCommentsPost: MutableLiveData<List<Post>> = MutableLiveData()
+    val profileCommentsPost: LiveData<List<Post>>
+        get() = _profileCommentsPost
+
     private val _writer: MutableLiveData<User> = MutableLiveData()
     val writer: LiveData<User>
         get() = _writer
+
+    private val _profileUid: MutableLiveData<String> = MutableLiveData()
+    val profileUid: LiveData<String>
+        get() = _profileUid
 
     private val _buttonDeleteImage: MutableLiveData<Event<Unit>> = MutableLiveData()
     val buttonDeleteImage: LiveData<Event<Unit>>
@@ -216,6 +237,51 @@ class PostViewModel @Inject constructor(
             }
     }
 
+    fun getProfileCreatedPosts() = viewModelScope.launch {
+        getProfileCreatedPostsUseCase(profileUid.value ?: "")
+            .collect {
+                when(it) {
+                    is Resource.Success -> {
+                        _profileCreatedPost.value = it.data
+                        hideProgress()
+                    }
+                    is Resource.Loading -> showProgress()
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                }
+            }
+    }
+
+    fun getProfileLikedPosts() = viewModelScope.launch {
+        getProfileLikedPostsUseCase(profileUid.value ?: "")
+            .collect {
+                when(it) {
+                    is Resource.Success -> {
+                        _profileLikedPost.value = it.data
+                        hideProgress()
+                    }
+                    is Resource.Loading -> showProgress()
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                }
+            }
+    }
+
+    fun getProfileCommentsCreatedPosts() = viewModelScope.launch {
+        getProfileCommentsCreatedPostsUseCase(profileUid.value ?: "")
+            .collect {
+                when(it) {
+                    is Resource.Success -> {
+                        _profileCommentsPost.value = it.data
+                        hideProgress()
+                    }
+                    is Resource.Loading -> showProgress()
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                }
+            }
+    }
+
     fun setPost() = viewModelScope.launch {
         _createPostKey.value = firestore.collection("posts").document().id
         val post = Post(
@@ -267,6 +333,21 @@ class PostViewModel @Inject constructor(
                 when (it) {
                     is Resource.Success -> {
                         _commentsList.value = it.data
+                        hideProgress()
+                    }
+                    is Resource.Loading -> showProgress()
+                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                }
+            }
+    }
+
+    fun updateCommentsCount(count : String) = viewModelScope.launch {
+        updateCommentsCountUseCase(_postKey.value ?: "", count)
+            .collect {
+                when (it) {
+                    is Resource.Success -> {
+                        _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
@@ -666,6 +747,10 @@ class PostViewModel @Inject constructor(
 
     fun getCategoryName(category: String) {
         _categoryName.value = category
+    }
+
+    fun getProfileUid(uid: String) {
+        _profileUid.value = uid
     }
 
     fun moveToPostCreateCategory() {

@@ -76,7 +76,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
             getComments()
             getUserInfo()
             checkPost()
-
         }
 
     }
@@ -110,6 +109,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
         }
 
         postViewModel.commentsList.observe(viewLifecycleOwner) {
+            postViewModel.updateCommentsCount(it.size.toString())
             when (it.size) {
                 0 -> {
                     binding.linearLayoutFragmentPostDetailNoComment.visibility = View.VISIBLE

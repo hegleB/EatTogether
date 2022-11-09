@@ -14,7 +14,7 @@ object TextBindingAdapter {
 
     @BindingAdapter("rollingText")
     @JvmStatic
-    fun rollingTextCount(rollingTextView : RollingTextView, count : String?) {
+    fun rollingTextCount(rollingTextView: RollingTextView, count: String?) {
         val animator = ValueAnimator.ofInt(0, 0)
         rollingTextView.animationDuration = 1000L
         rollingTextView.charStrategy = Strategy.CarryBitAnimation(Direction.SCROLL_UP)
@@ -27,20 +27,20 @@ object TextBindingAdapter {
         val handler = Handler()
         handler.postDelayed({
             animator.cancel()
-            rollingTextView.setText(count?:"0")
+            rollingTextView.setText(count ?: "0")
         }, 0)
     }
 
     @BindingAdapter("countBarcode")
     @JvmStatic
-    fun countBarcode(textView : TextView, l : Long?) {
-        textView.setText(String.format("%02d",l))
+    fun countBarcode(textView: TextView, l: Long?) {
+        textView.setText(String.format("%02d", l))
     }
 
     @BindingAdapter("barcodeTimeRemaining")
     @JvmStatic
-    fun barcodeTimeRemaining(textView : TextView, l : Long?) {
-        val time = l?:0
+    fun barcodeTimeRemaining(textView: TextView, l: Long?) {
+        val time = l ?: 0
         val hour = time / 3600000L
         val minues = time % 3600000 / 60000
         val second = time % 3600000 % 60000 / 1000
@@ -64,24 +64,38 @@ object TextBindingAdapter {
         val MONTH = 12
         val current = System.currentTimeMillis()
 
-        var diffTime = (current - createTime.toLong()) / 1000
+        if (createTime.length > 0) {
+            var diffTime = (current - createTime.toLong()) / 1000
 
-        if (diffTime < SEC) {
-            textView.setText("방금 전")
-        } else if (SEC.let { diffTime /= it; diffTime } < MIN) {
-            textView.setText(diffTime.toString() + "분 전")
-        } else if (MIN.let { diffTime /= it; diffTime } < HOUR) {
-            textView.setText(diffTime.toString() + "시간 전")
-        } else if (HOUR.let { diffTime /= it; diffTime } < DAY) {
-            textView.setText(diffTime.toString() + "일 전")
-        } else if (DAY.let { diffTime /= it; diffTime } < MONTH) {
-            textView.setText(diffTime.toString() + "개월 전")
+            if (diffTime < SEC) {
+                textView.setText("방금 전")
+            } else if (SEC.let { diffTime /= it; diffTime } < MIN) {
+                textView.setText(diffTime.toString() + "분 전")
+            } else if (MIN.let { diffTime /= it; diffTime } < HOUR) {
+                textView.setText(diffTime.toString() + "시간 전")
+            } else if (HOUR.let { diffTime /= it; diffTime } < DAY) {
+                textView.setText(diffTime.toString() + "일 전")
+            } else if (DAY.let { diffTime /= it; diffTime } < MONTH) {
+                textView.setText(diffTime.toString() + "개월 전")
+            }
         }
     }
 
     @BindingAdapter("createImageText")
     @JvmStatic
-    fun createImageText(textView: TextView, count : Int) {
+    fun createImageText(textView: TextView, count: Int) {
         textView.setText("${count}/3")
+    }
+
+    @BindingAdapter("likeCountText")
+    @JvmStatic
+    fun likeCountText(textView: TextView, count: Int) {
+        textView.setText("좋아요 ${count}")
+    }
+
+    @BindingAdapter("commentsCountText")
+    @JvmStatic
+    fun commentsCountText(textView: TextView, count: String) {
+        textView.setText("댓글 ${count}")
     }
 }

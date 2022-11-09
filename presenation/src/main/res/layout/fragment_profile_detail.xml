@@ -10,14 +10,14 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout_activityprofile"
+        android:id="@+id/constraintLayout_fragmentProfile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.people.DetailProfileFragment">
 
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolBar_activityprofile"
+            android:id="@+id/toolBar_fragmentProfile"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:visibility="invisible"
@@ -30,7 +30,7 @@
 
 
         <TextView
-            android:id="@+id/textView_activityprofile_cancel"
+            android:id="@+id/textView_fragmentProfile_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -45,7 +45,7 @@
 
 
         <ImageView
-            android:id="@+id/imageView_activityprofile_close"
+            android:id="@+id/imageView_fragmentProfile_close"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
@@ -57,7 +57,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView_activityprofile_submit"
+            android:id="@+id/textView_fragmentProfile_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -71,7 +71,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageView_activityprofile_profile"
+            android:id="@+id/circleImageView_fragmentProfile_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="72dp"
@@ -84,22 +84,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView_activityprofile_changeImage"
+            android:id="@+id/imageView_fragmentProfile_changeImage"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@color/white"
             android:src="@drawable/ic_baseline_add_box_24"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/circleImageView_activityprofile_profile"
-            app:layout_constraintEnd_toEndOf="@+id/circleImageView_activityprofile_profile"
+            app:layout_constraintBottom_toBottomOf="@+id/circleImageView_fragmentProfile_profile"
+            app:layout_constraintEnd_toEndOf="@+id/circleImageView_fragmentProfile_profile"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/circleImageView_activityprofile_profile"
-            app:layout_constraintTop_toTopOf="@+id/circleImageView_activityprofile_profile"
+            app:layout_constraintStart_toStartOf="@+id/circleImageView_fragmentProfile_profile"
+            app:layout_constraintTop_toTopOf="@+id/circleImageView_fragmentProfile_profile"
             app:layout_constraintVertical_bias="1.0" />
 
 
         <TextView
-            android:id="@+id/textView_activityprofile_name"
+            android:id="@+id/textView_fragmentProfile_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
@@ -111,11 +111,11 @@
             android:onClick="@{() -> viewmodel.editProfileName()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.283"
-            app:layout_constraintStart_toEndOf="@+id/circleImageView_activityprofile_profile"
-            app:layout_constraintTop_toBottomOf="@+id/toolBar_activityprofile" />
+            app:layout_constraintStart_toEndOf="@+id/circleImageView_fragmentProfile_profile"
+            app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentProfile" />
 
         <TextView
-            android:id="@+id/textView_activityprofile_message"
+            android:id="@+id/textView_fragmentProfile_message"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:enabled="false"
@@ -126,8 +126,8 @@
             android:onClick="@{() -> viewmodel.editProfileMessage()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.283"
-            app:layout_constraintStart_toEndOf="@+id/circleImageView_activityprofile_profile"
-            app:layout_constraintTop_toBottomOf="@+id/textView_activityprofile_name" />
+            app:layout_constraintStart_toEndOf="@+id/circleImageView_fragmentProfile_profile"
+            app:layout_constraintTop_toBottomOf="@+id/textView_fragmentProfile_name" />
 
         <ImageView
             android:id="@+id/imageView5"
@@ -139,10 +139,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_activityprofile_message" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_fragmentProfile_message" />
 
         <com.yy.mobile.rollingtextview.RollingTextView
-            android:id="@+id/rollingTextView_activityprofile_postCount"
+            android:id="@+id/rollingTextView_fragmentProfile_postCount"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -156,7 +156,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
         <TextView
-            android:id="@+id/textView_activityprofile_post"
+            android:id="@+id/textView_fragmentProfile_post"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -166,10 +166,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.149"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_activityprofile_postCount" />
+            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_postCount" />
 
         <com.yy.mobile.rollingtextview.RollingTextView
-            android:id="@+id/rollingTextView_activityprofile_meetingCount"
+            android:id="@+id/rollingTextView_fragmentProfile_meetingCount"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -179,11 +179,11 @@
             app:rollingText="@{viewmodel.meetingCount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.295"
-            app:layout_constraintStart_toEndOf="@+id/rollingTextView_activityprofile_postCount"
+            app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_postCount"
             app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
         <TextView
-            android:id="@+id/textView_activityprofile_meeting"
+            android:id="@+id/textView_fragmentProfile_meeting"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -192,11 +192,11 @@
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.295"
-            app:layout_constraintStart_toEndOf="@+id/textView_activityprofile_post"
-            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_activityprofile_meetingCount" />
+            app:layout_constraintStart_toEndOf="@+id/textView_fragmentProfile_post"
+            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_meetingCount" />
 
         <com.yy.mobile.rollingtextview.RollingTextView
-            android:id="@+id/rollingTextView_activityprofile_likeCount"
+            android:id="@+id/rollingTextView_fragmentProfile_likeCount"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -206,12 +206,12 @@
             app:rollingText="@{viewmodel.likeCount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.54"
-            app:layout_constraintStart_toEndOf="@+id/rollingTextView_activityprofile_meetingCount"
+            app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_meetingCount"
             app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
 
         <TextView
-            android:id="@+id/textView_activityprofile_like"
+            android:id="@+id/textView_fragmentProfile_like"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -220,22 +220,22 @@
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.54"
-            app:layout_constraintStart_toEndOf="@+id/textView_activityprofile_meeting"
-            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_activityprofile_likeCount" />
+            app:layout_constraintStart_toEndOf="@+id/textView_fragmentProfile_meeting"
+            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_likeCount" />
 
         <ImageView
-            android:id="@+id/imageView_activityprofile_profileEdit"
+            android:id="@+id/imageView_fragmentProfile_profileEdit"
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/ic_pencil"
             android:onClick="@{() -> viewmodel.editProfile()}"
-            app:layout_constraintEnd_toStartOf="@+id/imageView_activityprofile_qrcode"
+            app:layout_constraintEnd_toStartOf="@+id/imageView_fragmentProfile_qrcode"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView_activityprofile_qrcode"
+            android:id="@+id/imageView_fragmentProfile_qrcode"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginTop="16dp"
@@ -248,7 +248,7 @@
 
 
         <ImageView
-            android:id="@+id/imageView_activityprofile_scanner"
+            android:id="@+id/imageView_fragmentProfile_scanner"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginTop="16dp"
@@ -257,12 +257,12 @@
             android:backgroundTint="@color/black"
             android:onClick="@{() -> viewmodel.showProfileQRScanner()}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textView_activityprofile_submit"
+            app:layout_constraintStart_toStartOf="@+id/textView_fragmentProfile_submit"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
-            android:id="@+id/textView_activityprofile_barcodeTime"
+            android:id="@+id/textView_fragmentProfile_barcodeTime"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_round_20"
@@ -276,10 +276,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.948"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_activityprofile_profileEdit" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView_fragmentProfile_profileEdit" />
 
         <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spinKitViwe_activityprofile_loading"
+            android:id="@+id/spinKitViwe_fragmentProfile_loading"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:visibility="invisible"
@@ -294,22 +294,22 @@
 
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout_activityprofile"
+            android:id="@+id/tabLayout_fragmentProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_activityprofile_meeting"
+            app:layout_constraintTop_toBottomOf="@+id/textView_fragmentProfile_meeting"
             app:tabIndicatorColor="@color/black"
             app:tabSelectedTextColor="@color/black"
             app:tabTextColor="#888888">
-
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="작성한 글"
+
                 />
 
             <com.google.android.material.tabs.TabItem
@@ -325,12 +325,12 @@
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager_activityprofile"
+            android:id="@+id/viewPager_fragmentProfile"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout_activityprofile" />
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout_fragmentProfile" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

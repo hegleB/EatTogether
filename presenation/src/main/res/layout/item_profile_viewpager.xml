@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="profilePost"
+            type="com.qure.domain.model.PostModel.Post" />
+        <variable
+            name="viewmodel"
+            type="com.qure.presenation.viewmodel.PostViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <ImageView
+            android:id="@+id/imageView_itemProfileViewPager_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            postImage="@{profilePost.postImages.size() >= 1 ? profilePost.postImages[0] : null}"/>
+
+        <TextView
+            android:id="@+id/textView_itemProfileViewPager_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@{profilePost.title}"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.043"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_itemProfileViewPager_writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{profilePost.writer}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.043"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_itemProfileViewPager_title"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView_itemProfileViewPager_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintStart_toEndOf="@+id/textView_itemProfileViewPager_writer"
+            app:layout_constraintTop_toTopOf="@+id/textView_itemProfileViewPager_writer"
+            app:layout_constraintVertical_bias="0.0"
+            timeText="@{profilePost.timestamp}"/>
+
+
+        <TextView
+            android:id="@+id/textView_itemProfileViewPager_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{profilePost.category}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.043"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_itemProfileViewPager_writer" />
+
+        <TextView
+            android:id="@+id/textView_itemProfileViewPager_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.033"
+            app:layout_constraintStart_toEndOf="@+id/textView_itemProfileViewPager_category"
+            app:layout_constraintTop_toBottomOf="@+id/textView_itemProfileViewPager_time"
+            likeCountText="@{profilePost.likecount.size()}"/>
+
+        <TextView
+            android:id="@+id/textView_itemProfileViewPager_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintStart_toEndOf="@+id/textView_itemProfileViewPager_like"
+            app:layout_constraintTop_toBottomOf="@+id/textView_itemProfileViewPager_time"
+            commentsCountText="@{profilePost.commentsCount}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
