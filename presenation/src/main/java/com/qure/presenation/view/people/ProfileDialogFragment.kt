@@ -78,12 +78,15 @@ class ProfileDialogFragment :
     }
 
     private fun createOneToOneChatRoom() {
-        val chatroom = chatViewModel.findChatRoom()
         try {
+            val chatroom = chatViewModel.findChatRoom(args.peopleOtherPersonUid)
             moveToChatRoom(chatroom)
         } catch (e: IllegalArgumentException) {
             chatViewModel.setChatRoom(args.peopleOtherPersonUid)
-            moveToChatRoom(chatroom)
+            chatViewModel.chatRoom.observe(viewLifecycleOwner) {
+                moveToChatRoom(it)
+            }
         }
+
     }
 }

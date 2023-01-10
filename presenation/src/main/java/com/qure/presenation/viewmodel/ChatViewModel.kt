@@ -75,9 +75,9 @@ class ChatViewModel @Inject constructor(
 
     }
 
-    fun findChatRoom(): ChatRoom {
+    fun findChatRoom(otherUid: String): ChatRoom {
         return _chatRooms.value?.find {
-            it.isContainUid(curruntUid) && it.isCorrectOneToOneChatroom()
+            it.isContainUid(otherUid) && it.isCorrectOneToOneChatroom()
         } ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
     }
 
@@ -99,6 +99,7 @@ class ChatViewModel @Inject constructor(
             mutableMapOf(curruntUid to 0, otherUid to 0),
             users
         )
+        _chatRoom.value = ChatRoom()
         addChatRoom(chatRoom)
     }
 
