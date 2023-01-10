@@ -12,7 +12,7 @@ import com.qure.presenation.base.BaseAdapter
 import com.qure.presenation.base.BaseViewHolder
 import com.qure.presenation.databinding.ItemPostBinding
 
-class PostAdapter(val itemClick : (Post)-> Unit) : BaseAdapter<Post>(itemCallback){
+class PostAdapter(val itemClick: (Post) -> Unit) : BaseAdapter<Post>(itemCallback) {
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<Post>() {
@@ -39,13 +39,13 @@ class PostAdapter(val itemClick : (Post)-> Unit) : BaseAdapter<Post>(itemCallbac
         return R.layout.item_post
     }
 
-    inner class PostHolder(binding: ItemPostBinding)
-        : BaseViewHolder<ItemPostBinding, Post>(binding) {
+    inner class PostHolder(binding: ItemPostBinding) :
+        BaseViewHolder<ItemPostBinding, Post>(binding) {
 
         init {
             binding.apply {
-                itemView.setOnClickListener{
-                    post?.run{
+                itemView.setOnClickListener {
+                    post?.run {
                         itemClick(this)
                     }
                 }
@@ -57,24 +57,22 @@ class PostAdapter(val itemClick : (Post)-> Unit) : BaseAdapter<Post>(itemCallbac
             binding.post = element
 
             val images = element.postImages
-            binding.linearLayoutItemPostImage1.clipToOutline=true
-            if(images.size==1){
+            binding.linearLayoutItemPostImage1.clipToOutline = true
+            if (images.size == 1) {
 
                 binding.linearLayoutItemPostImage1.weightSum = 1F
                 Glide.with(itemView.context)
                     .load(images.get(0))
                     .into(binding.imageViewItemPostImage1)
 
-            }
-            else if(images.size==2){
+            } else if (images.size == 2) {
                 binding.linearLayoutItemPostImage2.weightSum = 1F
 
                 Glide.with(itemView.context).apply {
                     load(images.get(0)).into(binding.imageViewItemPostImage1)
                     load(images.get(1)).into(binding.imageViewItemPostImage2)
                 }
-            }
-            else if(images.size==3){
+            } else if (images.size == 3) {
                 Glide.with(itemView.context).apply {
                     load(images.get(0)).into(binding.imageViewItemPostImage1)
                     load(images.get(1)).into(binding.imageViewItemPostImage2)

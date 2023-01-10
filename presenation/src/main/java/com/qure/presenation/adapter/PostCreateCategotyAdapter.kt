@@ -10,9 +10,7 @@ class PostCreateCategotyAdapter(val itemClick: (String) -> Unit, val categoryLis
 
     inner class ViewHolder(val binding: ItemCreateCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(name: String) {
-
             binding.apply {
                 itemView.setOnClickListener {
                     itemClick(name)
@@ -20,19 +18,15 @@ class PostCreateCategotyAdapter(val itemClick: (String) -> Unit, val categoryLis
             }
             binding.name = name
         }
-
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(
             ItemCreateCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.bind(categoryList[position])
     }
 

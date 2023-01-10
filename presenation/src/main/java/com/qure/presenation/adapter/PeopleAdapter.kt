@@ -10,7 +10,7 @@ import com.qure.presenation.base.BaseAdapter
 import com.qure.presenation.base.BaseViewHolder
 import com.qure.presenation.databinding.ItemPeopleBinding
 
-class PeopleAdapter(val itemClick : (User)-> Unit) : BaseAdapter<User>(itemCallback){
+class PeopleAdapter(val itemClick: (User) -> Unit) : BaseAdapter<User>(itemCallback) {
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<User>() {
@@ -33,15 +33,14 @@ class PeopleAdapter(val itemClick : (User)-> Unit) : BaseAdapter<User>(itemCallb
         )
     }
 
-    inner class PeopleHolder(binding: ItemPeopleBinding)
-        : BaseViewHolder<ItemPeopleBinding, User>(binding) {
+    inner class PeopleHolder(binding: ItemPeopleBinding) :
+        BaseViewHolder<ItemPeopleBinding, User>(binding) {
 
         init {
             binding.apply {
-                itemView.setOnClickListener{
-                    user?.run{
-
-                        itemClick(this)
+                itemView.setOnClickListener {
+                    user?.run {
+                        itemClick(this@run)
                     }
                 }
             }
@@ -50,7 +49,6 @@ class PeopleAdapter(val itemClick : (User)-> Unit) : BaseAdapter<User>(itemCallb
         override fun bind(element: User) {
             super.bind(element)
             binding.user = element
-
         }
     }
 }

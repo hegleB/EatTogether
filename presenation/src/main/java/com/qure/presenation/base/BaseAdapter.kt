@@ -12,5 +12,4 @@ abstract class BaseAdapter<E: Any>
     override fun onBindViewHolder(holder: BaseViewHolder<out ViewDataBinding, E>, position: Int) {
         getItem(position)?.let { holder.bind(it) }
     }
-
 }

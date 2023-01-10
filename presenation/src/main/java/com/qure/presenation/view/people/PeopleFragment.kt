@@ -95,13 +95,9 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
     }
 
     fun moveToProfileFragment(uid: String) {
-
         val direction = PeopleFragmentDirections.actionPeopleFragmentToProfileDialogFragment(
             uid
         )
         findNavController().navigate(direction)
     }
-
-
-
 }

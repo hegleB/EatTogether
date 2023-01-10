@@ -10,7 +10,7 @@ import com.qure.presenation.view.people.PostCommentsTabFragment
 import com.qure.presenation.view.people.PostLikeTabFragment
 import com.qure.presenation.view.people.PostWriteTabFragment
 
-class ProfileViewPagerAdapter(fragmentManager : FragmentManager, lifecycle : Lifecycle, uid : String) :
+class ProfileViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, uid: String) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
     private val fragmentLaunchers: List<Fragment> = listOf(
@@ -26,5 +26,4 @@ class ProfileViewPagerAdapter(fragmentManager : FragmentManager, lifecycle : Lif
     override fun createFragment(position: Int): Fragment {
         return fragmentLaunchers[position]
     }
-
 }

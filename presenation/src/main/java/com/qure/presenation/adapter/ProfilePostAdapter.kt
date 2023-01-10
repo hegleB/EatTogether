@@ -12,15 +12,24 @@ import com.qure.presenation.base.BaseViewHolder
 import com.qure.presenation.databinding.ItemProfileViewpagerBinding
 import com.qure.presenation.viewmodel.PostViewModel
 
-class ProfilePostAdapter(val itemClick : (PostModel.Post)-> Unit, val postsViewModel : PostViewModel) : BaseAdapter<PostModel.Post>(itemCallback){
+class ProfilePostAdapter(
+    val itemClick: (PostModel.Post) -> Unit,
+    val postsViewModel: PostViewModel
+) : BaseAdapter<PostModel.Post>(itemCallback) {
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<PostModel.Post>() {
-            override fun areItemsTheSame(oldItem: PostModel.Post, newItem: PostModel.Post): Boolean {
+            override fun areItemsTheSame(
+                oldItem: PostModel.Post,
+                newItem: PostModel.Post
+            ): Boolean {
                 return oldItem.hashCode() == newItem.hashCode()
             }
 
-            override fun areContentsTheSame(oldItem: PostModel.Post, newItem: PostModel.Post): Boolean {
+            override fun areContentsTheSame(
+                oldItem: PostModel.Post,
+                newItem: PostModel.Post
+            ): Boolean {
                 return oldItem == newItem
             }
         }
@@ -39,13 +48,13 @@ class ProfilePostAdapter(val itemClick : (PostModel.Post)-> Unit, val postsViewM
         return R.layout.item_profile_viewpager
     }
 
-    inner class PostHolder(binding: ItemProfileViewpagerBinding)
-        : BaseViewHolder<ItemProfileViewpagerBinding, PostModel.Post>(binding) {
+    inner class PostHolder(binding: ItemProfileViewpagerBinding) :
+        BaseViewHolder<ItemProfileViewpagerBinding, PostModel.Post>(binding) {
 
         init {
             binding.apply {
-                itemView.setOnClickListener{
-                    profilePost?.run{
+                itemView.setOnClickListener {
+                    profilePost?.run {
                         itemClick(this)
                     }
                 }

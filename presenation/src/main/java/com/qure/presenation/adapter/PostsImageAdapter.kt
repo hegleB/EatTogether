@@ -8,21 +8,19 @@ import com.qure.presenation.databinding.ItemPostImageBinding
 
 class PostsImageAdapter : RecyclerView.Adapter<PostsImageAdapter.ViewHolder>() {
 
-    var imageList : List<String> = listOf()
+    var imageList: List<String> = listOf()
 
-    inner class ViewHolder(val binding: ItemPostImageBinding) : RecyclerView.ViewHolder(binding.root){
-
-        fun bind(image: String){
+    inner class ViewHolder(val binding: ItemPostImageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(image: String) {
             binding.image = PostImage(image)
         }
-
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemPostImageBinding.inflate(layoutInflater, parent, false)
-
         return ViewHolder(binding)
     }
 

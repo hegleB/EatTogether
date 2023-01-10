@@ -19,19 +19,19 @@ import com.qure.presenation.viewmodel.PostViewModel
 
 class CommentsAdapter(
     val itemClick: (Comments) -> Unit,
-    val context : Context,
+    val context: Context,
     val listener: OnItemClickListener,
     val postViewModel: PostViewModel,
     val viewLifecycleOwner: LifecycleOwner,
     val lifecycleCoroutineScope: LifecycleCoroutineScope,
-    val checkCommentUseCase : CheckCommentUseCase,
+    val checkCommentUseCase: CheckCommentUseCase,
     val getReCommentsUseCase: GetReCommentsUseCase,
     val checkReCommentUseCase: CheckReCommentUseCase
-
-) : ListAdapter<Comments, CommentsAdapter.ViewHolder>(itemCallback), ReCommentsAdapter.OnItemClickListener {
+) : ListAdapter<Comments, CommentsAdapter.ViewHolder>(itemCallback),
+    ReCommentsAdapter.OnItemClickListener {
 
     interface OnItemClickListener {
-        fun onItemClick(comments : Comments)
+        fun onItemClick(comments: Comments)
     }
 
     companion object {
@@ -51,8 +51,8 @@ class CommentsAdapter(
 
         fun bind(element: Comments) {
 
-            itemView.setOnClickListener{
-                binding.comments?.run{
+            itemView.setOnClickListener {
+                binding.comments?.run {
                     itemClick(this)
                 }
             }
@@ -64,7 +64,13 @@ class CommentsAdapter(
                 listener.onItemClick(element)
             }
 
-            val adapter = ReCommentsAdapter(postViewModel, this@CommentsAdapter ,viewLifecycleOwner,checkReCommentUseCase, lifecycleCoroutineScope)
+            val adapter = ReCommentsAdapter(
+                postViewModel,
+                this@CommentsAdapter,
+                viewLifecycleOwner,
+                checkReCommentUseCase,
+                lifecycleCoroutineScope
+            )
             binding.recyclerViewItemCommentsRecomment.adapter = adapter
 
             FirebaseFirestore.getInstance().collectionGroup("reply")

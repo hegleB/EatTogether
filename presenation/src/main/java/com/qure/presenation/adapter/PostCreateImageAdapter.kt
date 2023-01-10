@@ -9,7 +9,10 @@ import com.qure.presenation.base.*
 import com.qure.presenation.databinding.ItemCreateImageBinding
 import com.qure.presenation.viewmodel.PostViewModel
 
-class PostCreateImageAdapter(val postViewModel: PostViewModel, val viewLifecycleOwner: LifecycleOwner) : BaseAdapter<String>(itemCallback){
+class PostCreateImageAdapter(
+    val postViewModel: PostViewModel,
+    val viewLifecycleOwner: LifecycleOwner
+) : BaseAdapter<String>(itemCallback) {
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<String>() {
@@ -32,18 +35,15 @@ class PostCreateImageAdapter(val postViewModel: PostViewModel, val viewLifecycle
         )
     }
 
-    inner class ViewHolder(binding: ItemCreateImageBinding)
-        : BaseViewHolder<ItemCreateImageBinding, String>(binding) {
-
+    inner class ViewHolder(binding: ItemCreateImageBinding) :
+        BaseViewHolder<ItemCreateImageBinding, String>(binding) {
         override fun bind(element: String) {
             super.bind(element)
             binding.image = element
             binding.viewmodel = postViewModel
-
             binding.imageViewItemCreateImageDelete.setOnClickListener {
                 postViewModel.deletePostCreateImage(element)
             }
-
         }
     }
 }

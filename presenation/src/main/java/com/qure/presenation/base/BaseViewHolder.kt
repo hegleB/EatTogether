@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
-
 abstract class BaseViewHolder<VB: ViewDataBinding, E: Any>(protected val binding: VB) : RecyclerView.ViewHolder(binding.root) {
+
     val context: Context
         get() { return itemView.context }
 

@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel : ViewModel() {
 
-
-
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
