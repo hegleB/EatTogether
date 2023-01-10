@@ -15,4 +15,11 @@ data class ChatRoom(
     var unreadCount : MutableMap<String, Int> = mutableMapOf(),
     var users : ArrayList<String> = arrayListOf()
 
-) : Serializable
+) : Serializable {
+
+    fun isContainUid(uid: String): Boolean =
+        this.users.contains(uid)
+
+    fun isCorrectOneToOneChatroom(): Boolean =
+        this.users.size <= 2
+}

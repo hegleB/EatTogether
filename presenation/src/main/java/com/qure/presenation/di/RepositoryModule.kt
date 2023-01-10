@@ -64,5 +64,12 @@ object RepositoryModule {
         return CommentRepositoryImpl(firestore)
     }
 
+    @Provides
+    fun provideChatRepository(
+        firestore: FirebaseFirestore
+    ) : ChatRepository {
+        return ChatRepositoryImpl(firestore)
+    }
+
 
 }

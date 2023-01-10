@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="chatRight"
+            type="com.qure.domain.model.ChatComment" />
+
+    </data>
+
+
+    <LinearLayout
+        android:id="@+id/msg_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:visibility="visible"></View>
+
+            <TextView
+                android:id="@+id/divider_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="1999-01-01"
+                android:textAlignment="center" />
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:visibility="visible"></View>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+
+                    <TextView
+                        android:id="@+id/right_read_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/timestamp"
+                        android:layout_alignRight="@id/timestamp"
+                        android:text="0"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/timestamp"
+                        chattimeText="@{chatRight.timestamp}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/msg_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="3dp"
+                    android:autoLink="all"
+                    android:background="@drawable/img_chat_right"
+                    android:maxWidth="270dp"
+                    android:text="@{chatRight.message}"
+                    android:textSize="18dp" />
+
+
+                <ImageView
+                    android:id="@+id/img_item"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="3dp"
+                    android:background="@color/browser_actions_bg_grey"
+                    android:maxWidth="270dp"
+                    android:scaleType="fitXY"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

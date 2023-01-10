@@ -2,6 +2,7 @@ package com.qure.presenation.adapter.bindingadapter
 
 import android.animation.ValueAnimator
 import android.os.Handler
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -9,6 +10,8 @@ import com.yy.mobile.rollingtextview.CharOrder
 import com.yy.mobile.rollingtextview.RollingTextView
 import com.yy.mobile.rollingtextview.strategy.Direction
 import com.yy.mobile.rollingtextview.strategy.Strategy
+import java.text.SimpleDateFormat
+import java.util.*
 
 object TextBindingAdapter {
 
@@ -98,4 +101,29 @@ object TextBindingAdapter {
     fun commentsCountText(textView: TextView, count: String) {
         textView.setText("댓글 ${count}")
     }
+
+    @BindingAdapter("chattimeText")
+    @JvmStatic
+    fun chatTimeText(textView: TextView, chatTime: String) {
+        if (!chatTime.equals("")) {
+            val time: Long = chatTime.toLong()
+            val t_date = Date(time)
+            val t_dateFormat = SimpleDateFormat("aa hh:mm", Locale("ko", "KR"))
+            val str_date = t_dateFormat.format(t_date)
+            textView.setText(str_date)
+        }
+    }
+
+    @BindingAdapter("chatRoomCountText")
+    @JvmStatic
+    fun chatRoomCount(textView: TextView, chatroomCount: Int) {
+
+        if (chatroomCount == 2) {
+            textView.visibility = View.INVISIBLE
+        } else {
+            textView.visibility = View.VISIBLE
+            textView.setText(chatroomCount.toString())
+        }
+    }
+
 }

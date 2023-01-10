@@ -18,7 +18,7 @@
             android:id="@+id/action_peopleFragment_to_profileDetailFragment"
             app:destination="@id/profileDetailFragment"
             app:enterAnim="@anim/slide_in_bottom"
-            app:popExitAnim="@anim/slide_out_bottom"/>
+            app:popExitAnim="@anim/slide_out_bottom" />
 
     </fragment>
 
@@ -37,7 +37,15 @@
             android:id="@+id/action_profileDialogFragment_to_profileDetailFragment"
             app:destination="@id/profileDetailFragment"
             app:enterAnim="@anim/slide_in_bottom"
-            app:popExitAnim="@anim/slide_out_bottom"/>
+            app:popExitAnim="@anim/slide_out_bottom" />
+
+        <action
+            android:id="@+id/action_peopleFragment_to_messageFragment"
+            app:destination="@id/messageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
 
     </dialog>
     <fragment
@@ -47,33 +55,33 @@
         tools:layout="@layout/fragment_profile_detail">
         <argument
             android:name="uid"
-            app:argType="string"/>
+            app:argType="string" />
         <action
             android:id="@+id/action_profileDetailFragment_to_profilePostDetailFragment"
             app:destination="@id/profilePostDetailFragment"
-            app:popUpTo="@id/profilePostDetailFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/profilePostDetailFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/postCommentsTabFragment"
         android:name="com.qure.presenation.view.people.PostCommentsTabFragment"
         android:label="PostCommentsTabFragment"
-        tools:layout="@layout/fragment_post_comments_tab"/>
+        tools:layout="@layout/fragment_post_comments_tab" />
     <fragment
         android:id="@+id/postLikeTabFragment"
         android:name="com.qure.presenation.view.people.PostLikeTabFragment"
         android:label="PostLikeTabFragment"
-        tools:layout="@layout/fragment_post_like_tab"/>
+        tools:layout="@layout/fragment_post_like_tab" />
     <fragment
         android:id="@+id/postWriteTabFragment"
         android:name="com.qure.presenation.view.people.PostWriteTabFragment"
         android:label="PostWriteTabFragment"
-        tools:layout="@layout/fragment_post_write_tab"/>
+        tools:layout="@layout/fragment_post_write_tab" />
     <fragment
         android:id="@+id/profilePostDetailFragment"
         android:name="com.qure.presenation.view.post.PostDetailFragment"
@@ -83,6 +91,22 @@
         <argument
             android:name="post"
             app:argType="com.qure.domain.model.PostModel$Post" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.qure.presenation.view.chat.MessageFragment"
+        android:label="MessageFragment"
+        tools:layout="@layout/fragment_message" >
+        <argument
+            android:name="chatroom"
+            app:argType="com.qure.domain.model.ChatRoom" />
+        <argument
+            android:name="otherUid"
+            app:argType="string" />
+        <argument
+            android:name="notification"
+            app:argType="boolean" />
     </fragment>
 
 

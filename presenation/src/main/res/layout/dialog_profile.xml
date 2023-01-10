@@ -27,8 +27,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constrainLayout_dialogProfile_chat"
@@ -36,6 +36,7 @@
                 android:layout_height="100dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/shape_rectagle"
+                android:onClick="@{() -> viewmodel.moveToChatRoom()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"

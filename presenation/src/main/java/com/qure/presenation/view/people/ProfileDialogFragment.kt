@@ -1,20 +1,39 @@
 package com.qure.presenation.view.people
 
-import android.util.Log
+import android.os.Bundle
+import android.view.View
+import androidx.compose.animation.core.snap
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import com.qure.domain.model.ChatRoom
+import com.qure.domain.model.User
 import com.qure.presenation.R
 import com.qure.presenation.base.BaseBottomSheetFragment
 import com.qure.presenation.databinding.DialogProfileBinding
+import com.qure.presenation.viewmodel.ChatViewModel
 import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.asDeferred
+import kotlinx.coroutines.tasks.asTask
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileDialogFragment : BaseBottomSheetFragment<DialogProfileBinding>(R.layout.dialog_profile) {
+class ProfileDialogFragment :
+    BaseBottomSheetFragment<DialogProfileBinding>(R.layout.dialog_profile) {
 
-    private val peopleViewModel : PeopleViewModel by activityViewModels()
-    private val args : ProfileDialogFragmentArgs by navArgs()
+    private val peopleViewModel: PeopleViewModel by activityViewModels()
+    private val chatViewModel: ChatViewModel by activityViewModels()
+    private val args: ProfileDialogFragmentArgs by navArgs()
+
+    private var chatrooms: List<ChatRoom> = listOf()
 
     override fun init() {
         initViewModel()
@@ -23,6 +42,9 @@ class ProfileDialogFragment : BaseBottomSheetFragment<DialogProfileBinding>(R.la
 
     private fun initViewModel() {
         binding.viewmodel = peopleViewModel
+        chatViewModel.getUserInfo(peopleViewModel.currentUid)
+        chatViewModel.getUserInfo(args.peopleOtherPersonUid)
+        chatViewModel.getAllChatRoom()
     }
 
     private fun observeViewModel() {
@@ -32,14 +54,36 @@ class ProfileDialogFragment : BaseBottomSheetFragment<DialogProfileBinding>(R.la
             moveToProfile(args.peopleOtherPersonUid)
             it.consume()
         }
+
+        peopleViewModel.chatRoom.observe(viewLifecycleOwner) {
+            if (it.consumed) return@observe
+            createOneToOneChatRoom()
+            it.consume()
+        }
     }
 
     private fun moveToProfile(uid: String) {
+        val direction =
+            ProfileDialogFragmentDirections.actionProfileDialogFragmentToProfileDetailFragment(
+                uid
+            )
+        findNavController().navigate(direction)
+    }
 
-        val direction = ProfileDialogFragmentDirections.actionProfileDialogFragmentToProfileDetailFragment(
-            uid
+    private fun moveToChatRoom(chatRoom: ChatRoom) {
+        val direction = ProfileDialogFragmentDirections.actionPeopleFragmentToMessageFragment(
+            chatRoom, args.peopleOtherPersonUid, false
         )
         findNavController().navigate(direction)
     }
 
+    private fun createOneToOneChatRoom() {
+        val chatroom = chatViewModel.findChatRoom()
+        try {
+            moveToChatRoom(chatroom)
+        } catch (e: IllegalArgumentException) {
+            chatViewModel.setChatRoom(args.peopleOtherPersonUid)
+            moveToChatRoom(chatroom)
+        }
+    }
 }

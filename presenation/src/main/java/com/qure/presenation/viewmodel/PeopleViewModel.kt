@@ -41,7 +41,7 @@ class PeopleViewModel @Inject constructor(
     private val firebaseStorage: FirebaseStorage
 ) : BaseViewModel() {
 
-    private val currentUid = getCurrentUser()?.uid ?: ""
+    val currentUid = getCurrentUser()?.uid ?: ""
 
     private val _myProfileImage: MutableLiveData<Event<Unit>> = MutableLiveData()
     val myProfileImage: LiveData<Event<Unit>>
@@ -50,6 +50,10 @@ class PeopleViewModel @Inject constructor(
     private val _otherProfileInfo: MutableLiveData<Event<Unit>> = MutableLiveData()
     val otherProfileInfo: LiveData<Event<Unit>>
         get() = _otherProfileInfo
+
+    private val _chatRoom: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val chatRoom: LiveData<Event<Unit>>
+        get() = _chatRoom
 
     private val _userList: MutableLiveData<List<User>> = MutableLiveData()
     val userList: LiveData<List<User>>
@@ -383,6 +387,10 @@ class PeopleViewModel @Inject constructor(
 
     fun moveToProfile() {
         _otherProfileInfo.value = Event(Unit)
+    }
+
+    fun moveToChatRoom() {
+        _chatRoom.value = Event(Unit)
     }
 
     fun closeProfile() {

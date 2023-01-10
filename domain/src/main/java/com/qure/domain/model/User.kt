@@ -10,4 +10,7 @@ data class User(
     var token: String="",
     var userphoto: String="",
     var usermsg: String=""
-) : Serializable
+) : Serializable {
+    fun isSameUid(currentUid: String): Boolean =
+        this.uid == currentUid
+}
