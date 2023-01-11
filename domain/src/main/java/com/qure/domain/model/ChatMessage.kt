@@ -13,6 +13,6 @@ data class ChatMessage(
     var readUsers : MutableMap<String, Boolean> = mutableMapOf()
 ) : Serializable {
 
-    fun containUid(currentUser: String) =
-        this.readUsers.containsKey(currentUser)
+    fun isNotcontainUid(currentUser: String) =
+        !this.readUsers.containsKey(currentUser)
 }

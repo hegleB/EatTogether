@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.toObject
 import com.qure.domain.model.*
-import com.qure.domain.usecase.chat.GetAllMessageUseCase
-import com.qure.domain.usecase.chat.SetChatMessageUsecase
-import com.qure.domain.usecase.chat.UpdateChatRoomUseCase
-import com.qure.domain.usecase.chat.UpdateChatUseCase
+import com.qure.domain.usecase.chat.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MessageViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
     val firebaseAuth: FirebaseAuth,
     val getAllMessageUsecase: GetAllMessageUseCase,
     val setChatMessageUsecase: SetChatMessageUsecase,
@@ -68,34 +70,39 @@ class MessageViewModel @Inject constructor(
         }
     }
 
-    fun readMessage(roomId: String) = viewModelScope.launch {
-        getMessage(roomId)
-        for (message in findMyMessages()) {
-            val data = message.readUsers
-            data.put(currentUser, true)
-            updateChatUseCase(_chatroom.value?.roomId ?: "", data).collect {
-                when (it) {
-                    is Resource.Success -> hideProgress()
+    fun readMessage() {
+        val roomId = _chatroom.value?.roomId ?: ""
+        firestore.collection("chat").whereEqualTo("roomId", roomId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot != null) {
+                    val documents = findMydocument(snapshot.documents)
+                    for (document in documents) {
+                        val data = document.toObject(ChatMessage::class.java)?.readUsers ?: mutableMapOf()
+                        data.put(currentUser, true)
+                        document.reference.update("readUsers", data)
+                        val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
+                        unreadCount.put(currentUser, 0)
+                        viewModelScope.launch {
+                            updateChatRoomUseCase(roomId, unreadCount).collect {
+                                when (it) {
+                                    is Resource.Success -> hideProgress()
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
 
-        updateChatRoomUseCase(
-            _chatroom.value?.roomId ?: "",
-            _chatroom.value?.unreadCount ?: mutableMapOf()
-        ).collect {
-            when (it) {
-                is Resource.Success -> hideProgress()
             }
-        }
     }
 
-    fun findMyMessages(): List<ChatMessage> =
-        _messages.value?.filter { !it.containUid(currentUser) } ?: emptyList()
+    fun findMydocument(documents: List<DocumentSnapshot>): List<DocumentSnapshot> =
+        documents.filter { it.toObject(ChatMessage::class.java)?.isNotcontainUid(currentUser) ?: false }
 
     fun writeMessage(editText: String) {
         _buttonSendMessage.value = Event(Unit)
         editTextMessage.value = ""
+        println(currentUser)
         val chatMessage = ChatMessage(
             _chatroom.value?.roomId ?: "",
             _user.value?.userphoto ?: "",
@@ -106,6 +113,7 @@ class MessageViewModel @Inject constructor(
             System.currentTimeMillis().toString(),
             mutableMapOf(currentUser to true)
         )
+        println(chatMessage)
         setChatMessage(chatMessage)
     }
 
