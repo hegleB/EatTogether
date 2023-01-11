@@ -7,5 +7,5 @@ import javax.inject.Inject
 class IsJoinUserCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    fun isJoin(user : FirebaseUser) = authRepository.isJoin(user)
+    suspend operator fun invoke(user: FirebaseUser) = authRepository.isJoin(user)
 }

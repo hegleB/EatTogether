@@ -44,7 +44,7 @@
 
         <action
             android:id="@+id/action_loginBottomSheetDialog_to_peopleContainerFragment"
-            app:destination="@+id/profileSettingFragment"
+            app:destination="@+id/peopleContainerFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"

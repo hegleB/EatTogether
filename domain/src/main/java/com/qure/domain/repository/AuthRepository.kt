@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    fun signInWithGoogle(credential: AuthCredential) : Task<AuthResult>
-    fun signInWithFacebook(token : AccessToken)  : Task<AuthResult>
-    fun getCurrentUser() : FirebaseUser?
-    fun isJoin(user : FirebaseUser) : Boolean?
+    fun signInWithGoogle(credential: AuthCredential): Task<AuthResult>
+    fun signInWithFacebook(token: AccessToken): Task<AuthResult>
+    fun getCurrentUser(): FirebaseUser?
+    suspend fun isJoin(user: FirebaseUser): Flow<Resource<Boolean, String>>
     fun signOutUser()
-    suspend fun geMessageToken() : Task<String>
+    suspend fun geMessageToken(): Task<String>
 }

@@ -45,14 +45,16 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
     private val authViewModel: AuthViewModel by viewModels()
     private var callbackManager: CallbackManager? = null
     private lateinit var auth: FirebaseAuth
-    private val signInLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        handleSignInResult(result.data)
-    }
+    private val signInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            handleSignInResult(result.data)
+        }
 
     @Inject
     lateinit var signInClient: SignInClient
+
     @Inject
-    lateinit var signInRequest : GetSignInIntentRequest
+    lateinit var signInRequest: GetSignInIntentRequest
 
     override fun init() {
         initViewModel()
@@ -64,6 +66,7 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
 
     private fun initViewModel() {
         binding.viewmodel = authViewModel
+        authViewModel.getAllUser()
     }
 
     private fun observeViewModel() {
@@ -78,6 +81,44 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
             loginFacebook()
             it.consume()
         }
+
+        authViewModel.signInGoogleState.observe(viewLifecycleOwner) { user ->
+            when (user) {
+                is Resource.Success -> {
+                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
+                    authViewModel.isJoin(user.data!!)
+                    findUser()
+                }
+                is Resource.Loading -> {
+                    binding.spinKitViewDialogLoginProgressbar.visibility = View.VISIBLE
+                }
+                is Resource.Error -> {
+                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
+                    Snackbar.make(requireView(), user.message.toString(), Snackbar.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
+
+        authViewModel.signInFacebookState.observe(viewLifecycleOwner) { user ->
+            when (user) {
+                is Resource.Success -> {
+                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
+                    authViewModel.isJoin(user.data!!)
+                }
+
+                is Resource.Loading -> {
+                    binding.spinKitViewDialogLoginProgressbar.visibility = View.VISIBLE
+                }
+
+                is Resource.Error -> {
+                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
+                    Snackbar.make(requireView(), user.message.toString(), Snackbar.LENGTH_LONG)
+                        .show()
+                }
+
+            }
+        }
     }
 
 
@@ -89,7 +130,6 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult?) {
                     authViewModel.accessFacebook(result!!.accessToken)
-                    authWithFacebook()
                 }
 
                 override fun onCancel() {
@@ -104,38 +144,9 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
             })
     }
 
-
-    private fun authWithFacebook() {
-        authViewModel.signInFacebookState.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
-                    Log.d("IsJoin", "${it.data?.email}")
-                    if (isJoin(it.data!!) == true) {
-                        moveHomePage()
-                    } else {
-                        findNavController().navigate(R.id.action_loginBottomSheetDialog_to_profileSettingFragment)
-                    }
-                }
-
-                is Resource.Loading -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.VISIBLE
-                }
-
-                is Resource.Error -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
-                    Snackbar.make(requireView(), it.message.toString(), Snackbar.LENGTH_LONG).show()
-                }
-
-            }
-        }
-    }
-
     private fun loginGoogle() {
-
-        signInClient.getSignInIntent(signInRequest).addOnSuccessListener { pendingIntent ->
-                launchSignIn(pendingIntent)
-            }
+        signInClient.getSignInIntent(signInRequest)
+            .addOnSuccessListener { pendingIntent -> launchSignIn(pendingIntent) }
             .addOnFailureListener { e ->
                 failGoogleAuthMessage()
             }
@@ -167,33 +178,21 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
-
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         authViewModel.accessGoogle(credential)
+    }
 
-        authViewModel.signInGoogleState.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
-                    if (isJoin(it.data!!) == true) {
-                       moveHomePage()
-                    } else {
-                        findNavController().navigate(R.id.action_loginBottomSheetDialog_to_profileSettingFragment)
-                    }
-                }
-                is Resource.Loading -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.VISIBLE
-                }
-                is Resource.Error -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
-                    Snackbar.make(requireView(), it.message.toString(), Snackbar.LENGTH_LONG).show()
-                }
+    private fun findUser() {
+        authViewModel.isUser.observe(viewLifecycleOwner) {
+            when {
+                it -> moveHomePage()
+                else -> moveProfileSetting()
             }
         }
     }
 
-    private fun isJoin(user: FirebaseUser): Boolean? {
-        return authViewModel.isJoin(user)
+    private fun moveProfileSetting() {
+        findNavController().navigate(R.id.action_loginBottomSheetDialog_to_profileSettingFragment)
     }
 
     private fun moveHomePage() {

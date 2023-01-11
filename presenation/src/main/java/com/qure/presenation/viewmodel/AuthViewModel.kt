@@ -12,6 +12,7 @@ import com.qure.domain.model.Setting
 import com.qure.domain.model.User
 import com.qure.domain.usecase.auth.SignInWithFacebookUseCase
 import com.qure.domain.usecase.auth.SignWithGoogleUseCase
+import com.qure.domain.usecase.people.GetAllUserUseCase
 import com.qure.domain.usecase.people.GetMessageTokenUseCase
 import com.qure.domain.usecase.people.IsJoinUserCase
 import com.qure.domain.usecase.profile.GetCurrentUserUseCase
@@ -21,6 +22,7 @@ import com.qure.domain.usecase.setting.SetSettingUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,15 +32,14 @@ class AuthViewModel @Inject constructor(
     private val signWithGoogleUseCase: SignWithGoogleUseCase,
     private val signWithFacebookUserCase: SignInWithFacebookUseCase,
     private val isJoinUseCase: IsJoinUserCase,
+    private val getAllUserUseCase: GetAllUserUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getMessageTokenUseCase: GetMessageTokenUseCase,
     private val setUserUseCase: SetUserUseCase,
     private val setSettingUseCase: SetSettingUseCase,
     private val setMeetingCountUseCase: SetMeetingCountUseCase,
     private val firebaseStorage: FirebaseStorage,
-
-
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _bottomsSheetLogin: MutableLiveData<Event<Unit>> = MutableLiveData()
     val bottomsSheetLogin: LiveData<Event<Unit>>
@@ -102,14 +103,19 @@ class AuthViewModel @Inject constructor(
     val snackBarMsg: LiveData<PeopleViewModel.MessageSet>
         get() = _snackBarMsg
 
-    fun accessGoogle(credential : AuthCredential) {
+    private val _users: MutableLiveData<List<User>> = MutableLiveData()
+    val users: LiveData<List<User>>
+        get() = _users
 
+    private val _isUser: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUser: LiveData<Boolean>
+        get() = _isUser
+
+    fun accessGoogle(credential: AuthCredential) {
         _signInGoogleState.value = Resource.Loading()
         signWithGoogleUseCase.signWithGoogle(credential).addOnCompleteListener {
             if (it.isSuccessful) {
-
-                _signInGoogleState.value =
-                    Resource.Success(getCurrentUserUseCase.getCurrentUser()!!)
+                _signInGoogleState.value = Resource.Success(it.result?.user!!)
             } else {
                 _signInGoogleState.value = Resource.Error(it.exception?.message.toString())
             }
@@ -119,7 +125,6 @@ class AuthViewModel @Inject constructor(
     fun accessFacebook(token: AccessToken) {
         viewModelScope.launch {
             _signInFacebookState.value = Resource.Loading()
-
             signWithFacebookUserCase.signWithFacebook(token).addOnCompleteListener {
                 if (it.isSuccessful) {
                     _signInFacebookState.value = Resource.Success(it.result.user!!)
@@ -131,8 +136,18 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun isJoin(user: FirebaseUser): Boolean? {
-        return isJoinUseCase.isJoin(user)
+    fun getAllUser() = viewModelScope.launch {
+        getAllUserUseCase().collect {
+            when (it) {
+                is Resource.Success -> _users.value = it.data
+            }
+        }
+    }
+
+    fun isJoin(user: FirebaseUser) {
+        val isNotEmpty = _users.value?.filter { it.isSameUid(user.uid) }
+            ?.isNotEmpty() ?: false
+        _isUser.value = isNotEmpty
     }
 
     fun showBottomSheetLogin() {
@@ -205,8 +220,8 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun setSetting(now : Long) = viewModelScope.launch {
-        setSettingUseCase(currentUser.value?.uid?:"",Setting(true,true,true, now))
+    fun setSetting(now: Long) = viewModelScope.launch {
+        setSettingUseCase(currentUser.value?.uid ?: "", Setting(true, true, true, now))
             .collectLatest {
                 when (it) {
                     is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
@@ -216,7 +231,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun setUser() = viewModelScope.launch {
-        setUserUseCase(currentUser.value?.uid?:"", setUserProfile())
+        setUserUseCase(currentUser.value?.uid ?: "", setUserProfile())
             .collectLatest {
                 when (it) {
                     is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
@@ -226,7 +241,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun setMeeting() = viewModelScope.launch {
-        setMeetingCountUseCase(currentUser.value?.uid?:"", 0)
+        setMeetingCountUseCase(currentUser.value?.uid ?: "", 0)
             .collectLatest {
                 when (it) {
                     is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
@@ -235,7 +250,7 @@ class AuthViewModel @Inject constructor(
             }
     }
 
-    fun setFireStoreUser(now : Long) {
+    fun setFireStoreUser(now: Long) {
         setSetting(now)
         setUser()
         setMeeting()

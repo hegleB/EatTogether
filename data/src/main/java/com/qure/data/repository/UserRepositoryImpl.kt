@@ -53,7 +53,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllUser(user : User): Flow<Resource<List<User>, String>> {
+    override suspend fun getAllUser(): Flow<Resource<List<User>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
             val callback = firestore.collection("users").addSnapshotListener { snapshot, e ->
@@ -62,7 +62,6 @@ class UserRepositoryImpl @Inject constructor(
                 try {
                     if (!isEmpty) {
                         val users = snapshot?.toObjects(User::class.java)!!.toMutableList()
-                        users.remove(user)
                         this.trySendBlocking(Resource.Success(users))
                     } else {
                         this.trySendBlocking(Resource.Empty("데이터가 없습니다."))

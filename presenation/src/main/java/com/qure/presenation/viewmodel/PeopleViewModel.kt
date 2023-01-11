@@ -190,11 +190,12 @@ class PeopleViewModel @Inject constructor(
     fun getCurrentUser() = getCurrentUserUseCase.getCurrentUser()
 
     fun getAllUser(user: User) = viewModelScope.launch {
-        getAllUserUseCase(user)
+        getAllUserUseCase()
             .collect {
                 when (it) {
                     is Resource.Success -> {
-                        _userList.value = it.data
+                         val users = getRemovedCurrentUser(it.data!!, user)
+                        _userList.value = users
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
@@ -203,6 +204,9 @@ class PeopleViewModel @Inject constructor(
                 }
             }
     }
+
+    private fun getRemovedCurrentUser(users: List<User>, user: User): List<User> =
+        users.filter { !it.isSameUid(user.uid) }
 
     fun getUserInfo(uid: String) = viewModelScope.launch {
         getUserInfoUseCase(uid)
