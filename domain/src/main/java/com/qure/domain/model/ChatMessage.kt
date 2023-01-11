@@ -2,7 +2,7 @@ package com.qure.domain.model
 
 import java.io.Serializable
 
-data class ChatComment(
+data class ChatMessage(
     var roomId : String="",
     var userImage : String="",
     var uid : String="",
@@ -11,4 +11,8 @@ data class ChatComment(
     var messagetype : String="",
     var timestamp : String="",
     var readUsers : MutableMap<String, Boolean> = mutableMapOf()
-) : Serializable
+) : Serializable {
+
+    fun containUid(currentUser: String) =
+        this.readUsers.containsKey(currentUser)
+}

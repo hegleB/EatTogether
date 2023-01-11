@@ -8,17 +8,49 @@ import com.qure.presenation.R
 import com.qure.presenation.adapter.ChatAdapter
 import com.qure.presenation.databinding.FragmentMessageBinding
 import com.qure.presenation.utils.BottomNavigationEvent
-import com.qure.presenation.utils.KeyboardEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.MessageViewModel
+import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_message) {
 
+    private val messageViewModel: MessageViewModel by activityViewModels()
+    private val peopleViewModel: PeopleViewModel by activityViewModels()
+    private val args by navArgs<MessageFragmentArgs>()
+    private val adapter: ChatAdapter by lazy {
+        ChatAdapter(args.chatroom.userCount, peopleViewModel.currentUid)
+    }
+
     override fun init() {
         BottomNavigationEvent().hideBottomNavigation(activity!!)
         OnBackPressedListener().back(requireActivity(), findNavController())
+        initViewModel()
+        observeViewModel()
+        initRecyclerView()
     }
 
+    private fun initViewModel() {
+        binding.viewmodel = messageViewModel
+        messageViewModel.getChatRoom(args.chatroom)
+        messageViewModel.getMessage(args.chatroom.roomId)
+        messageViewModel.getUserInfo()
+        messageViewModel.readMessage(args.chatroom.roomId)
+    }
+
+    private fun observeViewModel() {
+        messageViewModel.buttonSendMessage.observe(viewLifecycleOwner) {
+            if (it.consumed) return@observe
+            it.consume()
+        }
+
+        messageViewModel.messages.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+    }
+
+    private fun initRecyclerView() {
+        binding.recyclerViewFragmentMessage.adapter = adapter
+    }
 }

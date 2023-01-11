@@ -8,7 +8,7 @@
 
         <variable
             name="chatRight"
-            type="com.qure.domain.model.ChatComment" />
+            type="com.qure.domain.model.ChatMessage" />
 
     </data>
 
