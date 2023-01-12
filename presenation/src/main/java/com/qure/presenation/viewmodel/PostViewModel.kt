@@ -15,6 +15,7 @@ import com.qure.domain.model.User
 import com.qure.domain.usecase.comment.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
 import com.qure.domain.usecase.post.*
+import com.qure.domain.utils.ErrorMessage
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
@@ -174,10 +175,6 @@ class PostViewModel @Inject constructor(
     val buttonLike: LiveData<Event<Unit>>
         get() = _buttonLike
 
-    private val _snackBarMsg: MutableLiveData<PeopleViewModel.MessageSet> = MutableLiveData()
-    val snackBarMsg: LiveData<PeopleViewModel.MessageSet>
-        get() = _snackBarMsg
-
     private val _postCreate: MutableLiveData<Event<Unit>> = MutableLiveData()
     val postCreate: LiveData<Event<Unit>>
         get() = _postCreate
@@ -215,8 +212,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -231,8 +227,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -246,8 +241,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -261,8 +255,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -276,8 +269,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -302,10 +294,9 @@ class PostViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is Resource.Success -> {
-                        _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
                         createPost()
                     }
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -320,8 +311,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -336,8 +326,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -347,12 +336,10 @@ class PostViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is Resource.Success -> {
-                        _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -366,8 +353,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -383,8 +369,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -399,9 +384,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value =
-                        PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
 
@@ -417,9 +400,7 @@ class PostViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value =
-                        PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
 
@@ -483,8 +464,7 @@ class PostViewModel @Inject constructor(
                 when (it) {
                     is Resource.Success -> hideProgress()
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -499,9 +479,7 @@ class PostViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> hideProgress()
                         is Resource.Loading -> showProgress()
-                        is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                        is Resource.Empty -> _snackBarMsg.value =
-                            PeopleViewModel.MessageSet.EMPTY_QUERY
+                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
                     }
                 }
         }
@@ -517,9 +495,7 @@ class PostViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> hideProgress()
                         is Resource.Loading -> showProgress()
-                        is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                        is Resource.Empty -> _snackBarMsg.value =
-                            PeopleViewModel.MessageSet.EMPTY_QUERY
+                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
                     }
                 }
         }
@@ -534,8 +510,7 @@ class PostViewModel @Inject constructor(
                 when (it) {
                     is Resource.Success -> hideProgress()
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = PeopleViewModel.MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -551,9 +526,7 @@ class PostViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> hideProgress()
                         is Resource.Loading -> showProgress()
-                        is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                        is Resource.Empty -> _snackBarMsg.value =
-                            PeopleViewModel.MessageSet.EMPTY_QUERY
+                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
                     }
                 }
         }
@@ -569,9 +542,7 @@ class PostViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> hideProgress()
                         is Resource.Loading -> showProgress()
-                        is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                        is Resource.Empty -> _snackBarMsg.value =
-                            PeopleViewModel.MessageSet.EMPTY_QUERY
+                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
                     }
                 }
         }
@@ -599,9 +570,7 @@ class PostViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> hideProgress()
                         is Resource.Loading -> showProgress()
-                        is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                        is Resource.Empty -> _snackBarMsg.value =
-                            PeopleViewModel.MessageSet.EMPTY_QUERY
+                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
                     }
                 }
         }
@@ -628,9 +597,7 @@ class PostViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> hideProgress()
                         is Resource.Loading -> showProgress()
-                        is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
-                        is Resource.Empty -> _snackBarMsg.value =
-                            PeopleViewModel.MessageSet.EMPTY_QUERY
+                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
                     }
                 }
         }

@@ -18,6 +18,7 @@ import com.qure.domain.usecase.profile.GetCurrentUserUseCase
 import com.qure.domain.usecase.profile.SetMeetingCountUseCase
 import com.qure.domain.usecase.profile.SetUserUseCase
 import com.qure.domain.usecase.setting.SetSettingUseCase
+import com.qure.domain.utils.ErrorMessage
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -95,10 +96,6 @@ class AuthViewModel @Inject constructor(
     private val _buttonSettingSubmit: MutableLiveData<Event<Unit>> = MutableLiveData()
     val buttonSettingSubmit: LiveData<Event<Unit>>
         get() = _buttonSettingSubmit
-
-    private val _snackBarMsg: MutableLiveData<PeopleViewModel.MessageSet> = MutableLiveData()
-    val snackBarMsg: LiveData<PeopleViewModel.MessageSet>
-        get() = _snackBarMsg
 
     private val _users: MutableLiveData<List<User>> = MutableLiveData()
     val users: LiveData<List<User>>
@@ -221,8 +218,8 @@ class AuthViewModel @Inject constructor(
         setSettingUseCase(currentUser.value?.uid ?: "", Setting(true, true, true, now))
             .collectLatest {
                 when (it) {
-                    is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Success -> println()
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -231,8 +228,8 @@ class AuthViewModel @Inject constructor(
         setUserUseCase(currentUser.value?.uid ?: "", setUserProfile())
             .collectLatest {
                 when (it) {
-                    is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Success -> println()
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -241,8 +238,8 @@ class AuthViewModel @Inject constructor(
         setMeetingCountUseCase(currentUser.value?.uid ?: "", 0)
             .collectLatest {
                 when (it) {
-                    is Resource.Success -> _snackBarMsg.value = PeopleViewModel.MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = PeopleViewModel.MessageSet.ERROR
+                    is Resource.Success -> println()
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
