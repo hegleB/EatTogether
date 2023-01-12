@@ -12,4 +12,5 @@ object Constants {
     const val POSTS_COLLECTION_PATH = "posts"
     const val SETTING_COLLECTION_PATH = "setting"
     const val USERS_COLLECTION_PATH = "users"
+    const val REPLY_COLLECTION_PATH = "reply"
 }

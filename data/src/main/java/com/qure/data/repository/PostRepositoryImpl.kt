@@ -6,6 +6,7 @@ import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.repository.PostRepository
+import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -19,7 +20,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun setPost(post: Post): Flow<Resource<String, String>> {
         return callbackFlow {
-            val callback = firestore.collection("posts").document(post.key).set(post)
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH).document(post.key).set(post)
                 .addOnSuccessListener {
                     this.trySendBlocking(Resource.Success("게시물 생성 성공"))
                 }
@@ -35,7 +36,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getLikeCount(uid: String): Flow<Resource<Int, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").whereArrayContains("likecount", uid)
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH).whereArrayContains("likecount", uid)
                 .addSnapshotListener { snapshot, e ->
                     if (e == null) {
                         val isEmpty = snapshot?.isEmpty ?: false
@@ -59,7 +60,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getPostCount(uid: String): Flow<Resource<Int, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").whereEqualTo("uid", uid)
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH).whereEqualTo("uid", uid)
                 .addSnapshotListener { snapshot, e ->
                     if (e == null) {
                         val isEmpty = snapshot?.isEmpty ?: false
@@ -82,7 +83,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun getAllPost(): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
-            val callback = firestore.collection("posts")
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, e ->
                     if (e == null) {
@@ -111,7 +112,7 @@ class PostRepositoryImpl @Inject constructor(
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
             val callback =
-                firestore.collection("posts").document(postKey).update("likecount", likeList)
+                firestore.collection(Constants.POSTS_COLLECTION_PATH).document(postKey).update("likecount", likeList)
                     .addOnSuccessListener {
                         this.trySendBlocking(Resource.Success("성공"))
                     }.addOnFailureListener {
@@ -127,7 +128,7 @@ class PostRepositoryImpl @Inject constructor(
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
             val callback =
-                firestore.collection("posts").document(postKey).addSnapshotListener { snapshot, e ->
+                firestore.collection(Constants.POSTS_COLLECTION_PATH).document(postKey).addSnapshotListener { snapshot, e ->
                     if (e == null) {
                         val isExists = snapshot?.exists() ?: false
 
@@ -150,7 +151,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getCategoryPost(categoryName: String): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").whereEqualTo("category", categoryName)
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH).whereEqualTo("category", categoryName)
                 .addSnapshotListener { snapshot, e ->
 
                     if (e == null) {
@@ -176,7 +177,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getProfileCreatedPosts(uid: String): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts")
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH)
                 .whereEqualTo("uid", uid).orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, e ->
                     if (e == null) {
@@ -202,7 +203,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getProfileLikedPosts(uid: String): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts")
+            val callback = firestore.collection(Constants.POSTS_COLLECTION_PATH)
                 .whereArrayContains("likecount", uid)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, e ->
@@ -232,7 +233,7 @@ class PostRepositoryImpl @Inject constructor(
             this.trySendBlocking(Resource.Loading())
             val commentCreatedsPost = mutableListOf<PostModel.Post>()
             val callback =
-                firestore.collection("posts").orderBy("timestamp", Query.Direction.DESCENDING)
+                firestore.collection(Constants.POSTS_COLLECTION_PATH).orderBy("timestamp", Query.Direction.DESCENDING)
                     .get().addOnCompleteListener { post ->
                         firestore.collection("comments").whereEqualTo("comments_uid", uid)
                             .get().addOnCompleteListener { snapshot ->

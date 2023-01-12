@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.qure.domain.model.User
 import com.qure.domain.repository.UserRepository
+import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -20,7 +21,7 @@ class UserRepositoryImpl @Inject constructor(
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
             val callback =
-                firestore.collection("users").document(uid ?: "").set(user).addOnSuccessListener {
+                firestore.collection(Constants.USERS_COLLECTION_PATH).document(uid ?: "").set(user).addOnSuccessListener {
                     this.trySendBlocking(Resource.Success("유저 추가 성공"))
                 }.addOnFailureListener {
                     this.trySendBlocking(Resource.Error(it.message))
@@ -33,7 +34,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(uid: String): Flow<Resource<User, String>> {
         return callbackFlow {
-            val callback = firestore.collection("users").document(uid ?: "")
+            val callback = firestore.collection(Constants.USERS_COLLECTION_PATH).document(uid ?: "")
                 .addSnapshotListener { snapshot, e ->
                     this.trySendBlocking(Resource.Loading())
                     val isExists = snapshot?.exists() ?: false
@@ -58,7 +59,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getAllUser(): Flow<Resource<List<User>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("users").addSnapshotListener { snapshot, e ->
+            val callback = firestore.collection(Constants.USERS_COLLECTION_PATH).addSnapshotListener { snapshot, e ->
 
                 val isEmpty = snapshot?.isEmpty ?: false
                 try {
@@ -85,7 +86,7 @@ class UserRepositoryImpl @Inject constructor(
         image: String
     ): Flow<Resource<String, String>> {
         return callbackFlow {
-            val userRef = firestore.collection("users").document(uid)
+            val userRef = firestore.collection(Constants.USERS_COLLECTION_PATH).document(uid)
             val callback = firestore.runBatch {
                 it.update(userRef, "usernm", name)
                 it.update(userRef, "usermsg", msg)

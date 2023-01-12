@@ -7,6 +7,7 @@ import com.qure.domain.repository.AddChatMessage
 import com.qure.domain.repository.AddChatRoom
 import com.qure.domain.repository.ChatRepository
 import com.qure.domain.repository.UpdateChatRoom
+import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -21,7 +22,7 @@ class ChatRepositoryImpl(
 
     override suspend fun getAllChatRoom(uid: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection("chatrooms")
+        val callback = firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
             .addSnapshotListener { snapshot, e ->
                 val chatRoomResource = if (snapshot != null) {
                     val chatRoomObjects = snapshot?.toObjects(ChatRoom::class.java)
@@ -50,7 +51,7 @@ class ChatRepositoryImpl(
 
     override suspend fun setChatRoom(chatroom: ChatRoom): AddChatRoom {
         return try {
-            firestore.collection("chatrooms")
+            firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
                 .document(chatroom.roomId)
                 .set(chatroom)
                 .await()
@@ -62,7 +63,7 @@ class ChatRepositoryImpl(
 
     override suspend fun getAllMessage(chatRoomId: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection("chat")
+        val callback = firestore.collection(Constants.CHAT_COLLECTION_PATH)
             .whereEqualTo("roomId", chatRoomId)
             .addSnapshotListener { snapshot, e ->
                 val messageResource = if (snapshot != null) {
@@ -82,7 +83,7 @@ class ChatRepositoryImpl(
     override suspend fun setChatMessage(chatMessage: ChatMessage): AddChatMessage {
         return try {
             val currentTime = Date().time
-            firestore.collection("chat")
+            firestore.collection(Constants.CHAT_COLLECTION_PATH)
                 .document(currentTime.toString())
                 .set(chatMessage)
                 .await()
@@ -97,7 +98,7 @@ class ChatRepositoryImpl(
         unreadCount: Map<String, Int>
     ): UpdateChatRoom {
         return try {
-            firestore.collection("chatrooms")
+            firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
                 .document(roomId)
                 .update("unreadCount", unreadCount)
                 .await()

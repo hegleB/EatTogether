@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.qure.domain.model.Comments
 import com.qure.domain.repository.CommentRepository
+import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -17,7 +18,7 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun getComments(postKey: String): Flow<Resource<List<Comments>, String>> {
         return callbackFlow {
-            val callback = firestore.collection("comments")
+            val callback = firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
                 .whereEqualTo("comments_postkey", postKey)
                 .whereEqualTo("comments_depth", 0)
                 .orderBy("comments_timestamp", Query.Direction.ASCENDING)
@@ -45,7 +46,7 @@ class CommentRepositoryImpl @Inject constructor(
     override suspend fun setComments(comments: Comments): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("comments").document(comments.comments_commentskey)
+            val callback = firestore.collection(Constants.COMMENTS_COLLECTION_PATH).document(comments.comments_commentskey)
                 .set(comments).addOnSuccessListener {
                     this.trySendBlocking(Resource.Success("댓글 추가 성공"))
                 }.addOnFailureListener {
@@ -59,7 +60,7 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun getReComments(recomments: Comments): Flow<Resource<List<Comments>, String>> {
         return callbackFlow {
-            val callback = firestore.collectionGroup("reply")
+            val callback = firestore.collectionGroup(Constants.REPLY_COLLECTION_PATH)
                 .whereEqualTo("comments_postkey", recomments.comments_postkey)
                 .whereEqualTo("comments_depth", 1)
                 .whereEqualTo("comments_commentskey", recomments.comments_commentskey)
@@ -89,7 +90,7 @@ class CommentRepositoryImpl @Inject constructor(
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
             val callback =
-                firestore.collection("comments").document(recomments.comments_commentskey)
+                firestore.collection(Constants.COMMENTS_COLLECTION_PATH).document(recomments.comments_commentskey)
                     .collection("reply")
                     .document()
                     .set(recomments).addOnSuccessListener {
@@ -106,7 +107,7 @@ class CommentRepositoryImpl @Inject constructor(
     override suspend fun checkComment(commentKey: String): Flow<Resource<Comments, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("comments").document(commentKey)
+            val callback = firestore.collection(Constants.COMMENTS_COLLECTION_PATH).document(commentKey)
                 .addSnapshotListener { snapshot, e ->
                     if (e == null) {
                         val isExists = snapshot?.exists() ?: false
@@ -130,7 +131,7 @@ class CommentRepositoryImpl @Inject constructor(
     override suspend fun checkReComment(recomments: Comments): Flow<Resource<Comments, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collectionGroup("reply")
+            val callback = firestore.collectionGroup(Constants.REPLY_COLLECTION_PATH)
                 .whereEqualTo("comments_postkey", recomments.comments_postkey)
                 .whereEqualTo("comments_depth", 1)
                 .whereEqualTo("comments_commentskey", recomments.comments_commentskey)
@@ -162,7 +163,7 @@ class CommentRepositoryImpl @Inject constructor(
     ): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("comments").document(commentKey)
+            val callback = firestore.collection(Constants.COMMENTS_COLLECTION_PATH).document(commentKey)
                 .update("comments_likeCount", commentLikeList).addOnSuccessListener {
                     this.trySendBlocking(Resource.Success("성공"))
                 }.addOnFailureListener {
@@ -181,7 +182,7 @@ class CommentRepositoryImpl @Inject constructor(
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
 
-            val callback = firestore.collectionGroup("reply")
+            val callback = firestore.collectionGroup(Constants.REPLY_COLLECTION_PATH)
                 .whereEqualTo("comments_postkey", recomments.comments_postkey)
                 .whereEqualTo("comments_depth", 1)
                 .whereEqualTo("comments_commentskey", recomments.comments_commentskey)
@@ -213,7 +214,7 @@ class CommentRepositoryImpl @Inject constructor(
             this.trySendBlocking(Resource.Loading())
 
             val callback =
-                firestore.collection("posts")
+                firestore.collection(Constants.POSTS_COLLECTION_PATH)
                     .document(postKey)
                     .update("commentsCount", count)
                     .addOnSuccessListener { snapshot ->
