@@ -206,6 +206,9 @@ class PeopleViewModel @Inject constructor(
     var updateMeetingCount by mutableStateOf<UpdateMeetingCount>(Resource.Success(false))
         private set
 
+    var updateUser by mutableStateOf<UpdateUser>(Resource.Success(false))
+        private set
+
     fun getCurrentUser() = getCurrentUserUseCase.getCurrentUser()
 
     fun getAllUser(user: User) = viewModelScope.launch {
@@ -363,13 +366,8 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun chageProfile() = viewModelScope.launch {
-        updateUserUseCase(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
-            .collectLatest {
-                when (it) {
-                    is Resource.Success -> println()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        updateUser = Resource.Loading()
+        updateUser = updateUserUseCase(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
     }
 
 

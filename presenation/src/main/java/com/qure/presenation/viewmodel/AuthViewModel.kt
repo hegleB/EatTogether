@@ -26,6 +26,7 @@ import com.qure.domain.usecase.setting.SetSettingUseCase
 import com.qure.domain.utils.ErrorMessage
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
+import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -42,7 +43,7 @@ class AuthViewModel @Inject constructor(
     private val setSettingUseCase: SetSettingUseCase,
     private val setMeetingCountUseCase: SetMeetingCountUseCase,
     private val firebaseStorage: FirebaseStorage,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _bottomsSheetLogin: MutableLiveData<Event<Unit>> = MutableLiveData()
     val bottomsSheetLogin: LiveData<Event<Unit>>
@@ -116,6 +117,9 @@ class AuthViewModel @Inject constructor(
     var addSetting by mutableStateOf<AddSetting>(Resource.Success(false))
         private set
 
+    var setUser by mutableStateOf<AddSetting>(Resource.Success(false))
+        private set
+
     fun accessGoogle(credential: AuthCredential) {
         _signInGoogleState.value = Resource.Loading()
         signWithGoogleUseCase.signWithGoogle(credential).addOnCompleteListener {
@@ -127,24 +131,26 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun accessFacebook(token: AccessToken) {
-        viewModelScope.launch {
-            _signInFacebookState.value = Resource.Loading()
-            signWithFacebookUserCase.signWithFacebook(token).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    _signInFacebookState.value = Resource.Success(it.result.user!!)
-                } else {
-                    _signInFacebookState.value = Resource.Error(it.exception?.message.toString())
-                }
+    fun accessFacebook(token: AccessToken) = viewModelScope.launch {
+        _signInFacebookState.value = Resource.Loading()
+        signWithFacebookUserCase.signWithFacebook(token).addOnCompleteListener {
+            if (it.isSuccessful) {
+                _signInFacebookState.value = Resource.Success(it.result.user!!)
+            } else {
+                _signInFacebookState.value = Resource.Error(it.exception?.message.toString())
             }
-
         }
     }
 
     fun getAllUser() = viewModelScope.launch {
         getAllUserUseCase().collect {
             when (it) {
-                is Resource.Success -> _users.value = it.data
+                is Resource.Loading -> showProgress()
+                is Resource.Success -> {
+                    hideProgress()
+                    _users.value = it.data
+                }
+                is Resource.Error -> ErrorMessage.print(it.message ?: "")
             }
         }
     }
@@ -184,17 +190,14 @@ class AuthViewModel @Inject constructor(
         _currentUser.value = getCurrentUserUseCase.getCurrentUser()
     }
 
-    fun setUserProfile(): User {
-
-        return User(
-            currentUser.value?.email ?: "",
-            currentUser.value?.uid ?: "",
-            settingName.value ?: "",
-            userMessageToken.value ?: "",
-            settingImageUri.value ?: "",
-            settingMessage.value ?: ""
-        )
-    }
+    fun setUserProfile(): User = User(
+        currentUser.value?.email ?: "",
+        currentUser.value?.uid ?: "",
+        settingName.value ?: "",
+        userMessageToken.value ?: "",
+        settingImageUri.value ?: "",
+        settingMessage.value ?: ""
+    )
 
 
     fun getImageUri(uri: Uri) {
@@ -202,9 +205,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun storageProfile() {
-
         _settingState.value = Resource.Loading()
-
         val riverRef: StorageReference =
             firebaseStorage.getReference()
                 .child("profile_image/" + currentUser.value?.uid.toString() + ".jpg")
@@ -231,13 +232,8 @@ class AuthViewModel @Inject constructor(
     }
 
     fun setUser() = viewModelScope.launch {
-        setUserUseCase(currentUser.value?.uid ?: "", setUserProfile())
-            .collectLatest {
-                when (it) {
-                    is Resource.Success -> println()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        setUser = Resource.Loading()
+        setUser = setUserUseCase(currentUser.value?.uid ?: "", setUserProfile())
     }
 
     fun setMeeting() = viewModelScope.launch {
