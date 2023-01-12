@@ -31,28 +31,6 @@ class AuthRepositoryImpl @Inject constructor(
         return firebaseAuth.currentUser
     }
 
-    override suspend fun isJoin(user: FirebaseUser): Flow<Resource<Boolean, String>> {
-        return callbackFlow {
-            val callback = firestore.collection("users")
-                .document(user.uid)
-                .addSnapshotListener { snapshot, e ->
-                    if (e == null) {
-                        val isExists = snapshot?.exists() ?: false
-                        if (isExists) {
-                            this.trySendBlocking(Resource.Success(true))
-                        } else {
-                            this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
-                        }
-                    } else {
-                        this.trySendBlocking(Resource.Error(e.message))
-                    }
-                }
-            awaitClose {
-                callback.remove()
-            }
-        }
-    }
-
     override fun signOutUser() {
         firebaseAuth.signOut()
     }

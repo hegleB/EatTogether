@@ -14,7 +14,6 @@ import com.qure.domain.usecase.auth.SignInWithFacebookUseCase
 import com.qure.domain.usecase.auth.SignWithGoogleUseCase
 import com.qure.domain.usecase.people.GetAllUserUseCase
 import com.qure.domain.usecase.people.GetMessageTokenUseCase
-import com.qure.domain.usecase.people.IsJoinUserCase
 import com.qure.domain.usecase.profile.GetCurrentUserUseCase
 import com.qure.domain.usecase.profile.SetMeetingCountUseCase
 import com.qure.domain.usecase.profile.SetUserUseCase
@@ -22,7 +21,6 @@ import com.qure.domain.usecase.setting.SetSettingUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +29,6 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val signWithGoogleUseCase: SignWithGoogleUseCase,
     private val signWithFacebookUserCase: SignInWithFacebookUseCase,
-    private val isJoinUseCase: IsJoinUserCase,
     private val getAllUserUseCase: GetAllUserUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getMessageTokenUseCase: GetMessageTokenUseCase,
