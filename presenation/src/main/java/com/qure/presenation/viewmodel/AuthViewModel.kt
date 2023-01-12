@@ -14,6 +14,7 @@ import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Setting
 import com.qure.domain.model.User
 import com.qure.domain.repository.AddMeetingCount
+import com.qure.domain.repository.AddSetting
 import com.qure.domain.usecase.auth.SignInWithFacebookUseCase
 import com.qure.domain.usecase.auth.SignWithGoogleUseCase
 import com.qure.domain.usecase.people.GetAllUserUseCase
@@ -110,6 +111,9 @@ class AuthViewModel @Inject constructor(
         get() = _isUser
 
     var addMeetingCount by mutableStateOf<AddMeetingCount>(Resource.Success(false))
+        private set
+
+    var addSetting by mutableStateOf<AddSetting>(Resource.Success(false))
         private set
 
     fun accessGoogle(credential: AuthCredential) {
@@ -222,13 +226,8 @@ class AuthViewModel @Inject constructor(
     }
 
     fun setSetting(now: Long) = viewModelScope.launch {
-        setSettingUseCase(currentUser.value?.uid ?: "", Setting(true, true, true, now))
-            .collectLatest {
-                when (it) {
-                    is Resource.Success -> println()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        addSetting = Resource.Loading()
+        addSetting = setSettingUseCase(currentUser.value?.uid ?: "", Setting(true, true, true, now))
     }
 
     fun setUser() = viewModelScope.launch {

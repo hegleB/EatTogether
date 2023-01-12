@@ -4,7 +4,8 @@ import com.qure.domain.model.Setting
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface SettingRepository {
+typealias AddSetting = Resource<Boolean, String>
 
-    suspend fun setSetting(uid: String, setting: Setting): Flow<Resource<String, String>>
+interface SettingRepository {
+    suspend fun setSetting(uid: String, setting: Setting): AddSetting
 }
