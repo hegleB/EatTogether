@@ -1,24 +1,25 @@
 package com.qure.presenation.viewmodel
 
-import android.widget.EditText
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.qure.domain.utils.ErrorMessage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.toObject
 import com.qure.domain.model.*
+import com.qure.domain.repository.AddChatMessage
+import com.qure.domain.repository.UpdateChatRoom
 import com.qure.domain.usecase.chat.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +32,7 @@ class MessageViewModel @Inject constructor(
     val updateChatRoomUseCase: UpdateChatRoomUseCase
 ) : BaseViewModel() {
 
-    private val _user: MutableLiveData<User> = MutableLiveData()
+    private val _user: MutableLiveData<User> = MutableLiveData(User())
     val user: LiveData<User>
         get() = _user
 
@@ -43,7 +44,7 @@ class MessageViewModel @Inject constructor(
     val buttonSendMessage: LiveData<Event<Unit>>
         get() = _buttonSendMessage
 
-    private val _messages: MutableLiveData<List<ChatMessage>> = MutableLiveData()
+    private val _messages: MutableLiveData<List<ChatMessage>> = MutableLiveData(emptyList())
     val messages: LiveData<List<ChatMessage>>
         get() = _messages
 
@@ -51,11 +52,21 @@ class MessageViewModel @Inject constructor(
     val chatroom: LiveData<ChatRoom>
         get() = _chatroom
 
+    var updateChatRoom by mutableStateOf<UpdateChatRoom>(Resource.Success(false))
+        private set
+
+    var addChatMessage by mutableStateOf<AddChatMessage>(Resource.Success(false))
+        private set
+
     fun getUserInfo() = viewModelScope.launch {
         getUserInfoUseCase(currentUser).collect {
             when (it) {
-                is Resource.Success -> _user.value = it.data
-                is Resource.Empty -> hideProgress()
+                is Resource.Loading -> showProgress()
+                is Resource.Success -> {
+                    _user.value = it.data
+                    hideProgress()
+                }
+                is Resource.Error -> ErrorMessage.print(it.message ?: "")
             }
         }
     }
@@ -63,8 +74,12 @@ class MessageViewModel @Inject constructor(
     fun getMessage(roomId: String) = viewModelScope.launch {
         getAllMessageUsecase(roomId).collect {
             when (it) {
-                is Resource.Success -> _messages.value = it.data
-                is Resource.Empty -> _messages.value = emptyList()
+                is Resource.Loading -> showProgress()
+                is Resource.Success -> {
+                    _messages.value = it.data
+                    hideProgress()
+                }
+                is Resource.Error -> ErrorMessage.print(it.message ?: "")
             }
         }
     }
@@ -94,16 +109,12 @@ class MessageViewModel @Inject constructor(
         }
     }
 
-    private fun updateChatRoom(roomId: String) =
-        viewModelScope.launch {
-            val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
-            unreadCount.put(currentUser, 0)
-            updateChatRoomUseCase(roomId, unreadCount).collect {
-                when (it) {
-                    is Resource.Success -> hideProgress()
-                }
-            }
-        }
+    private fun updateChatRoom(roomId: String) = viewModelScope.launch {
+        val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
+        unreadCount.put(currentUser, 0)
+        updateChatRoom = Resource.Loading()
+        updateChatRoom = updateChatRoomUseCase(roomId, unreadCount)
+    }
 
     fun findMydocument(documents: List<DocumentSnapshot>): List<DocumentSnapshot> =
         documents.filter {
@@ -119,20 +130,14 @@ class MessageViewModel @Inject constructor(
             currentUser,
             _user.value?.usernm ?: "",
             editText,
-            "1",
-            System.currentTimeMillis().toString(),
-            mutableMapOf(currentUser to true)
+            "1"
         )
         setChatMessage(chatMessage)
     }
 
     fun setChatMessage(chatMessage: ChatMessage) = viewModelScope.launch {
-        setChatMessageUsecase(chatMessage).collect {
-            when (it) {
-                is Resource.Success -> hideProgress()
-                is Resource.Empty -> hideProgress()
-            }
-        }
+        addChatMessage = Resource.Loading()
+        addChatMessage = setChatMessageUsecase(chatMessage)
     }
 
     fun getChatRoom(chatroom: ChatRoom) {

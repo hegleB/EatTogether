@@ -1,5 +1,8 @@
 package com.qure.presenation.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.ChatRoom
 import com.qure.domain.model.User
+import com.qure.domain.repository.AddChatRoom
 import com.qure.domain.usecase.chat.GetAllChatRoomUseCase
 import com.qure.domain.usecase.chat.SetChatRoomUseCase
 import com.qure.domain.usecase.people.GetUserInfoUseCase
@@ -45,6 +49,9 @@ class ChatViewModel @Inject constructor(
     private val _chatRoom: MutableLiveData<ChatRoom> = MutableLiveData(ChatRoom())
     val chatRoom: LiveData<ChatRoom>
         get() = _chatRoom
+
+    var addChatRoom by mutableStateOf<AddChatRoom>(Resource.Success(false))
+        private set
 
     fun getUserInfo(uid: String) {
         if (isCurrentUser(uid)) {
@@ -105,12 +112,7 @@ class ChatViewModel @Inject constructor(
     }
 
     fun addChatRoom(chatRoom: ChatRoom) = viewModelScope.launch {
-        setChatRoomUseCase(chatRoom)
-            .collect {
-                when (it) {
-                    is Resource.Success -> hideProgress()
-                    is Resource.Empty -> hideProgress()
-                }
-            }
+        addChatRoom = Resource.Loading()
+        addChatRoom = setChatRoomUseCase(chatRoom)
     }
 }

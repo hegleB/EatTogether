@@ -5,18 +5,19 @@ import com.qure.domain.model.ChatRoom
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
+typealias ChatRoomResource = Resource<List<ChatRoom>, String>
+typealias MessageResource = Resource<List<ChatMessage>, String>
+typealias AddChatRoom = Resource<Boolean, String>
+typealias AddChatMessage = Resource<Boolean, String>
+typealias UpdateChatRoom = Resource<Boolean, String>
+
 interface ChatRepository {
-    suspend fun getAllChatRoom(uid: String): Flow<Resource<List<ChatRoom>, String>>
-    suspend fun setChatRoom(chatroom: ChatRoom): Flow<Resource<String, String>>
-    suspend fun getAllMessage(chatRoomId: String): Flow<Resource<List<ChatMessage>, String>>
-    suspend fun setChatMessage(chatMessage: ChatMessage): Flow<Resource<String, String>>
+    suspend fun getAllChatRoom(uid: String): Flow<ChatRoomResource>
+    suspend fun setChatRoom(chatroom: ChatRoom): AddChatRoom
+    suspend fun getAllMessage(chatRoomId: String): Flow<MessageResource>
+    suspend fun setChatMessage(chatMessage: ChatMessage): AddChatMessage
     suspend fun updateChatRoom(
         roomId: String,
         unreadCount: Map<String, Int>
-    ): Flow<Resource<String, String>>
-
-    suspend fun updateChat(
-        roomId: String,
-        readUsers: MutableMap<String, Boolean>
-    ): Flow<Resource<String, String>>
+    ): UpdateChatRoom
 }
