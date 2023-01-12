@@ -203,18 +203,21 @@ class PeopleViewModel @Inject constructor(
     var checkBarcodeTime by mutableStateOf<CheckBarcodeTime>(Resource.Success(false))
         private set
 
+    var updateMeetingCount by mutableStateOf<UpdateMeetingCount>(Resource.Success(false))
+        private set
+
     fun getCurrentUser() = getCurrentUserUseCase.getCurrentUser()
 
     fun getAllUser(user: User) = viewModelScope.launch {
         getAllUserUseCase()
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         val users = getRemovedCurrentUser(it.data!!, user)
                         _userList.value = users
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -227,7 +230,9 @@ class PeopleViewModel @Inject constructor(
         getUserInfoUseCase(uid)
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
+                        hideProgress()
                         val user = it.data
                         _myName.value = user?.usernm
                         _myMsg.value = user?.usermsg
@@ -245,7 +250,11 @@ class PeopleViewModel @Inject constructor(
         getPostCountUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Success -> _postCount.value = it.data.toString()
+                    is Resource.Loading -> showProgress()
+                    is Resource.Success -> {
+                        hideProgress()
+                        _postCount.value = it.data.toString()
+                    }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -253,20 +262,19 @@ class PeopleViewModel @Inject constructor(
 
     fun updateMeetingCount() = viewModelScope.launch {
         val count = meetingCount.value?.toInt()?.plus(1) ?: meetingCount.value!!.toInt()
-        updateMeetingCountUseCase(currentUid, count)
-            .collect {
-                when (it) {
-                    is Resource.Success -> _meetingCount.value = count.toString()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        updateMeetingCount = Resource.Loading()
+        updateMeetingCount = updateMeetingCountUseCase(currentUid, count)
     }
 
     fun getMeetingCount(uid: String) = viewModelScope.launch {
         getMeetingCountUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Success -> _meetingCount.value = it.data.toString()
+                    is Resource.Loading -> showProgress()
+                    is Resource.Success -> {
+                        hideProgress()
+                        _meetingCount.value = it.data.toString()
+                    }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }

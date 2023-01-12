@@ -1,6 +1,9 @@
 package com.qure.presenation.viewmodel
 
 import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.facebook.AccessToken
 import com.google.firebase.auth.AuthCredential
@@ -10,6 +13,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Setting
 import com.qure.domain.model.User
+import com.qure.domain.repository.AddMeetingCount
 import com.qure.domain.usecase.auth.SignInWithFacebookUseCase
 import com.qure.domain.usecase.auth.SignWithGoogleUseCase
 import com.qure.domain.usecase.people.GetAllUserUseCase
@@ -104,6 +108,9 @@ class AuthViewModel @Inject constructor(
     private val _isUser: MutableLiveData<Boolean> = MutableLiveData(false)
     val isUser: LiveData<Boolean>
         get() = _isUser
+
+    var addMeetingCount by mutableStateOf<AddMeetingCount>(Resource.Success(false))
+        private set
 
     fun accessGoogle(credential: AuthCredential) {
         _signInGoogleState.value = Resource.Loading()
@@ -235,13 +242,8 @@ class AuthViewModel @Inject constructor(
     }
 
     fun setMeeting() = viewModelScope.launch {
-        setMeetingCountUseCase(currentUser.value?.uid ?: "", 0)
-            .collectLatest {
-                when (it) {
-                    is Resource.Success -> println()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        addMeetingCount = Resource.Loading()
+        addMeetingCount = setMeetingCountUseCase(currentUser.value?.uid ?: "", 0)
     }
 
     fun setFireStoreUser(now: Long) {
