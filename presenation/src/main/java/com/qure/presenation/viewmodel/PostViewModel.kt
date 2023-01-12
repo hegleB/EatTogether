@@ -222,30 +222,35 @@ class PostViewModel @Inject constructor(
     var updateCommentsCount by mutableStateOf<UpdateCommentsCount>(Resource.Success(false))
         private set
 
+    var addPost by mutableStateOf<AddPost>(Resource.Success(false))
+        private set
+
+    var updateLike by mutableStateOf<UpdateLike>(Resource.Success(false))
+        private set
+
     fun getAllPost() = viewModelScope.launch {
         getAllPostUseCase()
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _postList.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
 
     fun getCategoryPost() = viewModelScope.launch {
-
         getCategoryPostUseCase(categoryName.value ?: "")
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _categoryPostList.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -255,39 +260,37 @@ class PostViewModel @Inject constructor(
         getProfileCreatedPostsUseCase(profileUid.value ?: "")
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _profileCreatedPost.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
 
     fun getProfileLikedPosts() = viewModelScope.launch {
-        getProfileLikedPostsUseCase(profileUid.value ?: "")
-            .collect {
+        getProfileLikedPostsUseCase(profileUid.value ?: "").collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _profileLikedPost.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
 
     fun getProfileCommentsCreatedPosts() = viewModelScope.launch {
-        getProfileCommentsCreatedPostsUseCase(profileUid.value ?: "")
-            .collect {
+        getProfileCommentsCreatedPostsUseCase(profileUid.value ?: "").collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _profileCommentsPost.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -308,28 +311,19 @@ class PostViewModel @Inject constructor(
             "0",
             arrayListOf()
         )
-
-        setPostUseCase(post)
-            .collect {
-                when (it) {
-                    is Resource.Success -> {
-                        createPost()
-                    }
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        addPost = Resource.Loading()
+        addPost = setPostUseCase(post)
     }
 
 
     fun getUserInfo() = viewModelScope.launch {
-        getUserInfoUseCase(currentUid)
-            .collect {
+        getUserInfoUseCase(currentUid).collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _writer.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -337,14 +331,13 @@ class PostViewModel @Inject constructor(
 
 
     fun getComments() = viewModelScope.launch {
-        getCommentsUseCase(_postKey.value ?: "")
-            .collect {
+        getCommentsUseCase(_postKey.value ?: "").collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _commentsList.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -356,30 +349,27 @@ class PostViewModel @Inject constructor(
     }
 
     fun getReComments(recomment: Comments) = viewModelScope.launch {
-        getReCommentsUseCase(recomment)
-            .collect {
+        getReCommentsUseCase(recomment).collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _recommentsList.value = it.data
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
 
     fun checkPost() = viewModelScope.launch {
-
-        checkPostUseCase(_postKey.value ?: "")
-            .collect {
+        checkPostUseCase(_postKey.value ?: "").collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _post.value = it.data
                         _likeList.value = it.data?.likecount ?: arrayListOf()
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -389,16 +379,15 @@ class PostViewModel @Inject constructor(
         checkCommentUseCase(commentKey)
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _comment.value = it.data
                         _commentsLikeList.value = it.data?.comments_likeCount ?: arrayListOf()
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
-
     }
 
     fun checkReComment(recomment: Comments) = viewModelScope.launch {
@@ -406,15 +395,14 @@ class PostViewModel @Inject constructor(
         checkReCommentUseCase(recomment)
             .collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         _reCommentsLikeList.value = it.data?.comments_likeCount ?: arrayListOf()
                         hideProgress()
                     }
-                    is Resource.Loading -> showProgress()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
-
     }
 
 
@@ -467,22 +455,13 @@ class PostViewModel @Inject constructor(
 
     fun addlikeCount() = viewModelScope.launch {
         val likeList = _likeList.value ?: arrayListOf()
-
         likeList.add(currentUid)
-
-        updateLikeCountUseCase(likeList, _postKey.value ?: "")
-            .collect {
-                when (it) {
-                    is Resource.Success -> hideProgress()
-                    is Resource.Loading -> showProgress()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        updateLike = Resource.Loading()
+        updateLike = updateLikeCountUseCase(likeList, _postKey.value ?: "")
     }
 
     fun addCommentlikeCount() = viewModelScope.launch {
         val likeList = _commentsLikeList.value ?: arrayListOf()
-
         likeList.add(currentUid)
         if (commentKey.value != null) {
             updateCommentsLike = Resource.Loading()
@@ -492,7 +471,6 @@ class PostViewModel @Inject constructor(
 
     fun addReCommentlikeCount() = viewModelScope.launch {
         val likeList = _reCommentsLikeList.value ?: arrayListOf()
-
         likeList.add(currentUid)
         if (_recomment.value != null) {
             updateReCommentsLike = Resource.Loading()
@@ -501,21 +479,13 @@ class PostViewModel @Inject constructor(
     }
 
     fun removeLikeCount() = viewModelScope.launch {
-
         val likeList = _likeList.value ?: arrayListOf()
         likeList.remove(currentUid)
-        updateLikeCountUseCase(likeList, _postKey.value ?: "")
-            .collect {
-                when (it) {
-                    is Resource.Success -> hideProgress()
-                    is Resource.Loading -> showProgress()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        updateLike = Resource.Loading()
+        updateLike = updateLikeCountUseCase(likeList, _postKey.value ?: "")
     }
 
     fun removeCommentLikeCount() = viewModelScope.launch {
-
         val likeList = _commentsLikeList.value ?: arrayListOf()
         likeList.remove(currentUid)
         if (_commentKey.value != null) {
@@ -525,7 +495,6 @@ class PostViewModel @Inject constructor(
     }
 
     fun removeReCommentLikeCount() = viewModelScope.launch {
-
         val likeList = _reCommentsLikeList.value ?: arrayListOf()
         likeList.remove(currentUid)
         if (_recomment.value != null) {
@@ -536,7 +505,6 @@ class PostViewModel @Inject constructor(
 
     fun writeComments(content: String) = viewModelScope.launch {
         val commentId = firestore.collection("comments").document().id
-
         if (writer.value != null) {
             val writer = writer.value!!
             val recomments = Comments(
