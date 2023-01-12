@@ -1,5 +1,8 @@
 package com.qure.presenation.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +15,7 @@ import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.model.User
+import com.qure.domain.repository.*
 import com.qure.domain.usecase.comment.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
 import com.qure.domain.usecase.post.*
@@ -203,6 +207,21 @@ class PostViewModel @Inject constructor(
     val postImageList: LiveData<List<String>>
         get() = _postImageList
 
+    var addComments by mutableStateOf<AddComments>(Resource.Success(false))
+        private set
+
+    var addReComments by mutableStateOf<AddReComments>(Resource.Success(false))
+        private set
+
+    var updateCommentsLike by mutableStateOf<UpdateCommentsLike>(Resource.Success(false))
+        private set
+
+    var updateReCommentsLike by mutableStateOf<UpdateReCommentsLike>(Resource.Success(false))
+        private set
+
+    var updateCommentsCount by mutableStateOf<UpdateCommentsCount>(Resource.Success(false))
+        private set
+
     fun getAllPost() = viewModelScope.launch {
         getAllPostUseCase()
             .collect {
@@ -332,16 +351,8 @@ class PostViewModel @Inject constructor(
     }
 
     fun updateCommentsCount(count: String) = viewModelScope.launch {
-        updateCommentsCountUseCase(_postKey.value ?: "", count)
-            .collect {
-                when (it) {
-                    is Resource.Success -> {
-                        hideProgress()
-                    }
-                    is Resource.Loading -> showProgress()
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                }
-            }
+        updateCommentsCount = Resource.Loading()
+        updateCommentsCount = updateCommentsCountUseCase(_postKey.value ?: "", count)
     }
 
     fun getReComments(recomment: Comments) = viewModelScope.launch {
@@ -474,14 +485,8 @@ class PostViewModel @Inject constructor(
 
         likeList.add(currentUid)
         if (commentKey.value != null) {
-            updateCommentLikeUseCase(_commentKey.value ?: "", likeList)
-                .collect {
-                    when (it) {
-                        is Resource.Success -> hideProgress()
-                        is Resource.Loading -> showProgress()
-                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                    }
-                }
+            updateCommentsLike = Resource.Loading()
+            updateCommentsLike = updateCommentLikeUseCase(_commentKey.value ?: "", likeList)
         }
     }
 
@@ -490,14 +495,8 @@ class PostViewModel @Inject constructor(
 
         likeList.add(currentUid)
         if (_recomment.value != null) {
-            updateRecommentLikeUseCase(_recomment.value!!, likeList)
-                .collect {
-                    when (it) {
-                        is Resource.Success -> hideProgress()
-                        is Resource.Loading -> showProgress()
-                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                    }
-                }
+            updateReCommentsLike = Resource.Loading()
+            updateReCommentsLike = updateRecommentLikeUseCase(_recomment.value!!, likeList)
         }
     }
 
@@ -520,15 +519,8 @@ class PostViewModel @Inject constructor(
         val likeList = _commentsLikeList.value ?: arrayListOf()
         likeList.remove(currentUid)
         if (_commentKey.value != null) {
-
-            updateCommentLikeUseCase(_commentKey.value ?: "", likeList)
-                .collect {
-                    when (it) {
-                        is Resource.Success -> hideProgress()
-                        is Resource.Loading -> showProgress()
-                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                    }
-                }
+            updateCommentsLike = Resource.Loading()
+            updateCommentsLike = updateCommentLikeUseCase(_commentKey.value ?: "", likeList)
         }
     }
 
@@ -537,14 +529,8 @@ class PostViewModel @Inject constructor(
         val likeList = _reCommentsLikeList.value ?: arrayListOf()
         likeList.remove(currentUid)
         if (_recomment.value != null) {
-            updateRecommentLikeUseCase(_recomment.value!!, likeList)
-                .collect {
-                    when (it) {
-                        is Resource.Success -> hideProgress()
-                        is Resource.Loading -> showProgress()
-                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                    }
-                }
+            updateReCommentsLike = Resource.Loading()
+            updateReCommentsLike = updateRecommentLikeUseCase(_recomment.value!!, likeList)
         }
     }
 
@@ -565,14 +551,8 @@ class PostViewModel @Inject constructor(
                 commentId,
                 0
             )
-            setCommentsUseCase(recomments)
-                .collect {
-                    when (it) {
-                        is Resource.Success -> hideProgress()
-                        is Resource.Loading -> showProgress()
-                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                    }
-                }
+            addComments = Resource.Loading()
+            addComments = setCommentsUseCase(recomments)
         }
     }
 
@@ -592,14 +572,8 @@ class PostViewModel @Inject constructor(
                 commentId,
                 1
             )
-            setReCommentsUseCase(comments)
-                .collect {
-                    when (it) {
-                        is Resource.Success -> hideProgress()
-                        is Resource.Loading -> showProgress()
-                        is Resource.Error -> ErrorMessage.print(it.message ?: "")
-                    }
-                }
+            addReComments = Resource.Loading()
+            addReComments = setReCommentsUseCase(comments)
         }
     }
 
