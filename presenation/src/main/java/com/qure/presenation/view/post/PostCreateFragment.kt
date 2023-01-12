@@ -22,8 +22,8 @@ import gun0912.tedbottompicker.TedBottomSheetDialogFragment
 @AndroidEntryPoint
 class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.fragment_post_create) {
 
-    private val postViewModel : PostViewModel by activityViewModels()
-    private val adapter : PostCreateImageAdapter by lazy {
+    private val postViewModel: PostViewModel by activityViewModels()
+    private val adapter: PostCreateImageAdapter by lazy {
         PostCreateImageAdapter(postViewModel, viewLifecycleOwner)
     }
 
@@ -78,8 +78,10 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
                     findNavController().popBackStack()
                     postViewModel.setUpdatedState(Resource.Empty(""))
                 }
-                is Resource.Loading -> binding.spinKitViewFragmentPostCreateLoading.visibility = View.VISIBLE
-                is Resource.Error -> binding.spinKitViewFragmentPostCreateLoading.visibility = View.GONE
+                is Resource.Loading -> binding.spinKitViewFragmentPostCreateLoading.visibility =
+                    View.VISIBLE
+                is Resource.Error -> binding.spinKitViewFragmentPostCreateLoading.visibility =
+                    View.GONE
             }
         }
 

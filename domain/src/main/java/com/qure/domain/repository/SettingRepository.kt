@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingRepository {
 
-    suspend fun setSetting(uid : String, setting : Setting) : Flow<Resource<String, String>>
+    suspend fun setSetting(uid: String, setting: Setting): Flow<Resource<String, String>>
 }

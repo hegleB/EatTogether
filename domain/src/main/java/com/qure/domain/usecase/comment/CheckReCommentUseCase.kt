@@ -7,5 +7,5 @@ import javax.inject.Inject
 class CheckReCommentUseCase @Inject constructor(
     private val commentRepository: CommentRepository
 ) {
-    suspend operator fun invoke(recomment : Comments) = commentRepository.checkReComment(recomment)
+    suspend operator fun invoke(recomment: Comments) = commentRepository.checkReComment(recomment)
 }

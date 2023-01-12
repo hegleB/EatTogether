@@ -22,7 +22,7 @@ import org.intellij.lang.annotations.PrintFormat
 object NetworkModule {
 
     @Provides
-    fun provideSignInIntentRequest(@ApplicationContext context: Context) : GetSignInIntentRequest =
+    fun provideSignInIntentRequest(@ApplicationContext context: Context): GetSignInIntentRequest =
         GetSignInIntentRequest.builder()
             .setServerClientId(context.getString(R.string.default_web_client_id))
             .build()

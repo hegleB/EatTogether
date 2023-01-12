@@ -14,12 +14,13 @@ class MeetingRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : MeetingRepository {
 
-    override suspend fun setMeetingCount(uid: String, count : Int): Flow<Resource<String, String>> {
+    override suspend fun setMeetingCount(uid: String, count: Int): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("meeting").document(uid).set(BarcodeScan(count)).addOnSuccessListener {
-                this.trySendBlocking(Resource.Success("미팅 설정 성공"))
-            }.addOnFailureListener {
+            val callback = firestore.collection("meeting").document(uid).set(BarcodeScan(count))
+                .addOnSuccessListener {
+                    this.trySendBlocking(Resource.Success("미팅 설정 성공"))
+                }.addOnFailureListener {
                 this.trySendBlocking(Resource.Error(it.message))
             }
             awaitClose {
@@ -31,34 +32,39 @@ class MeetingRepositoryImpl @Inject constructor(
     override suspend fun getMeetingCount(uid: String): Flow<Resource<Int, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("meeting").document(uid).addSnapshotListener { snapshot, e ->
+            val callback =
+                firestore.collection("meeting").document(uid).addSnapshotListener { snapshot, e ->
 
-                if (e==null) {
-                    val isExists = snapshot?.exists() ?: false
+                    if (e == null) {
+                        val isExists = snapshot?.exists() ?: false
 
-                    if (isExists) {
-                        val meeting = snapshot?.toObject(BarcodeScan::class.java)?.meeting ?: 0
-                        this.trySendBlocking(Resource.Success(meeting))
+                        if (isExists) {
+                            val meeting = snapshot?.toObject(BarcodeScan::class.java)?.meeting ?: 0
+                            this.trySendBlocking(Resource.Success(meeting))
+                        } else {
+                            this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
-                }
 
-            }
+                }
             awaitClose {
                 callback.remove()
             }
         }
     }
 
-    override suspend fun updateMeetingCount(uid: String, count: Int): Flow<Resource<String, String>> {
+    override suspend fun updateMeetingCount(
+        uid: String,
+        count: Int
+    ): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("meeting").document(uid).update("meeting",count).addOnSuccessListener {
-                this.trySendBlocking(Resource.Success("미팅 설정 성공"))
-            }.addOnFailureListener {
+            val callback = firestore.collection("meeting").document(uid).update("meeting", count)
+                .addOnSuccessListener {
+                    this.trySendBlocking(Resource.Success("미팅 설정 성공"))
+                }.addOnFailureListener {
                 this.trySendBlocking(Resource.Error(it.message))
             }
             awaitClose {

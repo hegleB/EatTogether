@@ -8,7 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.WindowManager
 
-class ResizeDialog(val context: Context,val dialog: Dialog) {
+class ResizeDialog(val context: Context, val dialog: Dialog) {
 
     fun setUpDialogFragment() {
         val size = Point()

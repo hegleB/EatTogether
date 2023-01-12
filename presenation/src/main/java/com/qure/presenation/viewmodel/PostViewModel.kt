@@ -225,7 +225,7 @@ class PostViewModel @Inject constructor(
 
         getCategoryPostUseCase(categoryName.value ?: "")
             .collect {
-                when(it) {
+                when (it) {
                     is Resource.Success -> {
                         _categoryPostList.value = it.data
                         hideProgress()
@@ -240,7 +240,7 @@ class PostViewModel @Inject constructor(
     fun getProfileCreatedPosts() = viewModelScope.launch {
         getProfileCreatedPostsUseCase(profileUid.value ?: "")
             .collect {
-                when(it) {
+                when (it) {
                     is Resource.Success -> {
                         _profileCreatedPost.value = it.data
                         hideProgress()
@@ -255,7 +255,7 @@ class PostViewModel @Inject constructor(
     fun getProfileLikedPosts() = viewModelScope.launch {
         getProfileLikedPostsUseCase(profileUid.value ?: "")
             .collect {
-                when(it) {
+                when (it) {
                     is Resource.Success -> {
                         _profileLikedPost.value = it.data
                         hideProgress()
@@ -270,7 +270,7 @@ class PostViewModel @Inject constructor(
     fun getProfileCommentsCreatedPosts() = viewModelScope.launch {
         getProfileCommentsCreatedPostsUseCase(profileUid.value ?: "")
             .collect {
-                when(it) {
+                when (it) {
                     is Resource.Success -> {
                         _profileCommentsPost.value = it.data
                         hideProgress()
@@ -342,7 +342,7 @@ class PostViewModel @Inject constructor(
             }
     }
 
-    fun updateCommentsCount(count : String) = viewModelScope.launch {
+    fun updateCommentsCount(count: String) = viewModelScope.launch {
         updateCommentsCountUseCase(_postKey.value ?: "", count)
             .collect {
                 when (it) {
@@ -651,7 +651,8 @@ class PostViewModel @Inject constructor(
                     uploadTask.addOnSuccessListener {
                         riverRef.downloadUrl.addOnSuccessListener { uri ->
                             imageList.add(uri.toString())
-                            firestore.collection("posts").document(key).update("postImages", imageList)
+                            firestore.collection("posts").document(key)
+                                .update("postImages", imageList)
 
                         }
                     }

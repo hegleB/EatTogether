@@ -49,7 +49,7 @@ class ProfileDetailFragment :
         observeViewModel()
         onBackPressedEvent()
         checkOtherProfile()
-        currentUid = peopleViewModel.getCurrentUser()?.uid?:""
+        currentUid = peopleViewModel.getCurrentUser()?.uid ?: ""
         binding.circleImageViewFragmentProfileProfile.isEnabled = false
     }
 
@@ -217,7 +217,7 @@ class ProfileDetailFragment :
         peopleViewModel.otherProfile.observe(viewLifecycleOwner) {
             Log.d("OtherProfile", "${it}")
             binding.apply {
-            if (it.equals(false)) {
+                if (it.equals(false)) {
                     imageViewFragmentProfileProfileEdit.visibility = View.GONE
                     imageViewFragmentProfileQrcode.visibility = View.GONE
                     imageViewFragmentProfileScanner.visibility = View.GONE
@@ -241,8 +241,8 @@ class ProfileDetailFragment :
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val result = IntentIntegrator.parseActivityResult(requestCode,resultCode, data)
-        if (result!=null) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
             Log.d("QRcode", "${result.contents}")
             if (result.contents != null) {
 
@@ -360,15 +360,15 @@ class ProfileDetailFragment :
     }
 
     private fun initViewPager() {
-        val profileViewPagerAdapter : ProfileViewPagerAdapter by lazy {
-            ProfileViewPagerAdapter(childFragmentManager, lifecycle,args.uid)
+        val profileViewPagerAdapter: ProfileViewPagerAdapter by lazy {
+            ProfileViewPagerAdapter(childFragmentManager, lifecycle, args.uid)
         }
         val tabTitles = listOf("작성한 글", "좋아한 글", "댓글단 글")
         binding.viewPagerFragmentProfile.adapter = profileViewPagerAdapter
         TabLayoutMediator(
             binding.tabLayoutFragmentProfile,
             binding.viewPagerFragmentProfile,
-            { tab, position -> tab.text = tabTitles[position]}
+            { tab, position -> tab.text = tabTitles[position] }
         ).attach()
     }
 

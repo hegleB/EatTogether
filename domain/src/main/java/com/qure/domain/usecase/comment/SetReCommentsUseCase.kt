@@ -8,5 +8,5 @@ import javax.inject.Inject
 class SetReCommentsUseCase @Inject constructor(
     private val commentRepository: CommentRepository
 ) {
-    suspend operator fun invoke(recomments : Comments) = commentRepository.setReComments(recomments)
+    suspend operator fun invoke(recomments: Comments) = commentRepository.setReComments(recomments)
 }

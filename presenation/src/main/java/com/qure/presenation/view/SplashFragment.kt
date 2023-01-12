@@ -24,6 +24,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
     @Inject
     lateinit var firestore: FirebaseFirestore
 

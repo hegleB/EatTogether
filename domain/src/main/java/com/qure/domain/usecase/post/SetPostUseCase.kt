@@ -7,5 +7,5 @@ import javax.inject.Inject
 class SetPostUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(post : PostModel.Post) = postRepository.setPost(post)
+    suspend operator fun invoke(post: PostModel.Post) = postRepository.setPost(post)
 }

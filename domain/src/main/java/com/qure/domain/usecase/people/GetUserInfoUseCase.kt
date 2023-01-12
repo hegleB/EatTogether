@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class GetUserInfoUseCase @Inject constructor(
     private val userRepository: UserRepository
-){
-    suspend operator fun invoke(uid : String) = userRepository.getUser(uid)
+) {
+    suspend operator fun invoke(uid: String) = userRepository.getUser(uid)
 }

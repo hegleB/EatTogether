@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val auth : FirebaseAuth,
+    private val auth: FirebaseAuth,
 ) : ViewModel() {
 
     var isNotify = MutableLiveData<Boolean>()

@@ -64,7 +64,7 @@ class ProfileSettingFragment :
         findNavController().navigate(R.id.action_profileSettingFragment_to_peopleContainerFragment)
     }
 
-    private fun checkProfileName() : Boolean {
+    private fun checkProfileName(): Boolean {
         val name = binding.editTextFragmentProfileSettingName.text.toString()
         return name.equals("")
     }
@@ -120,7 +120,7 @@ class ProfileSettingFragment :
         authViewModel.storageProfile()
 
         authViewModel.settingState.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is Resource.Success -> {
                     binding.spinKitViewFragmentProfileSettingLoading.visibility = View.GONE
                     addFirebaseStore()

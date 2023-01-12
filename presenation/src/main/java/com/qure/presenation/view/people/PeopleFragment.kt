@@ -30,7 +30,7 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
         observeViewModel()
         initAdapter()
         initViewModel()
-        OnBackPressedListener().finish(requireActivity(),requireActivity())
+        OnBackPressedListener().finish(requireActivity(), requireActivity())
     }
 
 

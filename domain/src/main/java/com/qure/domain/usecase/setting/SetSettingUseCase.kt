@@ -7,5 +7,6 @@ import javax.inject.Inject
 class SetSettingUseCase @Inject constructor(
     private val settingRepository: SettingRepository
 ) {
-    suspend operator fun invoke(uid: String, setting : Setting) = settingRepository.setSetting(uid, setting)
+    suspend operator fun invoke(uid: String, setting: Setting) =
+        settingRepository.setSetting(uid, setting)
 }

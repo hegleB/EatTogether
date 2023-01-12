@@ -9,7 +9,7 @@ import androidx.navigation.NavDirections
 
 class OnBackPressedListener {
 
-    fun finish(requestActivity : FragmentActivity, activity: Activity) {
+    fun finish(requestActivity: FragmentActivity, activity: Activity) {
         requestActivity.onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 activity?.finish()
@@ -18,7 +18,7 @@ class OnBackPressedListener {
         })
     }
 
-    fun back(requestActivity : FragmentActivity,  navController : NavController) {
+    fun back(requestActivity: FragmentActivity, navController: NavController) {
         requestActivity.onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navController.popBackStack()

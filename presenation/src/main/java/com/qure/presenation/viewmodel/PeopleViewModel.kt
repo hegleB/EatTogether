@@ -194,7 +194,7 @@ class PeopleViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is Resource.Success -> {
-                         val users = getRemovedCurrentUser(it.data!!, user)
+                        val users = getRemovedCurrentUser(it.data!!, user)
                         _userList.value = users
                         hideProgress()
                     }

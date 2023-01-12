@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetProfileLikedPostsUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(uid : String) = postRepository.getProfileLikedPosts(uid)
+    suspend operator fun invoke(uid: String) = postRepository.getProfileLikedPosts(uid)
 }

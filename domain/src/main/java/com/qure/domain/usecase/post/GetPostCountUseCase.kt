@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetPostCountUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(uid : String) = postRepository.getPostCount(uid)
+    suspend operator fun invoke(uid: String) = postRepository.getPostCount(uid)
 }

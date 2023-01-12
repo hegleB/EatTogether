@@ -14,12 +14,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
-    private val authViewModel : AuthViewModel by activityViewModels()
+    private val authViewModel: AuthViewModel by activityViewModels()
 
     override fun init() {
         initViewModel()
         observeViewModel()
-        OnBackPressedListener().finish(requireActivity(),requireActivity())
+        OnBackPressedListener().finish(requireActivity(), requireActivity())
     }
 
     private fun initViewModel() {
@@ -33,7 +33,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             it.consume()
         }
     }
-
 
 
 }

@@ -22,24 +22,29 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.fragment_post_detail), CommentsAdapter.OnItemClickListener {
+class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.fragment_post_detail),
+    CommentsAdapter.OnItemClickListener {
 
-    private val postViewModel : PostViewModel by activityViewModels()
+    private val postViewModel: PostViewModel by activityViewModels()
 
     @Inject
     lateinit var getReCommentsUseCase: GetReCommentsUseCase
+
     @Inject
     lateinit var updateRecommentLikeUseCase: UpdateRecommentLikeUseCase
+
     @Inject
-    lateinit var checkCommentUseCase : CheckCommentUseCase
+    lateinit var checkCommentUseCase: CheckCommentUseCase
+
     @Inject
     lateinit var checkReCommentUseCase: CheckReCommentUseCase
 
 
-    private val adapter : CommentsAdapter by lazy {
+    private val adapter: CommentsAdapter by lazy {
         CommentsAdapter(
             {
-                val direction = PostDetailFragmentDirections.actionPostDetailFragmentToReCommentsFragment(it)
+                val direction =
+                    PostDetailFragmentDirections.actionPostDetailFragmentToReCommentsFragment(it)
                 findNavController().navigate(direction)
             },
             requireContext(),
@@ -53,7 +58,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
         )
     }
 
-    private val args : PostDetailFragmentArgs by navArgs()
+    private val args: PostDetailFragmentArgs by navArgs()
 
     override fun init() {
         BottomNavigationEvent().hideBottomNavigation(activity!!)

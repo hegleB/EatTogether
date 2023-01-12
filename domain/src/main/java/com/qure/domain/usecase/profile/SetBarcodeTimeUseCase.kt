@@ -6,5 +6,5 @@ import javax.inject.Inject
 class SetBarcodeTimeUseCase @Inject constructor(
     private val barcodeRepository: BarcodeRepository
 ) {
-    suspend operator fun invoke(uid : String) = barcodeRepository.setBarcodeTime(uid)
+    suspend operator fun invoke(uid: String) = barcodeRepository.setBarcodeTime(uid)
 }

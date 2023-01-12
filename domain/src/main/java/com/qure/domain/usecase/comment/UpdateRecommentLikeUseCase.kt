@@ -7,5 +7,6 @@ import javax.inject.Inject
 class UpdateRecommentLikeUseCase @Inject constructor(
     private val commentRepository: CommentRepository
 ) {
-    suspend operator fun invoke(recomments : Comments, count : ArrayList<String>) = commentRepository.updateRecommentLike(recomments, count)
+    suspend operator fun invoke(recomments: Comments, count: ArrayList<String>) =
+        commentRepository.updateRecommentLike(recomments, count)
 }

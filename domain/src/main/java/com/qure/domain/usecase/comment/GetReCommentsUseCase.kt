@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetReCommentsUseCase @Inject constructor(
     private val commentRepository: CommentRepository
 ) {
-    suspend operator fun invoke(comments : Comments) = commentRepository.getReComments(comments)
+    suspend operator fun invoke(comments: Comments) = commentRepository.getReComments(comments)
 }

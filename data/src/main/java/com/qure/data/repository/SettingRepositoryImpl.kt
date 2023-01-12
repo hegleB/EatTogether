@@ -12,16 +12,17 @@ import javax.inject.Inject
 
 class SettingRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore
-) : SettingRepository{
+) : SettingRepository {
 
-    override suspend fun setSetting(uid : String, setting: Setting): Flow<Resource<String, String>> {
+    override suspend fun setSetting(uid: String, setting: Setting): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("setting").document(uid).set(setting).addOnSuccessListener {
-                this.trySendBlocking(Resource.Success("설정 성공"))
-            }.addOnFailureListener {
-                this.trySendBlocking(Resource.Error(it.message))
-            }
+            val callback =
+                firestore.collection("setting").document(uid).set(setting).addOnSuccessListener {
+                    this.trySendBlocking(Resource.Success("설정 성공"))
+                }.addOnFailureListener {
+                    this.trySendBlocking(Resource.Error(it.message))
+                }
             awaitClose {
                 callback.isCanceled
             }

@@ -8,9 +8,9 @@ const val STARTING_KEY = 1
 const val DELAY_MILLIS = 1_000L
 
 
-abstract class BasePagingSource<T: Any> : PagingSource<Int, T>() {
+abstract class BasePagingSource<T : Any> : PagingSource<Int, T>() {
 
-    lateinit var dataList : List<T>
+    lateinit var dataList: List<T>
 
     override fun getRefreshKey(state: PagingState<Int, T>): Int? {
         return state.anchorPosition?.let { position ->

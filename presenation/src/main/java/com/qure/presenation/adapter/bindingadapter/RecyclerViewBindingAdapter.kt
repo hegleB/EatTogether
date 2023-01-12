@@ -12,7 +12,7 @@ object RecyclerViewBindingAdapter {
 
     @BindingAdapter("postImageAdapter")
     @JvmStatic
-    fun postImageAdapter(recyclerView : RecyclerView, data : List<String>) {
+    fun postImageAdapter(recyclerView: RecyclerView, data: List<String>) {
         val adapter = PostsImageAdapter()
         recyclerView.adapter = adapter
         adapter.imageList = data

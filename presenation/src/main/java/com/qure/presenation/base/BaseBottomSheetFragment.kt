@@ -10,7 +10,8 @@ import androidx.databinding.ViewDataBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-abstract class  BaseBottomSheetFragment<T: ViewDataBinding>(@LayoutRes val layoutResInt : Int) : BottomSheetDialogFragment() {
+abstract class BaseBottomSheetFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: Int) :
+    BottomSheetDialogFragment() {
 
     lateinit var binding: T
 
@@ -49,7 +50,6 @@ abstract class  BaseBottomSheetFragment<T: ViewDataBinding>(@LayoutRes val layou
         })
 
     }
-
 
 
     abstract fun init()

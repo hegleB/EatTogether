@@ -6,5 +6,6 @@ import javax.inject.Inject
 class SetMeetingCountUseCase @Inject constructor(
     private val meetingRepository: MeetingRepository
 ) {
-    suspend operator fun invoke(uid : String, count: Int) = meetingRepository.setMeetingCount(uid, count)
+    suspend operator fun invoke(uid: String, count: Int) =
+        meetingRepository.setMeetingCount(uid, count)
 }

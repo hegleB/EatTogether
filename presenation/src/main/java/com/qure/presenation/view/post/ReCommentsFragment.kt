@@ -18,14 +18,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.fragment_re_comments), ReCommentsAdapter.OnItemClickListener {
+class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.fragment_re_comments),
+    ReCommentsAdapter.OnItemClickListener {
 
     @Inject
     lateinit var checkReCommentUseCase: CheckReCommentUseCase
 
-    private val args : ReCommentsFragmentArgs by navArgs()
-    private val postViewModel : PostViewModel by activityViewModels()
-    private val adapter : ReCommentsAdapter by lazy {
+    private val args: ReCommentsFragmentArgs by navArgs()
+    private val postViewModel: PostViewModel by activityViewModels()
+    private val adapter: ReCommentsAdapter by lazy {
         ReCommentsAdapter(
             postViewModel,
             this,
@@ -83,7 +84,7 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
         postViewModel.buttonSendReComment.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
             KeyboardEvent(requireContext()).hideKeyboard()
-            postViewModel.editTextPostComment.value =  ""
+            postViewModel.editTextPostComment.value = ""
             it.consume()
         }
 

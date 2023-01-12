@@ -19,11 +19,12 @@ class UserRepositoryImpl @Inject constructor(
 
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("users").document(uid ?: "").set(user).addOnSuccessListener {
-                this.trySendBlocking(Resource.Success("유저 추가 성공"))
-            }.addOnFailureListener {
-                this.trySendBlocking(Resource.Error(it.message))
-            }
+            val callback =
+                firestore.collection("users").document(uid ?: "").set(user).addOnSuccessListener {
+                    this.trySendBlocking(Resource.Success("유저 추가 성공"))
+                }.addOnFailureListener {
+                    this.trySendBlocking(Resource.Error(it.message))
+                }
             awaitClose {
                 callback.isCanceled
             }
@@ -32,21 +33,22 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(uid: String): Flow<Resource<User, String>> {
         return callbackFlow {
-            val callback = firestore.collection("users").document(uid ?: "").addSnapshotListener { snapshot, e ->
-                this.trySendBlocking(Resource.Loading())
-                val isExists = snapshot?.exists() ?: false
-                if (e==null) {
-                    if (isExists) {
-                        val user = snapshot?.toObject(User::class.java)!!
-                        this.trySendBlocking(Resource.Success(user))
+            val callback = firestore.collection("users").document(uid ?: "")
+                .addSnapshotListener { snapshot, e ->
+                    this.trySendBlocking(Resource.Loading())
+                    val isExists = snapshot?.exists() ?: false
+                    if (e == null) {
+                        if (isExists) {
+                            val user = snapshot?.toObject(User::class.java)!!
+                            this.trySendBlocking(Resource.Success(user))
+                        } else {
+                            this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
-                }
 
-            }
+                }
             awaitClose {
                 callback.remove()
             }

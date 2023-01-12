@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class CheckBarcodeTimeUseCase @Inject constructor(
     private val barcodeRepository: BarcodeRepository
-){
-    suspend operator fun invoke(uid : String) = barcodeRepository.checkBarcodeTime(uid)
+) {
+    suspend operator fun invoke(uid: String) = barcodeRepository.checkBarcodeTime(uid)
 }

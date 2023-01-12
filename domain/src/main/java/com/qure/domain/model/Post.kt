@@ -2,10 +2,8 @@ package com.qure.domain.model
 
 import java.io.Serializable
 
-sealed class PostModel() {
-
+sealed class PostModel {
     data class Post(
-
         var uid: String = "",
         var writer: String = "",
         var title: String = "",
@@ -20,6 +18,6 @@ sealed class PostModel() {
     ) : Serializable
 
     data class PostImage(
-        var postImage : String = ""
+        var postImage: String = ""
     ) : Serializable
 }

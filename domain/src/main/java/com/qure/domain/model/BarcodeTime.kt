@@ -4,7 +4,5 @@ import java.io.Serializable
 
 
 data class BarcodeTime(
-
-    var barcodetime : Long=0
-
+    var barcodetime: Long = 0
 ) : Serializable

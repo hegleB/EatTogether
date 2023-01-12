@@ -12,13 +12,15 @@ import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PostCategoryFragment : BaseFragment<FragmentPostCategoryBinding>(R.layout.fragment_post_category) {
+class PostCategoryFragment :
+    BaseFragment<FragmentPostCategoryBinding>(R.layout.fragment_post_category) {
 
     private val postViewModel: PostViewModel by activityViewModels()
-    private val args : PostCategoryFragmentArgs by navArgs()
+    private val args: PostCategoryFragmentArgs by navArgs()
     private val postAdapter: PostAdapter by lazy {
         PostAdapter {
-            val direction = PostCategoryFragmentDirections.actionPostCategoryFragmentToPostDetailFragment(it)
+            val direction =
+                PostCategoryFragmentDirections.actionPostCategoryFragmentToPostDetailFragment(it)
             findNavController().navigate(direction)
         }
     }

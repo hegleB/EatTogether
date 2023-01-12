@@ -24,9 +24,8 @@ class ReCommentsAdapter(
 ) : ListAdapter<Comments, ReCommentsAdapter.ViewHolder>(itemCallback) {
 
     interface OnItemClickListener {
-        fun onItemClick(recomments : Comments)
+        fun onItemClick(recomments: Comments)
     }
-
 
 
     companion object {

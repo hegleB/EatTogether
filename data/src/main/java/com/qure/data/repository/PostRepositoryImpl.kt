@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore
-) : PostRepository{
+) : PostRepository {
 
     override suspend fun setPost(post: Post): Flow<Resource<String, String>> {
         return callbackFlow {
@@ -35,20 +35,21 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getLikeCount(uid: String): Flow<Resource<Int, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").whereArrayContains("likecount",uid).addSnapshotListener { snapshot, e ->
-                if (e==null) {
-                    val isEmpty = snapshot?.isEmpty ?: false
-                    val like = snapshot?.toObjects(Post::class.java)?.size ?: 0
-                    if (!isEmpty) {
-                        this.trySendBlocking(Resource.Success(like))
+            val callback = firestore.collection("posts").whereArrayContains("likecount", uid)
+                .addSnapshotListener { snapshot, e ->
+                    if (e == null) {
+                        val isEmpty = snapshot?.isEmpty ?: false
+                        val like = snapshot?.toObjects(Post::class.java)?.size ?: 0
+                        if (!isEmpty) {
+                            this.trySendBlocking(Resource.Success(like))
+                        } else {
+                            this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                            this.trySendBlocking(Resource.Success(like))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
-                        this.trySendBlocking(Resource.Success(like))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
                 }
-            }
             awaitClose {
                 callback.remove()
             }
@@ -58,31 +59,33 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getPostCount(uid: String): Flow<Resource<Int, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").whereEqualTo("uid",uid).addSnapshotListener { snapshot, e ->
-                if (e==null) {
-                    val isEmpty = snapshot?.isEmpty ?: false
-                    val post = snapshot?.toObjects(Post::class.java)?.size!!
-                    if (!isEmpty) {
-                        this.trySendBlocking(Resource.Success(post))
+            val callback = firestore.collection("posts").whereEqualTo("uid", uid)
+                .addSnapshotListener { snapshot, e ->
+                    if (e == null) {
+                        val isEmpty = snapshot?.isEmpty ?: false
+                        val post = snapshot?.toObjects(Post::class.java)?.size!!
+                        if (!isEmpty) {
+                            this.trySendBlocking(Resource.Success(post))
+                        } else {
+                            this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                            this.trySendBlocking(Resource.Success(post))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
-                        this.trySendBlocking(Resource.Success(post))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
                 }
-            }
             awaitClose {
                 callback.remove()
             }
         }
     }
 
-    override suspend fun getAllPost(): Flow<Resource<List<Post>,String>> {
+    override suspend fun getAllPost(): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
             val callback = firestore.collection("posts")
-                .orderBy("timestamp",  Query.Direction.DESCENDING).addSnapshotListener { snapshot, e ->
-                    if (e==null) {
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener { snapshot, e ->
+                    if (e == null) {
                         val isEmpty = snapshot?.isEmpty ?: false
 
                         if (!isEmpty) {
@@ -94,21 +97,26 @@ class PostRepositoryImpl @Inject constructor(
                     } else {
                         this.trySendBlocking(Resource.Error(e.message))
                     }
-            }
+                }
             awaitClose {
                 callback.remove()
             }
         }
     }
 
-    override suspend fun updateLike(likeList: ArrayList<String>, postKey : String): Flow<Resource<String, String>> {
+    override suspend fun updateLike(
+        likeList: ArrayList<String>,
+        postKey: String
+    ): Flow<Resource<String, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").document(postKey).update("likecount", likeList).addOnSuccessListener {
-                this.trySendBlocking(Resource.Success("성공"))
-            }.addOnFailureListener {
-                this.trySendBlocking(Resource.Error(it.message))
-            }
+            val callback =
+                firestore.collection("posts").document(postKey).update("likecount", likeList)
+                    .addOnSuccessListener {
+                        this.trySendBlocking(Resource.Success("성공"))
+                    }.addOnFailureListener {
+                    this.trySendBlocking(Resource.Error(it.message))
+                }
             awaitClose {
                 callback.isCanceled
             }
@@ -118,20 +126,21 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun checkPost(postKey: String): Flow<Resource<Post, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").document(postKey).addSnapshotListener { snapshot, e ->
-                if (e==null) {
-                    val isExists = snapshot?.exists() ?: false
+            val callback =
+                firestore.collection("posts").document(postKey).addSnapshotListener { snapshot, e ->
+                    if (e == null) {
+                        val isExists = snapshot?.exists() ?: false
 
-                    if (isExists) {
-                        val post = snapshot?.toObject(Post::class.java)!!
-                        this.trySendBlocking(Resource.Success(post))
+                        if (isExists) {
+                            val post = snapshot?.toObject(Post::class.java)!!
+                            this.trySendBlocking(Resource.Success(post))
+                        } else {
+                            this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Empty("데이터가 없습니다."))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
                 }
-            }
             awaitClose {
                 callback.remove()
             }
@@ -141,22 +150,23 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getCategoryPost(categoryName: String): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback = firestore.collection("posts").whereEqualTo("category", categoryName).addSnapshotListener { snapshot, e ->
+            val callback = firestore.collection("posts").whereEqualTo("category", categoryName)
+                .addSnapshotListener { snapshot, e ->
 
-                if (e==null) {
-                    val isEmpty = snapshot?.isEmpty ?: false
+                    if (e == null) {
+                        val isEmpty = snapshot?.isEmpty ?: false
 
-                    if (!isEmpty) {
-                        val post = snapshot?.toObjects(Post::class.java)!!
+                        if (!isEmpty) {
+                            val post = snapshot?.toObjects(Post::class.java)!!
 
-                        this.trySendBlocking(Resource.Success(post))
+                            this.trySendBlocking(Resource.Success(post))
+                        } else {
+                            this.trySendBlocking(Resource.Success(listOf()))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Success(listOf()))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
                 }
-            }
             awaitClose {
                 callback.remove()
             }
@@ -167,22 +177,22 @@ class PostRepositoryImpl @Inject constructor(
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
             val callback = firestore.collection("posts")
-                .whereEqualTo("uid", uid).orderBy("timestamp",Query.Direction.DESCENDING)
+                .whereEqualTo("uid", uid).orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, e ->
-                if (e==null) {
-                    val isEmpty = snapshot?.isEmpty ?: false
+                    if (e == null) {
+                        val isEmpty = snapshot?.isEmpty ?: false
 
-                    if (!isEmpty) {
-                        val post = snapshot?.toObjects(Post::class.java)!!
+                        if (!isEmpty) {
+                            val post = snapshot?.toObjects(Post::class.java)!!
 
-                        this.trySendBlocking(Resource.Success(post))
+                            this.trySendBlocking(Resource.Success(post))
+                        } else {
+                            this.trySendBlocking(Resource.Success(listOf()))
+                        }
                     } else {
-                        this.trySendBlocking(Resource.Success(listOf()))
+                        this.trySendBlocking(Resource.Error(e.message))
                     }
-                } else {
-                    this.trySendBlocking(Resource.Error(e.message))
                 }
-            }
             awaitClose {
                 callback.remove()
             }
@@ -192,11 +202,11 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getProfileLikedPosts(uid: String): Flow<Resource<List<Post>, String>> {
         return callbackFlow {
             this.trySendBlocking(Resource.Loading())
-            val callback =  firestore.collection("posts")
+            val callback = firestore.collection("posts")
                 .whereArrayContains("likecount", uid)
-                .orderBy("timestamp",Query.Direction.DESCENDING)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, e ->
-                    if (e==null) {
+                    if (e == null) {
                         val isEmpty = snapshot?.isEmpty ?: false
 
                         if (!isEmpty) {
@@ -230,7 +240,10 @@ class PostRepositoryImpl @Inject constructor(
                                 val commentsPost = snapshot.result.toObjects(Comments::class.java)
                                 for (j in posts) {
                                     for (i in commentsPost) {
-                                        if (j.key.equals(i.comments_postkey) && !commentCreatedsPost.contains(j)) {
+                                        if (j.key.equals(i.comments_postkey) && !commentCreatedsPost.contains(
+                                                j
+                                            )
+                                        ) {
                                             commentCreatedsPost.add(j)
                                         }
                                     }

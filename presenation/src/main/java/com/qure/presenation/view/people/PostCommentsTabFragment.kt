@@ -10,12 +10,16 @@ import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PostCommentsTabFragment(val uid : String) : BaseFragment<FragmentPostCommentsTabBinding>(R.layout.fragment_post_comments_tab) {
+class PostCommentsTabFragment(val uid: String) :
+    BaseFragment<FragmentPostCommentsTabBinding>(R.layout.fragment_post_comments_tab) {
 
-    private val postsViewModel : PostViewModel by activityViewModels()
-    private val profilePostAdapter : ProfilePostAdapter by lazy {
+    private val postsViewModel: PostViewModel by activityViewModels()
+    private val profilePostAdapter: ProfilePostAdapter by lazy {
         ProfilePostAdapter({
-            val direction = ProfileDetailFragmentDirections.actionProfileDetailFragmentToProfilePostDetailFragment(it)
+            val direction =
+                ProfileDetailFragmentDirections.actionProfileDetailFragmentToProfilePostDetailFragment(
+                    it
+                )
             findNavController().navigate(direction)
         }, postsViewModel)
     }

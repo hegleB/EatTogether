@@ -7,6 +7,7 @@ import javax.inject.Inject
 class SignInWithFacebookUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend fun signWithFacebook(token : AccessToken) = authRepository.signInWithFacebook(token).addOnCanceledListener {
-    }
+    suspend fun signWithFacebook(token: AccessToken) =
+        authRepository.signInWithFacebook(token).addOnCanceledListener {
+        }
 }

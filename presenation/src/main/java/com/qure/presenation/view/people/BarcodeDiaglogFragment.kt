@@ -11,9 +11,10 @@ import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BarcodeDiaglogFragment : BaseDialogFragment<FragmentBarcodeDiaglogBinding>(R.layout.fragment_barcode_diaglog) {
+class BarcodeDiaglogFragment :
+    BaseDialogFragment<FragmentBarcodeDiaglogBinding>(R.layout.fragment_barcode_diaglog) {
 
-    private val peopleViewModel : PeopleViewModel by viewModels()
+    private val peopleViewModel: PeopleViewModel by viewModels()
 
     override fun init() {
         initViewModel()
@@ -76,7 +77,7 @@ class BarcodeDiaglogFragment : BaseDialogFragment<FragmentBarcodeDiaglogBinding>
     private fun createBarcode() {
         var uid = peopleViewModel.getCurrentUser()?.uid
         var random_num = (Math.random() * 100).toString()
-        var random_barcode = uid +"_"+ random_num;
+        var random_barcode = uid + "_" + random_num;
         peopleViewModel.setBarcode(random_barcode)
         peopleViewModel.createBarcod(random_barcode)
     }

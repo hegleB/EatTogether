@@ -14,9 +14,10 @@ import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileEditDialogFragment : BaseDialogFragment<FragmentProfileEditDialogBinding>(R.layout.fragment_profile_edit_dialog) {
+class ProfileEditDialogFragment :
+    BaseDialogFragment<FragmentProfileEditDialogBinding>(R.layout.fragment_profile_edit_dialog) {
 
-    private val peopleViewModel : PeopleViewModel by activityViewModels()
+    private val peopleViewModel: PeopleViewModel by activityViewModels()
 
     override fun init() {
         initViewModel()

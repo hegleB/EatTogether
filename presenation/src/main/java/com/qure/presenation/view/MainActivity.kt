@@ -25,6 +25,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
     @Inject
     lateinit var firestore: FirebaseFirestore
 

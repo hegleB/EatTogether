@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetCategoryPostUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(categoryName : String) = postRepository.getCategoryPost(categoryName)
+    suspend operator fun invoke(categoryName: String) = postRepository.getCategoryPost(categoryName)
 }
