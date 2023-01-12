@@ -1,6 +1,9 @@
 package com.qure.presenation.viewmodel
 
 import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,11 +12,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.*
+import com.qure.domain.repository.*
 import com.qure.domain.usecase.people.GetAllUserUseCase
 import com.qure.domain.usecase.people.GetUserInfoUseCase
 import com.qure.domain.usecase.post.GetLikeCountUseCase
 import com.qure.domain.usecase.post.GetPostCountUseCase
 import com.qure.domain.usecase.profile.*
+import com.qure.domain.utils.ErrorMessage
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
@@ -58,10 +63,6 @@ class PeopleViewModel @Inject constructor(
     private val _userList: MutableLiveData<List<User>> = MutableLiveData()
     val userList: LiveData<List<User>>
         get() = _userList
-
-    private val _snackBarMsg: MutableLiveData<MessageSet> = MutableLiveData()
-    val snackBarMsg: LiveData<MessageSet>
-        get() = _snackBarMsg
 
     private val _myName: MutableLiveData<String> = MutableLiveData()
     val myName: LiveData<String>
@@ -186,6 +187,21 @@ class PeopleViewModel @Inject constructor(
     private val _updatedState: MutableLiveData<Resource<String, String>> = MutableLiveData()
     val updatedState: LiveData<Resource<String, String>>
         get() = _updatedState
+    
+    var deleteBarcodeTime by mutableStateOf<DeleteBarcodeTime>(Resource.Success(false))
+        private set
+
+    var deleteBarcodeInfo by mutableStateOf<DeleteBarcodeInfo>(Resource.Success(false))
+        private set
+
+    var addBarcodeTime by mutableStateOf<AddBarcodeTime>(Resource.Success(false))
+        private set
+
+    var addBarcodeInfo by mutableStateOf<AddBarcodeInfo>(Resource.Success(false))
+        private set
+
+    var checkBarcodeTime by mutableStateOf<CheckBarcodeTime>(Resource.Success(false))
+        private set
 
     fun getCurrentUser() = getCurrentUserUseCase.getCurrentUser()
 
@@ -199,8 +215,7 @@ class PeopleViewModel @Inject constructor(
                         hideProgress()
                     }
                     is Resource.Loading -> showProgress()
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -221,8 +236,7 @@ class PeopleViewModel @Inject constructor(
                         _myToken.value = user?.token
                         _user.value = user
                     }
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -232,8 +246,7 @@ class PeopleViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is Resource.Success -> _postCount.value = it.data.toString()
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -244,8 +257,7 @@ class PeopleViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is Resource.Success -> _meetingCount.value = count.toString()
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -255,8 +267,7 @@ class PeopleViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is Resource.Success -> _meetingCount.value = it.data.toString()
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -266,88 +277,59 @@ class PeopleViewModel @Inject constructor(
         getLikeCountUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Success -> _likeCount.value = it.data.toString()
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Loading -> showProgress()
+                    is Resource.Success -> {
+                        hideProgress()
+                        _likeCount.value = it.data.toString()
+                    }
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
 
     fun deleteBarcode() = viewModelScope.launch {
-        deleteBarcodeUseCase(currentUid)
-            .collect {
-                when (it) {
-                    is Resource.Success -> _snackBarMsg.value = MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
-                }
-            }
+        deleteBarcodeInfo = Resource.Loading()
+        deleteBarcodeInfo = deleteBarcodeUseCase(currentUid)
     }
 
     fun deleteBarcodeTime() = viewModelScope.launch {
-        deleteBarcodeTimeUseCase(currentUid)
-            .collect {
-                when (it) {
-                    is Resource.Success -> _snackBarMsg.value = MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
-                }
-            }
+        deleteBarcodeTime = Resource.Loading()
+        deleteBarcodeTime = deleteBarcodeTimeUseCase(currentUid)
     }
 
     fun setBarcode(randomBarcode: String) = viewModelScope.launch {
-        setBarcodeUseCase(currentUid, randomBarcode)
-            .collect {
-                when (it) {
-                    is Resource.Success -> _snackBarMsg.value = MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
-                }
-            }
+        addBarcodeInfo = Resource.Loading()
+        addBarcodeInfo = setBarcodeUseCase(currentUid, randomBarcode)
     }
 
     fun setBarcodeTime() = viewModelScope.launch {
-        setBarcodeTimeUseCase(currentUid)
-            .collect {
-                when (it) {
-                    is Resource.Success -> _snackBarMsg.value = MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
-                }
-            }
+        addBarcodeTime = Resource.Loading()
+        addBarcodeTime = setBarcodeTimeUseCase(currentUid)
     }
 
     fun checkBarcodeTime() = viewModelScope.launch {
-        checkBarcodeTimeUseCase(currentUid)
-            .collect {
-                when (it) {
-                    is Resource.Success -> _checkBarcode.value = it.data
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
-                }
-            }
+        checkBarcodeTime = Resource.Loading()
+        checkBarcodeTime = checkBarcodeTimeUseCase(currentUid)
     }
 
     fun getBarcodeTime() = viewModelScope.launch {
-        getBarcodeTimeUseCase(currentUid)
-            .collect {
+        getBarcodeTimeUseCase(currentUid).collect {
                 when (it) {
+                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
+                        hideProgress()
                         var data = it.data!!
                         var currentTime = System.currentTimeMillis()
                         var resultTime = data - currentTime
                         _barcodeTimeRemaining.value = resultTime
                     }
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
 
 
     fun uploadImage() = viewModelScope.launch {
-
-
         val riverRef: StorageReference =
             firebaseStorage.getReference()
                 .child("profile_image/" + currentUid + ".jpg")
@@ -373,13 +355,11 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun chageProfile() = viewModelScope.launch {
-
         updateUserUseCase(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
             .collectLatest {
                 when (it) {
-                    is Resource.Success -> _snackBarMsg.value = MessageSet.SUCCESS
-                    is Resource.Error -> _snackBarMsg.value = MessageSet.ERROR
-                    is Resource.Empty -> _snackBarMsg.value = MessageSet.EMPTY_QUERY
+                    is Resource.Success -> println()
+                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
     }
@@ -482,15 +462,5 @@ class PeopleViewModel @Inject constructor(
 
     fun submitProfileEdit() {
         _profileEditCancle.value = Event(Unit)
-    }
-
-    enum class MessageSet {
-        LAST_PAGE,
-        EMPTY_QUERY,
-        NETWORK_NOT_CONNECTED,
-        ERROR,
-        SUCCESS,
-        NO_RESULT,
-        LOCAL_SUCCESS
     }
 }
