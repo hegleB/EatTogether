@@ -46,21 +46,23 @@ class ChatViewModel @Inject constructor(
     val chatRoom: LiveData<ChatRoom>
         get() = _chatRoom
 
-    fun getUserInfo(uid: String) = viewModelScope.launch {
-        if (uid == curruntUid) {
-            getUserInfoUseCase(uid).collect {
-                when (it) {
-                    is Resource.Success -> _user.value = it.data
-                }
-            }
-        } else {
-            getUserInfoUseCase(uid).collect {
-                when (it) {
-                    is Resource.Success -> _otherUser.value = it.data
-                }
+    fun getUserInfo(uid: String) {
+        if (isCurrentUser(uid)) {
+            getUser(uid)
+            return
+        }
+        getUser(uid)
+    }
+
+    private fun getUser(uid: String) = viewModelScope.launch {
+        getUserInfoUseCase(uid).collect {
+            when (it) {
+                is Resource.Success -> _user.value = it.data
             }
         }
     }
+
+    private fun isCurrentUser(uid: String) = uid == curruntUid
 
     fun getAllChatRoom() = viewModelScope.launch {
         getAllChatRoomUseCase(curruntUid)
@@ -75,11 +77,10 @@ class ChatViewModel @Inject constructor(
 
     }
 
-    fun findChatRoom(otherUid: String): ChatRoom {
-        return _chatRooms.value?.find {
-            it.isContainUid(otherUid) && it.isCorrectOneToOneChatroom()
-        } ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
-    }
+    fun findChatRoom(otherUid: String): ChatRoom =
+        _chatRooms.value
+            ?.find { it.isContainUid(otherUid) && it.isCorrectOneToOneChatroom() }
+            ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
 
     fun setChatRoom(otherUid: String) {
         val users = arrayListOf(otherUid, curruntUid)
