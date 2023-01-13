@@ -95,10 +95,6 @@ class PostViewModel @Inject constructor(
     val profileUid: LiveData<String>
         get() = _profileUid
 
-    private val _buttonDeleteImage: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val buttonDeleteImage: LiveData<Event<Unit>>
-        get() = _buttonDeleteImage
-
     val createPostTitle: MutableLiveData<String> = MutableLiveData()
     val createPostContent: MutableLiveData<String> = MutableLiveData()
 
@@ -114,7 +110,6 @@ class PostViewModel @Inject constructor(
     val createPostImage: MutableLiveData<ArrayList<String>>
         get() = _createPostImage
 
-
     private val _postKey: MutableLiveData<String> = MutableLiveData()
     val postKey: LiveData<String>
         get() = _postKey
@@ -128,8 +123,6 @@ class PostViewModel @Inject constructor(
         get() = _comment
 
     private val _recomment: MutableLiveData<Comments> = MutableLiveData()
-    val recomment: LiveData<Comments>
-        get() = _recomment
 
     private val _commentsList: MutableLiveData<List<Comments>> = MutableLiveData()
     val commentsList: LiveData<List<Comments>>
@@ -147,21 +140,11 @@ class PostViewModel @Inject constructor(
     val buttonSendReComment: LiveData<Event<Unit>>
         get() = _buttonSendReComment
 
-    private val _buttonCommentLike: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val buttonCommentLike: LiveData<Event<Unit>>
-        get() = _buttonCommentLike
-
     private val _isLike: MutableLiveData<Boolean> = MutableLiveData()
     val isLike: LiveData<Boolean>
         get() = _isLike
 
     private val _isCommentLike: MutableLiveData<Boolean> = MutableLiveData()
-    val isCommentLike: LiveData<Boolean>
-        get() = _isCommentLike
-
-    private val _isReCommentLike: MutableLiveData<Boolean> = MutableLiveData()
-    val isReCommentLike: LiveData<Boolean>
-        get() = _isReCommentLike
 
     private val _likeList: MutableLiveData<ArrayList<String>> = MutableLiveData()
     val likeList: LiveData<ArrayList<String>>
@@ -172,12 +155,6 @@ class PostViewModel @Inject constructor(
         get() = _commentsLikeList
 
     private val _reCommentsLikeList: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    val reCommentsLikeList: LiveData<ArrayList<String>>
-        get() = _reCommentsLikeList
-
-    private val _buttonLike: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val buttonLike: LiveData<Event<Unit>>
-        get() = _buttonLike
 
     private val _postCreate: MutableLiveData<Event<Unit>> = MutableLiveData()
     val postCreate: LiveData<Event<Unit>>
@@ -405,11 +382,6 @@ class PostViewModel @Inject constructor(
             }
     }
 
-
-    fun checkLike(likeList: ArrayList<String>) {
-        _isLike.value = likeList.contains(currentUid)
-    }
-
     fun checkCommentLike(likeList: ArrayList<String>) {
         _isCommentLike.value = likeList.contains(currentUid)
     }
@@ -436,19 +408,6 @@ class PostViewModel @Inject constructor(
             else -> {
                 addCommentlikeCount()
                 _isCommentLike.value = true
-            }
-        }
-    }
-
-    fun updateReCommentLikeState() {
-        when (_isReCommentLike.value ?: false) {
-            true -> {
-                removeReCommentLikeCount()
-                _isReCommentLike.value = false
-            }
-            else -> {
-                addReCommentlikeCount()
-                _isReCommentLike.value = true
             }
         }
     }
@@ -494,15 +453,6 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun removeReCommentLikeCount() = viewModelScope.launch {
-        val likeList = _reCommentsLikeList.value ?: arrayListOf()
-        likeList.remove(currentUid)
-        if (_recomment.value != null) {
-            updateReCommentsLike = Resource.Loading()
-            updateReCommentsLike = updateRecommentLikeUseCase(_recomment.value!!, likeList)
-        }
-    }
-
     fun writeComments(content: String) = viewModelScope.launch {
         val commentId = firestore.collection("comments").document().id
         if (writer.value != null) {
@@ -526,6 +476,7 @@ class PostViewModel @Inject constructor(
 
     fun writeReComments(content: String) = viewModelScope.launch {
         val commentId = _recomment.value?.comments_commentskey ?: ""
+        val replyId = firestore.collection("comments").document().id
         if (writer.value != null) {
             val writer = writer.value!!
             val comments = Comments(
@@ -538,7 +489,8 @@ class PostViewModel @Inject constructor(
                 arrayListOf(),
                 _recomment.value?.comments_postkey ?: "",
                 commentId,
-                1
+                1,
+                replyId
             )
             addReComments = Resource.Loading()
             addReComments = setReCommentsUseCase(comments)
@@ -632,10 +584,6 @@ class PostViewModel @Inject constructor(
         val images = createPostImage.value ?: arrayListOf()
         images.remove(image)
         _createPostImage.value = images
-    }
-
-    fun getReCommentLike(isReCommentLike: Boolean) {
-        _isReCommentLike.value = isReCommentLike
     }
 
     fun getReCommentLkeList(recommentLikeList: ArrayList<String>) {

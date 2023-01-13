@@ -8,30 +8,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.Comments
 import com.qure.domain.usecase.comment.CheckReCommentUseCase
+import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
+import com.qure.presenation.R
 import com.qure.presenation.databinding.ItemRecommentsBinding
 import com.qure.presenation.viewmodel.PostViewModel
 import kotlinx.coroutines.launch
 
 class ReCommentsAdapter(
     val postViewModel: PostViewModel,
-    val listener: OnItemClickListener,
-    val viewLifecycleOwner: LifecycleOwner,
-    val checkReCommentUseCase: CheckReCommentUseCase,
-    val lifecycleCoroutineScope: LifecycleCoroutineScope
+    val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<Comments, ReCommentsAdapter.ViewHolder>(itemCallback) {
-
-    interface OnItemClickListener {
-        fun onItemClick(recomments: Comments)
-    }
-
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<Comments>() {
             override fun areItemsTheSame(oldItem: Comments, newItem: Comments): Boolean {
-                return oldItem.hashCode() == newItem.hashCode()
+                return oldItem.comments_replyKey == newItem.comments_replyKey
             }
 
             override fun areContentsTheSame(oldItem: Comments, newItem: Comments): Boolean {
@@ -40,34 +36,49 @@ class ReCommentsAdapter(
         }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     inner class ViewHolder(val binding: ItemRecommentsBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private val LIKE_COLOR = -807670
+        private val UNLIKE_COLOR = -5131855
 
         fun bind(element: Comments) {
             binding.recomments = element
             binding.viewmodel = postViewModel
-            val user = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-            lifecycleCoroutineScope.launch {
-                checkReCommentUseCase(element)
-                    .collect {
-                        when (it) {
-                            is Resource.Success -> {
-                                val recomment = it.data
-                                postViewModel.getReCommentLike(
-                                    recomment!!.comments_likeCount.contains(
-                                        user
-                                    )
-                                )
-                                postViewModel.getReCommentLkeList(recomment!!.comments_likeCount)
-                            }
-                        }
-                    }
-            }
+            clickReCommentLike(element)
+        }
 
+        private fun clickReCommentLike(element: Comments) {
             binding.textViewItemRecommentsLike.setOnClickListener {
-                listener.onItemClick(element)
+                when (binding.textViewItemRecommentsLike.currentTextColor) {
+                    LIKE_COLOR -> updateLikeCount(
+                        element.comments_commentskey,
+                        element.comments_replyKey,
+                        FieldValue.arrayRemove(postViewModel.currentUid)
+                    )
+                    UNLIKE_COLOR -> updateLikeCount(
+                        element.comments_commentskey,
+                        element.comments_replyKey,
+                        FieldValue.arrayUnion(postViewModel.currentUid)
+                    )
+                }
             }
+        }
 
+        private fun updateLikeCount(commentKey: String, recommentKey: String, fieldValue: FieldValue) {
+            FirebaseFirestore.getInstance()
+                .collection(Constants.COMMENTS_COLLECTION_PATH)
+                .document(commentKey)
+                .collection(Constants.REPLY_COLLECTION_PATH)
+                .document(recommentKey)
+                .update(
+                    "comments_likeCount",
+                    fieldValue
+                )
         }
     }
 

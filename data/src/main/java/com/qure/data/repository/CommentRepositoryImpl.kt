@@ -77,7 +77,7 @@ class CommentRepositoryImpl @Inject constructor(
             firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
                 .document(recomments.comments_commentskey)
                 .collection(Constants.REPLY_COLLECTION_PATH)
-                .document()
+                .document(recomments.comments_replyKey)
                 .set(recomments)
                 .await()
             Resource.Success(true)

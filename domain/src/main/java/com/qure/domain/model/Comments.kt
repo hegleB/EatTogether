@@ -12,5 +12,6 @@ data class Comments(
     val comments_likeCount: ArrayList<String> = arrayListOf(),
     val comments_postkey: String = "",
     val comments_commentskey: String = "",
-    val comments_depth: Int = 0
+    val comments_depth: Int = 0,
+    val comments_replyKey: String = ""
 ) : Serializable

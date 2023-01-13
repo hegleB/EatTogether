@@ -2,9 +2,14 @@ package com.qure.presenation.view.post
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.model.Comments
 import com.qure.domain.usecase.comment.CheckCommentUseCase
@@ -22,8 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.fragment_post_detail),
-    CommentsAdapter.OnItemClickListener {
+class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.fragment_post_detail) {
 
     private val postViewModel: PostViewModel by activityViewModels()
 
@@ -48,13 +52,8 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
                 findNavController().navigate(direction)
             },
             requireContext(),
-            this,
             postViewModel,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope,
-            checkCommentUseCase,
-            getReCommentsUseCase,
-            checkReCommentUseCase
+            viewLifecycleOwner
         )
     }
 
@@ -126,7 +125,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
                 }
             }
 
-
             adapter.submitList(it)
 
         }
@@ -137,16 +135,5 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
             postViewModel.editTextPostComment.value = ""
             it.consume()
         }
-
-        postViewModel.likeList.observe(viewLifecycleOwner) {
-            postViewModel.checkLike(it)
-        }
-
-    }
-
-    override fun onItemClick(comments: Comments) {
-        postViewModel.checkComment(comments.comments_commentskey)
-        postViewModel.getCommentsKey(comments.comments_commentskey)
-        postViewModel.updateCommentLikeState()
     }
 }

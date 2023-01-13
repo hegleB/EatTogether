@@ -18,8 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.fragment_re_comments),
-    ReCommentsAdapter.OnItemClickListener {
+class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.fragment_re_comments) {
 
     @Inject
     lateinit var checkReCommentUseCase: CheckReCommentUseCase
@@ -29,10 +28,7 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
     private val adapter: ReCommentsAdapter by lazy {
         ReCommentsAdapter(
             postViewModel,
-            this,
-            viewLifecycleOwner,
-            checkReCommentUseCase,
-            viewLifecycleOwner.lifecycleScope
+            viewLifecycleOwner
         )
     }
 
@@ -48,9 +44,10 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
         binding.viewmodel = postViewModel
 
         postViewModel.apply {
+            checkCommentLike(args.recomment.comments_likeCount)
             getReCommentLkeList(args.recomment.comments_likeCount)
-            getReCommentLike(args.recomment.comments_likeCount.contains(postViewModel.currentUid))
-            getComments()
+
+            checkPost()
             getCommentsKey(args.recomment.comments_commentskey)
             checkComment(args.recomment.comments_commentskey)
             checkReComment(args.recomment)
@@ -87,22 +84,9 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
             postViewModel.editTextPostComment.value = ""
             it.consume()
         }
-
-        postViewModel.commentsLikeList.observe(viewLifecycleOwner) {
-            postViewModel.checkCommentLike(it)
-        }
-
-
     }
 
     private fun initAdapter() {
         binding.recyclerViewFragmentReComment.adapter = adapter
     }
-
-    override fun onItemClick(recomments: Comments) {
-        postViewModel.checkReComment(recomments)
-        postViewModel.updateReCommentLikeState()
-    }
-
-
 }
