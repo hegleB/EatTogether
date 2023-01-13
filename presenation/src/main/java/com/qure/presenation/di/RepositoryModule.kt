@@ -3,7 +3,6 @@ package com.qure.presenation.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.data.repository.*
-import com.qure.domain.model.Setting
 import com.qure.domain.repository.*
 import dagger.Module
 import dagger.Provides

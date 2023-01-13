@@ -7,6 +7,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.qure.presenation.viewmodel.PostViewModel" />
@@ -23,15 +25,15 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolBar_fragmentPostCreate"
+            setNavigationOnClick="@{() -> viewmodel.backPostCreat()}"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/orange2"
-            app:menu="@menu/create_post_menu"
-            app:navigationIcon="@drawable/ic_back"
-            setNavigationOnClick="@{() -> viewmodel.backPostCreat()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/create_post_menu"
+            app:navigationIcon="@drawable/ic_back"
             app:title="게시글 작성"
             app:titleCentered="true"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
@@ -44,9 +46,9 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/shape_bottom_border1"
-            android:text="@={viewmodel.createPostTitle}"
             android:hint="제목"
             android:paddingStart="15dp"
+            android:text="@={viewmodel.createPostTitle}"
             app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentPostCreate" />
 
 
@@ -59,10 +61,10 @@
             android:background="@drawable/shape_bottom_border1"
             android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
             android:gravity="left|center"
+            android:onClick="@{() -> viewmodel.moveToPostCreateCategory()}"
             android:paddingStart="20dp"
             android:text="@{viewmodel.category}"
             android:textSize="15dp"
-            android:onClick="@{() -> viewmodel.moveToPostCreateCategory()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText_fragmentPostCreate_title" />
@@ -75,9 +77,9 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/shape_bottom_border1"
             android:gravity="top"
-            android:text="@={viewmodel.createPostContent}"
             android:hint="내용을 입력하세요"
             android:padding="15dp"
+            android:text="@={viewmodel.createPostContent}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appCompatButton_fragmentPostCreate_category" />
@@ -140,7 +142,7 @@
             android:id="@+id/spinKitView_fragmentPostCreate_loading"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:visibility="gone"
+            android:visibility="@{viewmodel.isLoading() ? View.VISIBLE : View.INVISIBLE}"
             app:SpinKit_Color="@color/black"
             app:SpinKit_Style="FadingCircle"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -4,20 +4,21 @@ import java.io.Serializable
 
 sealed class PostModel {
     data class Post(
-        var uid: String = "",
-        var writer: String = "",
-        var title: String = "",
-        var category: String = "",
-        var content: String = "",
-        var userimage: String = "",
-        var timestamp: String = "",
-        var key: String = "",
-        var likecount: ArrayList<String> = arrayListOf(),
-        var commentsCount: String = "",
-        var postImages: ArrayList<String> = arrayListOf()
+        val uid: String = "",
+        val writer: String = "",
+        val title: String = "",
+        val category: String = "",
+        val content: String = "",
+        val userimage: String = "",
+        val timestamp: String = "",
+        val key: String = "",
+        val likecount: ArrayList<String> = arrayListOf(),
+        val commentsCount: String = "",
+        val postImages: ArrayList<String> = arrayListOf()
     ) : Serializable
 
     data class PostImage(
-        var postImage: String = ""
+        val postkey: String = "",
+        val postImage: String = ""
     ) : Serializable
 }

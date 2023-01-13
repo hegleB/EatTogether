@@ -74,14 +74,9 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
         postViewModel.updatedState.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    binding.spinKitViewFragmentPostCreateLoading.visibility = View.GONE
                     findNavController().popBackStack()
                     postViewModel.setUpdatedState(Resource.Empty(""))
                 }
-                is Resource.Loading -> binding.spinKitViewFragmentPostCreateLoading.visibility =
-                    View.VISIBLE
-                is Resource.Error -> binding.spinKitViewFragmentPostCreateLoading.visibility =
-                    View.GONE
             }
         }
 
@@ -91,7 +86,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
         binding.toolBarFragmentPostCreate.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_create -> {
-                    postViewModel.setPost()
+                        postViewModel.createPost()
                     true
                 }
                 else -> false

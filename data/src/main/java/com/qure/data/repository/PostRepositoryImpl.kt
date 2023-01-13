@@ -3,7 +3,6 @@ package com.qure.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.qure.domain.model.Comments
-import com.qure.domain.model.PostModel
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.repository.AddPost
 import com.qure.domain.repository.PostRepository
@@ -11,8 +10,6 @@ import com.qure.domain.repository.UpdateLike
 import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -192,13 +189,13 @@ class PostRepositoryImpl @Inject constructor(
                         .addOnCompleteListener { snapshot ->
                             val posts = post.result.toObjects(Post::class.java)
                             val commentsPost = snapshot.result.toObjects(Comments::class.java)
-                            for (j in posts) {
-                                for (i in commentsPost) {
-                                    if (j.key.equals(i.comments_postkey) && !commentCreatedsPost.contains(
-                                            j
+                            for (post in posts) {
+                                for (comment in commentsPost) {
+                                    if (post.key.equals(comment.comments_postkey) && !commentCreatedsPost.contains(
+                                            post
                                         )
                                     ) {
-                                        commentCreatedsPost.add(j)
+                                        commentCreatedsPost.add(post)
                                     }
                                 }
                             }
