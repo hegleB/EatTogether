@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.qure.presenation.viewmodel.PeopleViewModel" />
@@ -20,7 +23,7 @@
             android:id="@+id/toolBar_fragmentProfile"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:visibility="invisible"
+            android:visibility="@{viewmodel.profileEditState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -35,11 +38,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:onClick="@{() -> viewmodel.cancelProfile()}"
             android:text="취소"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:textSize="20dp"
-            android:onClick="@{() -> viewmodel.cancelProfile()}"
-            android:visibility="invisible"
+            android:visibility="@{viewmodel.profileEditState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,6 +55,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/ic_baseline_close_24"
             android:backgroundTint="@color/black"
+            android:visibility="@{viewmodel.profileEditState == false ? View.VISIBLE : View.INVISIBLE}"
             android:onClick="@{() -> viewmodel.closeProfile()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -62,22 +66,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:onClick="@{() -> viewmodel.submitProfile()}"
             android:text="완료"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:textSize="20dp"
-            android:visibility="invisible"
-            android:onClick="@{() -> viewmodel.submitProfile()}"
+            android:visibility="@{viewmodel.profileEditState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circleImageView_fragmentProfile_profile"
+            userImage="@{viewmodel.myImage}"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="72dp"
-            android:src="@drawable/ic_user"
-            userImage="@{viewmodel.myImage}"
             android:onClick="@{() -> viewmodel.editProfileImage()}"
+            android:src="@drawable/ic_user"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.172"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +93,7 @@
             android:layout_height="25dp"
             android:background="@color/white"
             android:src="@drawable/ic_baseline_add_box_24"
-            android:visibility="invisible"
+            android:visibility="@{viewmodel.profileEditState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/circleImageView_fragmentProfile_profile"
             app:layout_constraintEnd_toEndOf="@+id/circleImageView_fragmentProfile_profile"
             app:layout_constraintHorizontal_bias="1.0"
@@ -104,11 +108,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:enabled="false"
+            android:onClick="@{() -> viewmodel.editProfileName()}"
             android:singleLine="true"
             android:text="@{viewmodel.myName}"
             android:textSize="28dp"
             android:textStyle="bold"
-            android:onClick="@{() -> viewmodel.editProfileName()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.283"
             app:layout_constraintStart_toEndOf="@+id/circleImageView_fragmentProfile_profile"
@@ -119,11 +123,11 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:enabled="false"
+            android:onClick="@{() -> viewmodel.editProfileMessage()}"
             android:singleLine="true"
             android:text="@{viewmodel.myMsg}"
             android:textSize="15dp"
             android:textStyle="bold"
-            android:onClick="@{() -> viewmodel.editProfileMessage()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.283"
             app:layout_constraintStart_toEndOf="@+id/circleImageView_fragmentProfile_profile"
@@ -149,11 +153,11 @@
             android:gravity="center"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:rollingText="@{viewmodel.postCount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.151"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            app:rollingText="@{viewmodel.postCount}" />
 
         <TextView
             android:id="@+id/textView_fragmentProfile_post"
@@ -176,11 +180,11 @@
             android:gravity="center"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:rollingText="@{viewmodel.meetingCount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.295"
             app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_postCount"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            app:rollingText="@{viewmodel.meetingCount}" />
 
         <TextView
             android:id="@+id/textView_fragmentProfile_meeting"
@@ -203,11 +207,11 @@
             android:gravity="center"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:rollingText="@{viewmodel.likeCount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.54"
             app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_meetingCount"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            app:rollingText="@{viewmodel.likeCount}" />
 
 
         <TextView
@@ -229,6 +233,7 @@
             android:layout_height="23dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
+            android:visibility="@{viewmodel.profileQRState == true ? View.VISIBLE : View.INVISIBLE}"
             android:background="@drawable/ic_pencil"
             android:onClick="@{() -> viewmodel.editProfile()}"
             app:layout_constraintEnd_toStartOf="@+id/imageView_fragmentProfile_qrcode"
@@ -243,6 +248,7 @@
             android:background="@drawable/ic_baseline_qr_code_24"
             android:backgroundTint="@color/black"
             android:onClick="@{() -> viewmodel.showProfileQRCode()}"
+            android:visibility="@{viewmodel.profileQRState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -256,6 +262,7 @@
             android:background="@drawable/ic_baseline_qr_code_scanner_24"
             android:backgroundTint="@color/black"
             android:onClick="@{() -> viewmodel.showProfileQRScanner()}"
+            android:visibility="@{viewmodel.profileQRState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView_fragmentProfile_submit"
             app:layout_constraintTop_toTopOf="parent" />
@@ -263,16 +270,16 @@
 
         <TextView
             android:id="@+id/textView_fragmentProfile_barcodeTime"
+            barcodeTimeRemaining="@{viewmodel.barcdoeCount}"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_round_20"
             android:layout_marginTop="12dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18dp"
+            android:background="@drawable/shape_round_20"
             android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:visibility="gone"
-            barcodeTimeRemaining="@{viewmodel.barcdoeCount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.948"
             app:layout_constraintStart_toStartOf="parent"

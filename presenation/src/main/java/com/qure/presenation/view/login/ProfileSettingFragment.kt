@@ -122,18 +122,11 @@ class ProfileSettingFragment :
         authViewModel.settingState.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    binding.spinKitViewFragmentProfileSettingLoading.visibility = View.GONE
                     addFirebaseStore()
                     moveToHome()
 
                 }
-
-                is Resource.Loading -> {
-                    binding.spinKitViewFragmentProfileSettingLoading.visibility = View.VISIBLE
-                }
-
                 is Resource.Error -> {
-                    binding.spinKitViewFragmentProfileSettingLoading.visibility = View.GONE
                     Snackbar.make(requireView(), "이미지 업로드 실패", Snackbar.LENGTH_LONG).show()
                 }
             }
@@ -141,9 +134,7 @@ class ProfileSettingFragment :
     }
 
     private fun addFirebaseStore() {
-
         val now = System.currentTimeMillis()
         authViewModel.setFireStoreUser(now)
     }
-
 }

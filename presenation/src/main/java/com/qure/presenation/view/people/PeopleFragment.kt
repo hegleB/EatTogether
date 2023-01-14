@@ -59,6 +59,8 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
         val uid = peopleViewModel.getCurrentUser()?.uid ?: ""
         peopleViewModel.myProfileImage.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
+            peopleViewModel.setClosedProfileState()
+            peopleViewModel.setQRAbledState()
             moveMyProfile(uid)
             it.consume()
         }
@@ -71,15 +73,6 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
         peopleViewModel.user.observe(viewLifecycleOwner) {
             peopleViewModel.getAllUser(it)
         }
-
-        peopleViewModel.isLoading.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.spinKitViewFragmentPeopleProgressbar.visibility = View.VISIBLE
-            } else {
-                binding.spinKitViewFragmentPeopleProgressbar.visibility = View.GONE
-            }
-        }
-
     }
 
     private fun initAdapter() {

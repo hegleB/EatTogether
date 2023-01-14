@@ -84,7 +84,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
 
     }
 
-
     private fun initPost() {
         binding.post = args.post
 
@@ -95,17 +94,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
     }
 
     private fun observeViewModel() {
-
-        postViewModel.editTextPostComment.observe(viewLifecycleOwner) {
-            when (it.length) {
-                0 -> binding.imageViewFragmentPostDetailSendComment.visibility = View.GONE
-                else -> {
-                    binding.imageViewFragmentPostDetailSendComment.visibility = View.VISIBLE
-
-                }
-            }
-        }
-
         postViewModel.toolbarBack.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
             findNavController().popBackStack()
@@ -114,17 +102,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
 
         postViewModel.commentsList.observe(viewLifecycleOwner) {
             postViewModel.updateCommentsCount(it.size.toString())
-            when (it.size) {
-                0 -> {
-                    binding.linearLayoutFragmentPostDetailNoComment.visibility = View.VISIBLE
-                    binding.recyclerViewFragmentPostDetailComment.visibility = View.GONE
-                }
-                else -> {
-                    binding.linearLayoutFragmentPostDetailNoComment.visibility = View.GONE
-                    binding.recyclerViewFragmentPostDetailComment.visibility = View.VISIBLE
-                }
-            }
-
             adapter.submitList(it)
 
         }

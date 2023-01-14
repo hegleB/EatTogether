@@ -85,15 +85,10 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
         authViewModel.signInGoogleState.observe(viewLifecycleOwner) { user ->
             when (user) {
                 is Resource.Success -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
                     authViewModel.isJoin(user.data!!)
                     findUser()
                 }
-                is Resource.Loading -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.VISIBLE
-                }
                 is Resource.Error -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
                     Snackbar.make(requireView(), user.message.toString(), Snackbar.LENGTH_LONG)
                         .show()
                 }
@@ -106,13 +101,7 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
                     binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
                     authViewModel.isJoin(user.data!!)
                 }
-
-                is Resource.Loading -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.VISIBLE
-                }
-
                 is Resource.Error -> {
-                    binding.spinKitViewDialogLoginProgressbar.visibility = View.GONE
                     Snackbar.make(requireView(), user.message.toString(), Snackbar.LENGTH_LONG)
                         .show()
                 }

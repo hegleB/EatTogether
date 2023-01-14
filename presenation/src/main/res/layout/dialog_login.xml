@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.qure.presenation.viewmodel.AuthViewModel" />
@@ -58,10 +60,10 @@
                 android:backgroundTint="@android:color/white"
                 android:drawableLeft="@drawable/shape_google"
                 android:gravity="center"
+                android:onClick="@{() -> viewmodel.signInGoogle()}"
                 android:text="구글로 로그인"
                 android:textColor="@android:color/black"
                 android:textSize="18dp"
-                android:onClick="@{() -> viewmodel.signInGoogle()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
@@ -84,11 +86,11 @@
                 android:backgroundTint="#5890FF"
                 android:drawableLeft="@drawable/shape_facebook"
                 android:gravity="center"
+                android:onClick="@{() -> viewmodel.signInFacebook()}"
                 android:text="Facebook으로 로그인"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
-                android:onClick="@{() -> viewmodel.signInFacebook()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
@@ -100,7 +102,7 @@
                 android:id="@+id/spinKitView_dialogLogin_progressbar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:visibility="gone"
+                android:visibility="@{viewmodel.isLoading() == true ? View.VISIBLE : View.INVISIBLE}"
                 app:SpinKit_Color="@color/black"
                 app:SpinKit_Style="FadingCircle"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -33,8 +33,6 @@ class ProfileDialogFragment :
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val args: ProfileDialogFragmentArgs by navArgs()
 
-    private var chatrooms: List<ChatRoom> = listOf()
-
     override fun init() {
         initViewModel()
         observeViewModel()
@@ -52,6 +50,7 @@ class ProfileDialogFragment :
         peopleViewModel.otherProfileInfo.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
             moveToProfile(args.peopleOtherPersonUid)
+            peopleViewModel.setClosedProfileState()
             it.consume()
         }
 

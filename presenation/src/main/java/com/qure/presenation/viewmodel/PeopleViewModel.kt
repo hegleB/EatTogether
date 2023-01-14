@@ -187,7 +187,15 @@ class PeopleViewModel @Inject constructor(
     private val _updatedState: MutableLiveData<Resource<String, String>> = MutableLiveData()
     val updatedState: LiveData<Resource<String, String>>
         get() = _updatedState
-    
+
+    private val _profileEditState: MutableLiveData<Boolean> = MutableLiveData(false)
+    val profileEditState: LiveData<Boolean>
+        get() = _profileEditState
+
+    private val _profileQRState: MutableLiveData<Boolean> = MutableLiveData(true)
+    val profileQRState: LiveData<Boolean>
+        get() = _profileQRState
+
     var deleteBarcodeTime by mutableStateOf<DeleteBarcodeTime>(Resource.Success(false))
         private set
 
@@ -215,11 +223,9 @@ class PeopleViewModel @Inject constructor(
         getAllUserUseCase()
             .collect {
                 when (it) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         val users = getRemovedCurrentUser(it.data!!, user)
                         _userList.value = users
-                        hideProgress()
                     }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
@@ -233,9 +239,7 @@ class PeopleViewModel @Inject constructor(
         getUserInfoUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
-                        hideProgress()
                         val user = it.data
                         _myName.value = user?.usernm
                         _myMsg.value = user?.usermsg
@@ -253,9 +257,7 @@ class PeopleViewModel @Inject constructor(
         getPostCountUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
-                        hideProgress()
                         _postCount.value = it.data.toString()
                     }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
@@ -273,9 +275,7 @@ class PeopleViewModel @Inject constructor(
         getMeetingCountUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
-                        hideProgress()
                         _meetingCount.value = it.data.toString()
                     }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
@@ -288,9 +288,7 @@ class PeopleViewModel @Inject constructor(
         getLikeCountUseCase(uid)
             .collect {
                 when (it) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
-                        hideProgress()
                         _likeCount.value = it.data.toString()
                     }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
@@ -299,36 +297,29 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun deleteBarcode() = viewModelScope.launch {
-        deleteBarcodeInfo = Resource.Loading()
         deleteBarcodeInfo = deleteBarcodeUseCase(currentUid)
     }
 
     fun deleteBarcodeTime() = viewModelScope.launch {
-        deleteBarcodeTime = Resource.Loading()
         deleteBarcodeTime = deleteBarcodeTimeUseCase(currentUid)
     }
 
     fun setBarcode(randomBarcode: String) = viewModelScope.launch {
-        addBarcodeInfo = Resource.Loading()
         addBarcodeInfo = setBarcodeUseCase(currentUid, randomBarcode)
     }
 
     fun setBarcodeTime() = viewModelScope.launch {
-        addBarcodeTime = Resource.Loading()
         addBarcodeTime = setBarcodeTimeUseCase(currentUid)
     }
 
     fun checkBarcodeTime() = viewModelScope.launch {
-        checkBarcodeTime = Resource.Loading()
         checkBarcodeTime = checkBarcodeTimeUseCase(currentUid)
     }
 
     fun getBarcodeTime() = viewModelScope.launch {
         getBarcodeTimeUseCase(currentUid).collect {
                 when (it) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
-                        hideProgress()
                         var data = it.data!!
                         var currentTime = System.currentTimeMillis()
                         var resultTime = data - currentTime
@@ -366,7 +357,6 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun chageProfile() = viewModelScope.launch {
-        updateUser = Resource.Loading()
         updateUser = updateUserUseCase(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
     }
 
@@ -468,5 +458,23 @@ class PeopleViewModel @Inject constructor(
 
     fun submitProfileEdit() {
         _profileEditCancle.value = Event(Unit)
+    }
+
+    fun setClosedProfileState() {
+        _profileEditState.value = false
+        _profileQRState.value = true
+    }
+
+    fun setEditedProfileState() {
+        _profileEditState.value =  true
+        _profileQRState.value = false
+    }
+
+    fun setQRAbledState() {
+        _profileQRState.value = true
+    }
+
+    fun setQRDisabledState() {
+        _profileQRState.value = false
     }
 }

@@ -121,9 +121,10 @@ class AuthViewModel @Inject constructor(
         private set
 
     fun accessGoogle(credential: AuthCredential) {
-        _signInGoogleState.value = Resource.Loading()
+        showProgress()
         signWithGoogleUseCase.signWithGoogle(credential).addOnCompleteListener {
             if (it.isSuccessful) {
+                hideProgress()
                 _signInGoogleState.value = Resource.Success(it.result?.user!!)
             } else {
                 _signInGoogleState.value = Resource.Error(it.exception?.message.toString())
@@ -132,9 +133,10 @@ class AuthViewModel @Inject constructor(
     }
 
     fun accessFacebook(token: AccessToken) = viewModelScope.launch {
-        _signInFacebookState.value = Resource.Loading()
+        showProgress()
         signWithFacebookUserCase.signWithFacebook(token).addOnCompleteListener {
             if (it.isSuccessful) {
+                hideProgress()
                 _signInFacebookState.value = Resource.Success(it.result.user!!)
             } else {
                 _signInFacebookState.value = Resource.Error(it.exception?.message.toString())
@@ -205,7 +207,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun storageProfile() {
-        _settingState.value = Resource.Loading()
+        showProgress()
         val riverRef: StorageReference =
             firebaseStorage.getReference()
                 .child("profile_image/" + currentUser.value?.uid.toString() + ".jpg")
@@ -216,6 +218,7 @@ class AuthViewModel @Inject constructor(
                     riverRef.downloadUrl.addOnSuccessListener {
                         _settingImageUri.value = it.toString()
                         _settingState.value = Resource.Success(setUserProfile())
+                        hideProgress()
                     }
                 }
             } else {

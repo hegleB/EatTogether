@@ -44,7 +44,6 @@ class ProfileDetailFragment :
     }
 
     override fun init() {
-        Log.d("PostUid", "${args.uid}")
         initViewModel()
         observeViewModel()
         onBackPressedEvent()
@@ -76,7 +75,7 @@ class ProfileDetailFragment :
     private fun observeViewModel() {
         peopleViewModel.profileClose.observe(this) {
             if (it.consumed) return@observe
-
+            peopleViewModel.setQRAbledState()
             if (args.uid.equals(currentUid)) {
                 updateProfile()
             } else {
@@ -88,6 +87,7 @@ class ProfileDetailFragment :
         peopleViewModel.profileSubmit.observe(this) {
             if (it.consumed) return@observe
             cancleEditProfile()
+            peopleViewModel.setClosedProfileState()
             it.consume()
         }
 
@@ -95,12 +95,16 @@ class ProfileDetailFragment :
             if (it.consumed) return@observe
             cancleEditProfile()
             peopleViewModel.getUserInfo(args.uid)
+            peopleViewModel.setClosedProfileState()
+            peopleViewModel.setQRAbledState()
             it.consume()
         }
 
         peopleViewModel.profileEdit.observe(this) {
             if (it.consumed) return@observe
             editProfile()
+            peopleViewModel.setEditedProfileState()
+            peopleViewModel.setQRDisabledState()
             it.consume()
         }
 
@@ -157,9 +161,6 @@ class ProfileDetailFragment :
 
     private fun editProfile() {
         binding.apply {
-
-            toolBarFragmentProfile.visibility = View.VISIBLE
-            imageViewFragmentProfileChangeImage.visibility = View.VISIBLE
             circleImageViewFragmentProfileProfile.isEnabled = true
             textViewFragmentProfileName.isEnabled = true
             textViewFragmentProfileName.background =
@@ -173,22 +174,11 @@ class ProfileDetailFragment :
                     requireContext(),
                     R.drawable.shape_bottom_border2
                 )
-            imageViewFragmentProfileProfileEdit.visibility = View.INVISIBLE
-            textViewFragmentProfileCancel.visibility = View.VISIBLE
-            textViewFragmentProfileSubmit.visibility = View.VISIBLE
-            imageViewFragmentProfileClose.visibility = View.INVISIBLE
-            imageViewFragmentProfileQrcode.visibility = View.INVISIBLE
-            imageViewFragmentProfileScanner.visibility = View.INVISIBLE
         }
     }
 
     fun cancleEditProfile() {
         binding.apply {
-
-            toolBarFragmentProfile.visibility = View.INVISIBLE
-            imageViewFragmentProfileQrcode.visibility = View.INVISIBLE
-            imageViewFragmentProfileScanner.visibility = View.INVISIBLE
-            imageViewFragmentProfileChangeImage.visibility = View.INVISIBLE
             circleImageViewFragmentProfileProfile.isEnabled = false
             textViewFragmentProfileName.isEnabled = false
             textViewFragmentProfileName.background =
@@ -198,31 +188,19 @@ class ProfileDetailFragment :
                 ContextCompat.getDrawable(requireContext(), R.color.white)
             peopleViewModel.checkBarcode.observe(viewLifecycleOwner) {
                 if (!it) {
-                    imageViewFragmentProfileProfileEdit.visibility = View.VISIBLE
-                    imageViewFragmentProfileQrcode.visibility = View.VISIBLE
-                    imageViewFragmentProfileScanner.visibility = View.VISIBLE
+                    peopleViewModel.setClosedProfileState()
                 } else {
-                    imageViewFragmentProfileProfileEdit.visibility = View.VISIBLE
-                    imageViewFragmentProfileQrcode.visibility = View.GONE
-                    imageViewFragmentProfileScanner.visibility = View.GONE
+                    peopleViewModel.setEditedProfileState()
                 }
             }
-            textViewFragmentProfileCancel.visibility = View.INVISIBLE
-            textViewFragmentProfileSubmit.visibility = View.INVISIBLE
-            imageViewFragmentProfileClose.visibility = View.VISIBLE
         }
     }
 
     private fun checkOtherProfile() {
         peopleViewModel.otherProfile.observe(viewLifecycleOwner) {
-            Log.d("OtherProfile", "${it}")
             binding.apply {
                 if (it.equals(false)) {
-                    imageViewFragmentProfileProfileEdit.visibility = View.GONE
-                    imageViewFragmentProfileQrcode.visibility = View.GONE
-                    imageViewFragmentProfileScanner.visibility = View.GONE
-                    textViewFragmentProfileBarcodeTime.visibility = View.GONE
-
+                    peopleViewModel.setQRDisabledState()
                 }
             }
         }
@@ -243,7 +221,6 @@ class ProfileDetailFragment :
         super.onActivityResult(requestCode, resultCode, data)
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
-            Log.d("QRcode", "${result.contents}")
             if (result.contents != null) {
 
                 peopleViewModel.apply {
@@ -259,32 +236,23 @@ class ProfileDetailFragment :
                     updateMeetingCount()
                 }
             }
-        } else {
-            Log.d("QRcode", "null")
         }
-
     }
 
     private fun countTime() {
         peopleViewModel.getBarcodeTime()
-
-        binding.imageViewFragmentProfileScanner.visibility = View.GONE
-        binding.imageViewFragmentProfileQrcode.visibility = View.GONE
-        binding.textViewFragmentProfileBarcodeTime.visibility = View.VISIBLE
-
         checkOtherProfile()
 
         var countDownTimer: CountDownTimer? = null
         peopleViewModel.barcodeTimeRemaining.observe(this) {
+            peopleViewModel.setQRAbledState()
             countDownTimer = object : CountDownTimer(it, 1000) {
                 override fun onTick(l: Long) {
                     peopleViewModel.countBarcodeTime(l)
                 }
 
                 override fun onFinish() {
-                    binding.imageViewFragmentProfileScanner.visibility = View.VISIBLE
-                    binding.imageViewFragmentProfileQrcode.visibility = View.VISIBLE
-                    binding.textViewFragmentProfileBarcodeTime.visibility = View.GONE
+                    peopleViewModel.setQRDisabledState()
                     peopleViewModel.deleteBarcodeTime()
                 }
             }.start()
@@ -344,12 +312,8 @@ class ProfileDetailFragment :
         peopleViewModel.updatedState.observe(this) {
             when (it) {
                 is Resource.Success -> {
-                    binding.spinKitViweFragmentProfileLoading.visibility = View.GONE
                     peopleViewModel.chageProfile()
                     findNavController().popBackStack()
-                }
-                is Resource.Loading -> {
-                    binding.spinKitViweFragmentProfileLoading.visibility = View.VISIBLE
                 }
                 is Resource.Error -> {
                     binding.spinKitViweFragmentProfileLoading.visibility =

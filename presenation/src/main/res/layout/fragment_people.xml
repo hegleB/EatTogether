@@ -186,22 +186,5 @@
 
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spinKitView_fragmentPeople_progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:SpinKit_Color="#0063DC"
-            app:SpinKit_Style="Circle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_conversion_absoluteHeight="0dp"
-            tools:layout_conversion_absoluteWidth="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
-
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

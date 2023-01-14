@@ -8,6 +8,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="post"
             type="com.qure.domain.model.PostModel.Post" />
@@ -28,15 +30,15 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolBar_fragmentPostDetail"
+            setNavigationOnClick="@{() -> viewmodel.backPostDetail()}"
+            setOnMenuItemClick=""
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/orange2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:navigationIcon="@drawable/ic_back"
-            setOnMenuItemClick=""
-            setNavigationOnClick="@{() -> viewmodel.backPostDetail()}"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_back" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView_fragmentPostDetail"
@@ -86,10 +88,10 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/circleImageView_fragmentPostDetail_user"
+                            userImage="@{post.userimage}"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:src="@drawable/ic_user"
-                            userImage="@{post.userimage}"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.044"
                             app:layout_constraintStart_toStartOf="parent"
@@ -108,14 +110,14 @@
 
                         <TextView
                             android:id="@+id/textView_fragmentPostDetail_timestamp"
+                            timeText="@{post.timestamp}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.044"
                             app:layout_constraintStart_toEndOf="@+id/circleImageView_fragmentPostDetail_user"
-                            app:layout_constraintTop_toBottomOf="@+id/textView_fragmentPostDetail_name"
-                            timeText="@{post.timestamp}"/>
+                            app:layout_constraintTop_toBottomOf="@+id/textView_fragmentPostDetail_name" />
 
                         <TextView
                             android:id="@+id/textView_fragmentPostDetail_title"
@@ -153,14 +155,14 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerView_fragmentPostDetail_image"
+                            postImageAdapter="@{viewmodel.postImageList}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            postImageAdapter="@{viewmodel.postImageList}"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView_fragmentPostDetail_content"
-                            app:layout_constraintVertical_bias="0.119"/>
+                            app:layout_constraintVertical_bias="0.119" />
 
 
                         <ImageView
@@ -262,7 +264,7 @@
                     android:background="@color/white"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
-                    android:visibility="gone"
+                    android:visibility="@{viewmodel.commentsList.size > 0 ? View.VISIBLE : View.GONE}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -279,14 +281,13 @@
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:visibility="@{viewmodel.commentsList.size == 0 ? View.VISIBLE : View.GONE}">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_gravity="center"
                         android:orientation="vertical">
-
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -343,8 +344,8 @@
                 android:paddingStart="18dp"
                 android:paddingEnd="45dp"
                 android:singleLine="true"
-                android:textCursorDrawable="@color/black"
                 android:text="@={viewmodel.editTextPostComment}"
+                android:textCursorDrawable="@color/black"
                 android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -357,9 +358,9 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_send"
-                android:visibility="gone"
                 android:onClick="@{() -> viewmodel.sendComment(editTextFragmentPostDetailComment.getText().toString())}"
+                android:src="@drawable/ic_send"
+                android:visibility="@{viewmodel.editTextPostComment.length() > 0 ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@+id/editText_fragmentPostDetail_comment"
                 app:layout_constraintEnd_toEndOf="@+id/editText_fragmentPostDetail_comment"
                 app:layout_constraintTop_toTopOf="@+id/editText_fragmentPostDetail_comment"
@@ -381,7 +382,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.472" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
