@@ -14,6 +14,7 @@ typealias CategoryPostResource = Resource<List<PostModel.Post>, String>
 typealias CreatedPostsResource = Resource<List<PostModel.Post>, String>
 typealias LikedPostsResource = Resource<List<PostModel.Post>, String>
 typealias CommentsCreatedPostsResource = Resource<List<PostModel.Post>, String>
+typealias PostImageResource = Resource<List<PostModel.PostImage>, String>
 
 interface PostRepository {
     suspend fun setPost(post: PostModel.Post): AddPost
@@ -30,4 +31,5 @@ interface PostRepository {
     suspend fun getProfileCreatedPosts(uid: String): Flow<CreatedPostsResource>
     suspend fun getProfileLikedPosts(uid: String): Flow<LikedPostsResource>
     suspend fun getProfileCommentsCreatedPosts(uid: String): Flow<CommentsCreatedPostsResource>
+    suspend fun getPostImage(postKey: String): Flow<PostImageResource>
 }

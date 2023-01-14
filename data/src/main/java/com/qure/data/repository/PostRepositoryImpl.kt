@@ -1,15 +1,19 @@
 package com.qure.data.repository
 
+
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.qure.domain.model.Comments
+import com.qure.domain.model.PostModel
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.repository.AddPost
+import com.qure.domain.repository.PostImageResource
 import com.qure.domain.repository.PostRepository
 import com.qure.domain.repository.UpdateLike
 import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -204,6 +208,26 @@ class PostRepositoryImpl @Inject constructor(
                 }
         awaitClose {
             callback.isCanceled
+        }
+    }
+
+    override suspend fun getPostImage(postKey: String) = callbackFlow {
+        trySend(Resource.Loading())
+        val callback =
+            firestore.collectionGroup("images")
+                .whereEqualTo("postkey", postKey)
+                .orderBy("postImage", Query.Direction.ASCENDING)
+                .addSnapshotListener { snapshot, e ->
+                    val postImageResource = if (snapshot != null) {
+                        val postimages = snapshot.toObjects(PostModel.PostImage::class.java)
+                        Resource.Success(postimages)
+                    } else {
+                        Resource.Error(e?.message)
+                    }
+                    trySend(postImageResource)
+                }
+        awaitClose {
+            callback.remove()
         }
     }
 }

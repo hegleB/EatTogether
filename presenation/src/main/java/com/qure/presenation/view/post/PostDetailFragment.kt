@@ -1,23 +1,17 @@
 package com.qure.presenation.view.post
 
-import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import com.quer.presenation.base.BaseFragment
-import com.qure.domain.model.Comments
 import com.qure.domain.usecase.comment.CheckCommentUseCase
 import com.qure.domain.usecase.comment.CheckReCommentUseCase
 import com.qure.domain.usecase.comment.GetReCommentsUseCase
 import com.qure.domain.usecase.comment.UpdateRecommentLikeUseCase
 import com.qure.presenation.R
 import com.qure.presenation.adapter.CommentsAdapter
+import com.qure.presenation.adapter.PostAdapter
+import com.qure.presenation.adapter.PostImagesAdapter
 import com.qure.presenation.databinding.FragmentPostDetailBinding
 import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.KeyboardEvent
@@ -44,7 +38,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
     lateinit var checkReCommentUseCase: CheckReCommentUseCase
 
 
-    private val adapter: CommentsAdapter by lazy {
+    private val commentAdapter: CommentsAdapter by lazy {
         CommentsAdapter(
             {
                 val direction =
@@ -55,6 +49,10 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
             postViewModel,
             viewLifecycleOwner
         )
+    }
+
+    private val imageAdapter: PostImagesAdapter by lazy {
+        PostImagesAdapter()
     }
 
     private val args: PostDetailFragmentArgs by navArgs()
@@ -80,6 +78,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
             getComments()
             getUserInfo()
             checkPost()
+            getPostImages()
         }
 
     }
@@ -90,7 +89,8 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
     }
 
     private fun initAdapter() {
-        binding.recyclerViewFragmentPostDetailComment.adapter = adapter
+        binding.recyclerViewFragmentPostDetailComment.adapter = commentAdapter
+        binding.recyclerViewFragmentPostDetailImage.adapter = imageAdapter
     }
 
     private fun observeViewModel() {
@@ -102,8 +102,12 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
 
         postViewModel.commentsList.observe(viewLifecycleOwner) {
             postViewModel.updateCommentsCount(it.size.toString())
-            adapter.submitList(it)
+            commentAdapter.submitList(it)
 
+        }
+
+        postViewModel.postDetailImageList.observe(viewLifecycleOwner) {
+            imageAdapter.submitList(it)
         }
 
         postViewModel.buttonSendComment.observe(viewLifecycleOwner) {

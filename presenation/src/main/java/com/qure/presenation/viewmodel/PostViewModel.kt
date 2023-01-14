@@ -1,6 +1,7 @@
 package com.qure.presenation.viewmodel
 
 import android.net.Uri
+import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -49,6 +50,7 @@ class PostViewModel @Inject constructor(
     private val getProfileLikedPostsUseCase: GetProfileLikedPostsUseCase,
     private val getProfileCommentsCreatedPostsUseCase: GetProfileCommentsCreatedPostsUseCase,
     private val updateCommentsCountUseCase: UpdateCommentsCountUseCase,
+    private val getPostImageUseCase: GetPostImageUseCase,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage
@@ -185,6 +187,10 @@ class PostViewModel @Inject constructor(
     private val _postImageList: MutableLiveData<List<String>> = MutableLiveData(listOf())
     val postImageList: LiveData<List<String>>
         get() = _postImageList
+
+    private val _postDetailImageList: MutableLiveData<List<PostModel.PostImage>> = MutableLiveData()
+    val postDetailImageList: LiveData<List<PostModel.PostImage>>
+        get() = _postDetailImageList
 
     var addComments by mutableStateOf<AddComments>(Resource.Success(false))
         private set
@@ -496,6 +502,16 @@ class PostViewModel @Inject constructor(
         _createPostImage.value = arrayListOf()
     }
 
+    fun getPostImages() = viewModelScope.launch {
+        getPostImageUseCase(_postKey.value ?: "").collect {
+            when (it) {
+                is Resource.Success -> {
+                    _postDetailImageList.value = it.data
+                }
+            }
+        }
+    }
+
     fun createPost() = viewModelScope.launch {
         val key = firestore.collection("posts").document().id
         val createImages = createPostImage.value ?: arrayListOf()
@@ -506,7 +522,25 @@ class PostViewModel @Inject constructor(
             for (i in createImages.indices) {
                 val riverRef: StorageReference =
                     firebaseStorage.getReference().child("post_image/" + key + "/" + i + ".jpg")
-                uploadImages(riverRef, createImages, i, key, imageList)
+                val uploadTask: UploadTask = riverRef.putFile(createImages.get(i).toUri())
+                uploadTask.addOnSuccessListener {
+
+                    riverRef.downloadUrl.addOnSuccessListener { uri ->
+                        firestore.collection("posts").document(key).collection("images")
+                            .document().set(PostModel.PostImage(key, uri.toString()))
+                        imageList.add(uri.toString())
+                        firestore.collection("posts").document(key).update("postImages", imageList)
+                    }
+                }
+                firestore.collection("posts").document(key).set(post)
+                uploadTask.addOnProgressListener {
+                    val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+                    if (progress == 100.0) {
+                        setPost(key, imageList)
+                        hideProgress()
+                        _updatedState.value = Resource.Success("성공")
+                    }
+                }
             }
         } else {
             setPost(key, imageList)
