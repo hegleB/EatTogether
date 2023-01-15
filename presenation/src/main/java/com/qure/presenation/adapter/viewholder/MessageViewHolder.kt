@@ -80,6 +80,8 @@ sealed class MessageViewHolder(
 
         override fun bind(item: ChatMessage) {
             binding.chatRight = item
+            println("RightUserCount : " + userCount)
+            println("RightReadUsers : " + item.readUsers.size)
             var cnt = userCount - item.readUsers.size
             if (cnt > 0) {
                 binding.rightReadCounter.visibility = View.VISIBLE

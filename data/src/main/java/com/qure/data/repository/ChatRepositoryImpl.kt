@@ -1,6 +1,7 @@
 package com.qure.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.qure.domain.model.ChatMessage
 import com.qure.domain.model.ChatRoom
 import com.qure.domain.repository.AddChatMessage
@@ -23,6 +24,7 @@ class ChatRepositoryImpl(
     override suspend fun getAllChatRoom(uid: String) = callbackFlow {
         trySend(Resource.Loading())
         val callback = firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .whereArrayContains("users", uid)
             .addSnapshotListener { snapshot, e ->
                 val chatRoomResource = if (snapshot != null) {
                     val chatRoomObjects = snapshot?.toObjects(ChatRoom::class.java)

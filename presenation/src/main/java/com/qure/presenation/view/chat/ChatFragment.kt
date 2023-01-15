@@ -17,14 +17,18 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val adapter: ChatRoomAdapter by lazy {
-        ChatRoomAdapter({})
+        ChatRoomAdapter(chatViewModel.curruntUid , {})
     }
 
     override fun init() {
         OnBackPressedListener().finish(requireActivity(), requireActivity())
         initAdapter()
         observeViewModel()
+        initViewModel()
+    }
 
+    private fun initViewModel() {
+        chatViewModel.getAllChatRoom()
     }
 
     private fun initAdapter() {

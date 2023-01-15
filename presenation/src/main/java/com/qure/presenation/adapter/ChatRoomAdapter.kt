@@ -1,15 +1,20 @@
 package com.qure.presenation.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
+import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.ChatRoom
+import com.qure.domain.model.User
+import com.qure.presenation.adapter.bindingadapter.ImageBindingAdapter
 import com.qure.presenation.base.BaseAdapter
 import com.qure.presenation.base.BaseViewHolder
 import com.qure.presenation.databinding.ItemChatBinding
 
-class ChatRoomAdapter(val itemClick: (ChatRoom) -> Unit) : BaseAdapter<ChatRoom>(itemCallback) {
+class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
+    BaseAdapter<ChatRoom>(itemCallback) {
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<ChatRoom>() {
@@ -39,7 +44,6 @@ class ChatRoomAdapter(val itemClick: (ChatRoom) -> Unit) : BaseAdapter<ChatRoom>
             binding.apply {
                 itemView.setOnClickListener {
                     chat?.run {
-
                         itemClick(this)
                     }
                 }
@@ -49,7 +53,41 @@ class ChatRoomAdapter(val itemClick: (ChatRoom) -> Unit) : BaseAdapter<ChatRoom>
         override fun bind(element: ChatRoom) {
             super.bind(element)
             binding.chat = element
+            var users = ""
+            for (i in element.photo.keys) {
+                if (!uid.equals(i)) {
+                    ImageBindingAdapter.userImage(
+                        binding.circleImageViewItemChat,
+                        element.photo.get(i)
+                    )
+                    FirebaseFirestore.getInstance().collection("users").document(i).get()
+                        .addOnSuccessListener { snapshot ->
+                            val user = snapshot.toObject(User::class.java)
+                            users += user!!.usernm + ", "
+                            binding.textViewItemChatTitle.setText(
+                                users.substring(0, users.length - 2)
+                            )
+                        }
 
+                }
+            }
+
+            if (element.lastmsg.startsWith("https://firebasestorage")) {
+                binding.textViewItemChatLastMsg.setText("사진을 보냈습니다.")
+
+            } else {
+                binding.textViewItemChatLastMsg.setText(element.lastmsg)
+            }
+
+            var cnt = element.unreadCount.get(uid)
+
+            if (cnt == 0) {
+                binding.textViewItemChatMsgCount.visibility = View.INVISIBLE
+            } else {
+                binding.textViewItemChatMsgCount.visibility = View.VISIBLE
+                binding.textViewItemChatMsgCount.setText(cnt.toString())
+
+            }
         }
     }
 }

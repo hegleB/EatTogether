@@ -64,7 +64,13 @@ class ChatViewModel @Inject constructor(
     private fun getUser(uid: String) = viewModelScope.launch {
         getUserInfoUseCase(uid).collect {
             when (it) {
-                is Resource.Success -> _user.value = it.data
+                is Resource.Success -> {
+                    if (uid == curruntUid) {
+                        _user.value = it.data
+                    } else {
+                        _otherUser.value = it.data
+                    }
+                }
             }
         }
     }
@@ -81,7 +87,6 @@ class ChatViewModel @Inject constructor(
                     is Resource.Loading -> showProgress()
                 }
             }
-
     }
 
     fun findChatRoom(otherUid: String): ChatRoom =
@@ -92,7 +97,7 @@ class ChatViewModel @Inject constructor(
     fun setChatRoom(otherUid: String) {
         val users = arrayListOf(otherUid, curruntUid)
         val userPhoto = user.value?.userphoto ?: ""
-        val otherUserPhoto = otherUser.value?.userphoto ?: ""
+        val otherUserPhoto = _otherUser.value?.userphoto ?: ""
         val chatRoom = ChatRoom(
             false,
             chatroomId,
@@ -107,12 +112,11 @@ class ChatViewModel @Inject constructor(
             mutableMapOf(curruntUid to 0, otherUid to 0),
             users
         )
-        _chatRoom.value = ChatRoom()
         addChatRoom(chatRoom)
     }
 
     fun addChatRoom(chatRoom: ChatRoom) = viewModelScope.launch {
-        addChatRoom = Resource.Loading()
         addChatRoom = setChatRoomUseCase(chatRoom)
+        _chatRoom.value = chatRoom
     }
 }
