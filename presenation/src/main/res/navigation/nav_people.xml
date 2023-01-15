@@ -101,9 +101,7 @@
         <argument
             android:name="chatroom"
             app:argType="com.qure.domain.model.ChatRoom" />
-        <argument
-            android:name="chatRoomId"
-            app:argType="string" />
+
         <argument
             android:name="otherUid"
             app:argType="string" />

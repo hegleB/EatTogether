@@ -56,8 +56,6 @@ class MessageViewModel @Inject constructor(
     val chatroom: LiveData<ChatRoom>
         get() = _chatroom
 
-    private val _chatroomId: MutableLiveData<String> = MutableLiveData("")
-
     var updateChatRoom by mutableStateOf<UpdateChatRoom>(Resource.Success(false))
         private set
 
@@ -131,7 +129,7 @@ class MessageViewModel @Inject constructor(
         _buttonSendMessage.value = Event(Unit)
         editTextMessage.value = ""
         val chatMessage = ChatMessage(
-            _chatroomId.value ?: "",
+            _chatroom.value?.roomId ?: "",
             _user.value?.userphoto ?: "",
             currentUser,
             _user.value?.usernm ?: "",
@@ -144,10 +142,10 @@ class MessageViewModel @Inject constructor(
 
     private fun updateLastMessaage(editText: String) {
         firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
-            .document(_chatroomId.value ?: "")
+            .document(_chatroom.value?.roomId ?: "")
             .update("lastmsg", editText)
         firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
-            .document(_chatroomId.value ?: "")
+            .document(_chatroom.value?.roomId ?: "")
             .update("lastDate", Date().time.toString())
     }
 
@@ -158,9 +156,5 @@ class MessageViewModel @Inject constructor(
 
     fun getChatRoom(chatroom: ChatRoom) {
         _chatroom.value = chatroom
-    }
-
-    fun getChatRoomId(chatRoomId: String) {
-        _chatroomId.value = chatRoomId
     }
 }

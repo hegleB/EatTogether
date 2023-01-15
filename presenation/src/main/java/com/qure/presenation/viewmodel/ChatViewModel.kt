@@ -25,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
     private val getAllChatRoomUseCase: GetAllChatRoomUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val setChatRoomUseCase: SetChatRoomUseCase
@@ -90,7 +91,8 @@ class ChatViewModel @Inject constructor(
             ?.find { it.isContainUid(otherUid) && it.isCorrectOneToOneChatroom() }
             ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
 
-    fun setChatRoom(otherUid: String, chatRoomId: String): ChatRoom {
+    fun setChatRoom(otherUid: String): ChatRoom {
+        val chatRoomId = firestore.collection("chatrooms").document().id
         val users = arrayListOf(otherUid, curruntUid)
         val userPhoto = user.value?.userphoto ?: ""
         val otherUserPhoto = _otherUser.value?.userphoto ?: ""
