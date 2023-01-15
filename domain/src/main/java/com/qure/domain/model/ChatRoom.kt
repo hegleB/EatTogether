@@ -21,4 +21,16 @@ data class ChatRoom(
 
     fun isCorrectOneToOneChatroom(): Boolean =
         this.users.size <= 2
+
+    fun removeChatRommUsers(chatUsers: List<User>): List<User> {
+        var chatusers = chatUsers.toMutableList()
+        for (user in this.users) {
+            chatusers = getChatRoomUsers(chatusers, user)
+        }
+        return chatUsers
+    }
+
+    private fun getChatRoomUsers(chatusers: MutableList<User>, user: String): MutableList<User> =
+        chatusers.filter { !it.isSameUid(user) }.toMutableList()
+
 }

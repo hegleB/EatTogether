@@ -5,130 +5,97 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.qure.presenation.viewmodel.MessageViewModel" />
 
     </data>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawerLayout_fragmentMessage_chat"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainLayout_fragmentMessage_message"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:openDrawer="right">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constrainLayout_fragmentMessage_message"
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolBar_fragmentMessage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/orange2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@{viewmodel.chatroom.title}"
+            app:titleCentered="true" />
 
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolBar_fragmentMessage"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/orange2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@{viewmodel.chatroom.title}"
-                app:titleCentered="true" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_fragmentMessage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@drawable/shape_bottom_border1"
-                android:scrollbars="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout_fragmentMessage_input"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentMessage"
-                app:layout_constraintVertical_bias="0.0"
-                tools:listitem="@layout/item_message" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout_fragmentMessage_input"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <ImageButton
-                    android:id="@+id/imageButton_fragmentMessage_messageImage"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/ic_camera"
-                    android:backgroundTint="@color/black"
-                    android:onClick="@{() -> viewmodel.buttonUploadMessageImage()}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/editText_fragmentMessage_messageEditText"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/shape_rectagle"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="45dp"
-                    android:text="@={viewmodel.editTextMessage}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageButton_fragmentMessage_messageImage"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/imageButton_fragmentMessage_messageSend"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@drawable/ic_send"
-                    android:visibility="@{viewmodel.editTextMessage.length() > 0 ? View.VISIBLE : View.INVISIBLE}"
-                    android:onClick="@{() -> viewmodel.writeMessage(viewmodel.editTextMessage)}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/editText_fragmentMessage_messageEditText"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_fragmentMessage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_bottom_border1"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout_fragmentMessage_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentMessage"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/item_message" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout_fragmentMessage_chatUsers"
-            android:layout_width="280dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:background="@color/white">
+            android:id="@+id/constraintLayout_fragmentMessage_input"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_fragmentMessage_addUser"
+            <ImageButton
+                android:id="@+id/imageButton_fragmentMessage_messageImage"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/ic_camera"
+                android:backgroundTint="@color/black"
+                android:onClick="@{() -> viewmodel.buttonUploadMessageImage()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/editText_fragmentMessage_messageEditText"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/shape_rectagle"
+                android:paddingStart="15dp"
+                android:paddingEnd="45dp"
+                android:text="@={viewmodel.editTextMessage}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/item_chat_people" />
+                app:layout_constraintStart_toEndOf="@+id/imageButton_fragmentMessage_messageImage"
+                app:layout_constraintTop_toTopOf="parent" />
 
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/appCompatButton_fragmentMessage_addUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="추가하기"
-                app:layout_constraintBottom_toBottomOf="parent" />
+            <ImageButton
+                android:id="@+id/imageButton_fragmentMessage_messageSend"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/ic_send"
+                android:onClick="@{() -> viewmodel.writeMessage(viewmodel.editTextMessage)}"
+                android:visibility="@{viewmodel.editTextMessage.length() > 0 ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/editText_fragmentMessage_messageEditText"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

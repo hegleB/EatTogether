@@ -52,6 +52,10 @@ class MessageViewModel @Inject constructor(
     val buttonImageSelection: LiveData<Event<Unit>>
         get() = _buttonImageSelection
 
+    private val _buttonAddUsers: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val buttonAddUsers: LiveData<Event<Unit>>
+        get() = _buttonAddUsers
+
     private val _messages: MutableLiveData<List<ChatMessage>> = MutableLiveData(emptyList())
     val messages: LiveData<List<ChatMessage>>
         get() = _messages
@@ -59,6 +63,10 @@ class MessageViewModel @Inject constructor(
     private val _chatroom: MutableLiveData<ChatRoom> = MutableLiveData()
     val chatroom: LiveData<ChatRoom>
         get() = _chatroom
+
+    private val _selectedUsers: MutableLiveData<List<User>> = MutableLiveData(emptyList())
+    val selectedUsers: LiveData<List<User>>
+        get() = _selectedUsers
 
     var updateChatRoom by mutableStateOf<UpdateChatRoom>(Resource.Success(false))
         private set
@@ -192,4 +200,36 @@ class MessageViewModel @Inject constructor(
         _buttonImageSelection.value = Event(Unit)
     }
 
+    fun addChatUsers() {
+        _buttonAddUsers.value = Event(Unit)
+        val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
+        val users = _chatroom.value?.users ?: mutableListOf()
+        val userCount = _chatroom.value?.userCount?.plus(_selectedUsers.value?.size ?: 0)
+
+        for (user in _selectedUsers.value ?: emptyList()) {
+            unreadCount.put(user.uid, 0)
+            users.add(user.uid)
+        }
+        updateChatRoomUsers(unreadCount, users, userCount)
+    }
+
+    private fun updateChatRoomUsers(
+        unreadCount: MutableMap<String, Int>,
+        addedUsers: MutableList<String>,
+        userCount: Int?
+    ) {
+        firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .document(_chatroom.value?.roomId ?: "")
+            .update("unreadCount", unreadCount)
+        firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .document(_chatroom.value?.roomId ?: "")
+            .update("users", addedUsers)
+        firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .document(_chatroom.value?.roomId ?: "")
+            .update("userCount", userCount)
+    }
+
+    fun setSelectedUsers(users: MutableList<User>) {
+        _selectedUsers.value = users
+    }
 }

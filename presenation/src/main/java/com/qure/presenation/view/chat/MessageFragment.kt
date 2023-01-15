@@ -1,6 +1,10 @@
 package com.qure.presenation.view.chat
 
 import android.net.Uri
+import android.os.Bundle
+import android.view.Gravity
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -43,6 +47,7 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
         initViewModel()
         observeViewModel()
         initRecyclerView()
+        setMessageToolbar()
     }
 
     private fun initViewModel() {
@@ -128,5 +133,33 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
                     }
                 }
             })
+    }
+
+    private fun setMessageToolbar() {
+        binding.apply {
+            toolBarFragmentMessage.inflateMenu(R.menu.chat_navigation)
+            toolBarFragmentMessage.setNavigationIcon(R.drawable.ic_back)
+            toolBarFragmentMessage.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            binding.toolBarFragmentMessage.setOnMenuItemClickListener(object :
+                Toolbar.OnMenuItemClickListener {
+                override fun onMenuItemClick(item: MenuItem?): Boolean {
+                    when (item!!.itemId) {
+                        R.id.menu_add_user -> {
+                            findNavController().navigate(MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(
+                                args.chatroom
+                            ))
+                            return true
+                        }
+                        else -> {
+                            return true
+                        }
+                    }
+                }
+
+            })
+        }
     }
 }
