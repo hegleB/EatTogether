@@ -138,6 +138,7 @@ class MessageViewModel @Inject constructor(
         )
         setChatMessage(chatMessage, editText)
         updateLastMessaage(editText)
+        updateUnreadCount()
     }
 
     private fun updateLastMessaage(editText: String) {
@@ -147,6 +148,19 @@ class MessageViewModel @Inject constructor(
         firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
             .update("lastDate", Date().time.toString())
+    }
+
+    private fun updateUnreadCount() {
+        val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
+        for (user in _chatroom.value?.users ?: listOf()) {
+            if (user != currentUser) {
+                var count = unreadCount.get(user) ?: 0
+                unreadCount.put(user, count.plus(1))
+            }
+        }
+        firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .document(_chatroom.value?.roomId ?: "")
+            .update("unreadCount", unreadCount)
     }
 
     fun setChatMessage(chatMessage: ChatMessage, editText: String) = viewModelScope.launch {
