@@ -2,6 +2,7 @@ package com.qure.presenation.view.chat
 
 import android.util.Log
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.quer.presenation.base.BaseFragment
 import com.qure.presenation.R
 import com.qure.presenation.adapter.ChatRoomAdapter
@@ -17,7 +18,10 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val adapter: ChatRoomAdapter by lazy {
-        ChatRoomAdapter(chatViewModel.curruntUid , {})
+        ChatRoomAdapter(chatViewModel.curruntUid , {
+            val direction = ChatFragmentDirections.actionChatFragmentToMessageFragment(it)
+            findNavController().navigate(direction)
+        })
     }
 
     override fun init() {
