@@ -34,8 +34,9 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
 
     private fun initViewModel() {
         binding.viewmodel = messageViewModel
+        messageViewModel.getChatRoomId(args.chatRoomId)
         messageViewModel.getChatRoom(args.chatroom)
-        messageViewModel.getMessage(args.chatroom.roomId)
+        messageViewModel.getMessage(args.chatRoomId)
         messageViewModel.getUserInfo()
         messageViewModel.readMessage()
     }

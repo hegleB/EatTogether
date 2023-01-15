@@ -32,6 +32,8 @@ class ProfileDialogFragment :
     private val peopleViewModel: PeopleViewModel by activityViewModels()
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val args: ProfileDialogFragmentArgs by navArgs()
+    @Inject
+    lateinit var firestore: FirebaseFirestore
 
     override fun init() {
         initViewModel()
@@ -69,9 +71,9 @@ class ProfileDialogFragment :
         findNavController().navigate(direction)
     }
 
-    private fun moveToChatRoom(chatRoom: ChatRoom) {
+    private fun moveToChatRoom(chatRoom: ChatRoom, chatRoomId: String) {
         val direction = ProfileDialogFragmentDirections.actionPeopleFragmentToMessageFragment(
-            chatRoom, args.peopleOtherPersonUid, false
+            chatRoom, chatRoomId, args.peopleOtherPersonUid,false
         )
         findNavController().navigate(direction)
     }
@@ -79,12 +81,11 @@ class ProfileDialogFragment :
     private fun createOneToOneChatRoom() {
         try {
             val chatroom = chatViewModel.findChatRoom(args.peopleOtherPersonUid)
-            moveToChatRoom(chatroom)
+            moveToChatRoom(chatroom, chatroom.roomId)
         } catch (e: IllegalArgumentException) {
-            chatViewModel.setChatRoom(args.peopleOtherPersonUid)
-            chatViewModel.chatRoom.observe(viewLifecycleOwner) {
-                moveToChatRoom(it)
-            }
+            val chatroomId = firestore.collection("chatrooms").document().id
+            val chatRoom = chatViewModel.setChatRoom(args.peopleOtherPersonUid, chatroomId)
+            moveToChatRoom(chatRoom, chatroomId)
         }
 
     }

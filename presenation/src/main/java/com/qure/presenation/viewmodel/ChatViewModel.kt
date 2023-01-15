@@ -25,7 +25,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
     private val getAllChatRoomUseCase: GetAllChatRoomUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val setChatRoomUseCase: SetChatRoomUseCase
@@ -36,11 +35,8 @@ class ChatViewModel @Inject constructor(
         get() = _user
 
     private val _otherUser: MutableLiveData<User> = MutableLiveData()
-    val otherUser: LiveData<User>
-        get() = _otherUser
 
     val curruntUid = firebaseAuth.currentUser?.uid ?: ""
-    val chatroomId = firestore.collection("chatrooms").document().id
 
     private val _chatRooms: MutableLiveData<List<ChatRoom>> = MutableLiveData(emptyList())
     val chatRooms: LiveData<List<ChatRoom>>
@@ -94,13 +90,25 @@ class ChatViewModel @Inject constructor(
             ?.find { it.isContainUid(otherUid) && it.isCorrectOneToOneChatroom() }
             ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
 
-    fun setChatRoom(otherUid: String) {
+    fun setChatRoom(otherUid: String, chatRoomId: String): ChatRoom {
         val users = arrayListOf(otherUid, curruntUid)
         val userPhoto = user.value?.userphoto ?: ""
         val otherUserPhoto = _otherUser.value?.userphoto ?: ""
+        val chatRoom = getFirstchatRoom(chatRoomId, userPhoto, otherUid, otherUserPhoto, users)
+        addChatRoom(chatRoom)
+        return chatRoom
+    }
+
+    private fun getFirstchatRoom(
+        chatRoomId: String,
+        userPhoto: String,
+        otherUid: String,
+        otherUserPhoto: String,
+        users: ArrayList<String>
+    ): ChatRoom {
         val chatRoom = ChatRoom(
             false,
-            chatroomId,
+            chatRoomId,
             "",
             mutableMapOf(
                 curruntUid to userPhoto,
@@ -112,11 +120,10 @@ class ChatViewModel @Inject constructor(
             mutableMapOf(curruntUid to 0, otherUid to 0),
             users
         )
-        addChatRoom(chatRoom)
+        return chatRoom
     }
 
     fun addChatRoom(chatRoom: ChatRoom) = viewModelScope.launch {
         addChatRoom = setChatRoomUseCase(chatRoom)
-        _chatRoom.value = chatRoom
     }
 }

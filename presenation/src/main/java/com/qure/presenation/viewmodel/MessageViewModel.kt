@@ -3,23 +3,27 @@ package com.qure.presenation.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Constraints
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.qure.domain.utils.ErrorMessage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.*
 import com.qure.domain.repository.AddChatMessage
 import com.qure.domain.repository.UpdateChatRoom
 import com.qure.domain.usecase.chat.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
+import com.qure.domain.utils.Constants
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,6 +55,8 @@ class MessageViewModel @Inject constructor(
     private val _chatroom: MutableLiveData<ChatRoom> = MutableLiveData()
     val chatroom: LiveData<ChatRoom>
         get() = _chatroom
+
+    private val _chatroomId: MutableLiveData<String> = MutableLiveData("")
 
     var updateChatRoom by mutableStateOf<UpdateChatRoom>(Resource.Success(false))
         private set
@@ -125,22 +131,36 @@ class MessageViewModel @Inject constructor(
         _buttonSendMessage.value = Event(Unit)
         editTextMessage.value = ""
         val chatMessage = ChatMessage(
-            _chatroom.value?.roomId ?: "",
+            _chatroomId.value ?: "",
             _user.value?.userphoto ?: "",
             currentUser,
             _user.value?.usernm ?: "",
             editText,
             "1"
         )
-        setChatMessage(chatMessage)
+        setChatMessage(chatMessage, editText)
+        updateLastMessaage(editText)
     }
 
-    fun setChatMessage(chatMessage: ChatMessage) = viewModelScope.launch {
+    private fun updateLastMessaage(editText: String) {
+        firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .document(_chatroomId.value ?: "")
+            .update("lastmsg", editText)
+        firestore.collection(Constants.CHATROOMS_COLLECTION_PATH)
+            .document(_chatroomId.value ?: "")
+            .update("lastDate", Date().time.toString())
+    }
+
+    fun setChatMessage(chatMessage: ChatMessage, editText: String) = viewModelScope.launch {
         addChatMessage = Resource.Loading()
         addChatMessage = setChatMessageUsecase(chatMessage)
     }
 
     fun getChatRoom(chatroom: ChatRoom) {
         _chatroom.value = chatroom
+    }
+
+    fun getChatRoomId(chatRoomId: String) {
+        _chatroomId.value = chatRoomId
     }
 }
