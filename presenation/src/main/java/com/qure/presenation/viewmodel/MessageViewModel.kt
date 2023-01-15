@@ -48,6 +48,10 @@ class MessageViewModel @Inject constructor(
     val buttonSendMessage: LiveData<Event<Unit>>
         get() = _buttonSendMessage
 
+    private val _buttonImageSelection: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val buttonImageSelection: LiveData<Event<Unit>>
+        get() = _buttonImageSelection
+
     private val _messages: MutableLiveData<List<ChatMessage>> = MutableLiveData(emptyList())
     val messages: LiveData<List<ChatMessage>>
         get() = _messages
@@ -128,17 +132,22 @@ class MessageViewModel @Inject constructor(
     fun writeMessage(editText: String) {
         _buttonSendMessage.value = Event(Unit)
         editTextMessage.value = ""
+        val chatMessage = getChatMessage(editText, "1")
+        setChatMessage(chatMessage)
+        updateLastMessaage(editText)
+        updateUnreadCount()
+    }
+
+    private fun getChatMessage(editText: String, messageType: String): ChatMessage {
         val chatMessage = ChatMessage(
             _chatroom.value?.roomId ?: "",
             _user.value?.userphoto ?: "",
             currentUser,
             _user.value?.usernm ?: "",
             editText,
-            "1"
+            messageType
         )
-        setChatMessage(chatMessage, editText)
-        updateLastMessaage(editText)
-        updateUnreadCount()
+        return chatMessage
     }
 
     private fun updateLastMessaage(editText: String) {
@@ -163,7 +172,7 @@ class MessageViewModel @Inject constructor(
             .update("unreadCount", unreadCount)
     }
 
-    fun setChatMessage(chatMessage: ChatMessage, editText: String) = viewModelScope.launch {
+    fun setChatMessage(chatMessage: ChatMessage) = viewModelScope.launch {
         addChatMessage = Resource.Loading()
         addChatMessage = setChatMessageUsecase(chatMessage)
     }
@@ -171,4 +180,16 @@ class MessageViewModel @Inject constructor(
     fun getChatRoom(chatroom: ChatRoom) {
         _chatroom.value = chatroom
     }
+
+    fun sendMessageImage(uri: String) {
+        val message = getChatMessage(uri, "2")
+        setChatMessage(message)
+        updateLastMessaage("사진을 보냈습니다.")
+        updateUnreadCount()
+    }
+
+    fun buttonUploadMessageImage() {
+        _buttonImageSelection.value = Event(Unit)
+    }
+
 }

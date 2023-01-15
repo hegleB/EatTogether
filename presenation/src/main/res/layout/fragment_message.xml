@@ -64,6 +64,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/ic_camera"
                     android:backgroundTint="@color/black"
+                    android:onClick="@{() -> viewmodel.buttonUploadMessageImage()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

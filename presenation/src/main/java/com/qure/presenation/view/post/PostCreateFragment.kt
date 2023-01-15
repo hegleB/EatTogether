@@ -126,7 +126,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
             .showGalleryTile(false)
             .setPreviewMaxCount(1000)
             .setSelectMaxCount(3)
-            .setSelectMaxCountErrorText("1개만 선택이 가능합니다.")
+            .setSelectMaxCountErrorText("3개만 선택이 가능합니다.")
             .showTitle(false)
             .setTitleBackgroundResId(R.color.light_red)
             .setGalleryTileBackgroundResId(R.color.white)

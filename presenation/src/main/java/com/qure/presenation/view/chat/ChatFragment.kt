@@ -7,6 +7,7 @@ import com.quer.presenation.base.BaseFragment
 import com.qure.presenation.R
 import com.qure.presenation.adapter.ChatRoomAdapter
 import com.qure.presenation.databinding.FragmentChatBinding
+import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.AuthViewModel
 import com.qure.presenation.viewmodel.ChatViewModel
@@ -26,6 +27,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     override fun init() {
         OnBackPressedListener().finish(requireActivity(), requireActivity())
+        BottomNavigationEvent().showBottomNavigation(activity!!)
         initAdapter()
         observeViewModel()
         initViewModel()
