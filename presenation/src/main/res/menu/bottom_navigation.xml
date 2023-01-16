@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/peopleContainerFragment"
+        android:id="@+id/peopleFragment"
         android:title="@string/people_text"
         android:icon="@drawable/ic_baseline_people_24"
 
         />
 
     <item
-        android:id="@+id/postContainerFragment"
+        android:id="@+id/postFragment"
         android:title="@string/post_text"
         android:icon="@drawable/ic_baseline_dashboard_24"
         android:checkable="true"
         />
 
     <item
-        android:id="@+id/chatContainerFragment"
+        android:id="@+id/chatFragment"
         android:title="@string/chat_text"
         android:icon="@drawable/ic_baseline_chat_24" />
 
     <item
-        android:id="@+id/settingContainerFragment"
+        android:id="@+id/settingFragment"
         android:title="@string/settings_text"
         android:icon="@drawable/ic_baseline_settings_24" />
 

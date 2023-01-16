@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -122,17 +123,11 @@ class SettingFragment : PreferenceFragmentCompat() {
         LogOutPreference!!.setOnPreferenceClickListener(object :
             Preference.OnPreferenceClickListener {
             override fun onPreferenceClick(preference: Preference?): Boolean {
-
-                viewModel.logout()
-                activity?.let {
-                    val intent = Intent(context, MainActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
-                }
-
-                return true
+                FirebaseAuth.getInstance().signOut()
+                findNavController().navigate(R.id.loginFragment)
+                return false
             }
-
         })
+
     }
 }

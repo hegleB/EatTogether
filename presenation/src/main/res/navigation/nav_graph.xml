@@ -6,6 +6,276 @@
     app:startDestination="@id/splashFragment">
 
     <fragment
+        android:id="@+id/userChatRoomAddFragment"
+        android:name="com.qure.presenation.view.chat.UserChatRoomAddFragment"
+        android:label="UserChatRoomAddFragment">
+        <argument
+            android:name="chatroom"
+            app:argType="com.qure.domain.model.ChatRoom" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.qure.presenation.view.chat.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_chat">
+        <action
+            android:id="@+id/action_chatFragment_to_messageFragment"
+            app:destination="@id/messageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/postCategoryFragment"
+        android:name="com.qure.presenation.view.post.PostCategoryFragment"
+        android:label="PostCategoryFragment"
+        tools:layout="@layout/fragment_post_category">
+        <argument
+            android:name="categoryname"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_postCategoryFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/postCreateCategoryFragment"
+        android:name="com.qure.presenation.view.post.PostCreateCategoryFragment"
+        android:label="PostCreateCategoryFragment"
+        tools:layout="@layout/fragment_post_create_category" />
+    <fragment
+        android:id="@+id/postCreateFragment"
+        android:name="com.qure.presenation.view.post.PostCreateFragment"
+        android:label="PostCreateFragment"
+        tools:layout="@layout/fragment_post_create">
+        <action
+            android:id="@+id/action_postCreateFragment_to_postCreateCategoryFragment"
+            app:destination="@id/postCreateCategoryFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <action
+        android:id="@+id/action_postFragment_to_postDetailFragment"
+        app:destination="@id/postDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+    <action
+        android:id="@+id/action_postDetailFragment_to_reCommentsFragment"
+        app:destination="@id/reCommentsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+    <action
+        android:id="@+id/action_postCreateFragment_to_postCreateCategoryFragment"
+        app:destination="@id/postCreateCategoryFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+    <action
+        android:id="@+id/action_postCategoryFragment_to_postDetailFragment"
+        app:destination="@id/postDetailFragment"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_right"
+        app:popEnterAnim="@anim/slide_in_right"
+        app:popExitAnim="@anim/slide_out_left" />
+    <fragment
+        android:id="@+id/reCommentsFragment"
+        android:name="com.qure.presenation.view.post.ReCommentsFragment"
+        android:label="ReCommentsFragment"
+        tools:layout="@layout/fragment_re_comments">
+        <argument
+            android:name="recomment"
+            app:argType="com.qure.domain.model.Comments" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.qure.presenation.view.post.PostDetailFragment"
+        android:label="PostDetailFragment"
+        tools:layout="@layout/fragment_post_detail">
+        <argument
+            android:name="post"
+            app:argType="com.qure.domain.model.PostModel$Post" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_reCommentsFragment"
+            app:destination="@id/reCommentsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <action
+        android:id="@+id/action_postFragment_to_postCategoryFragment"
+        app:destination="@id/postCategoryFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.qure.presenation.view.post.PostFragment"
+        android:label="PostFragment"
+        tools:layout="@layout/fragment_post">
+        <action
+            android:id="@+id/action_postFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_postFragment_to_postCreateFragment"
+            app:destination="@id/postCreateFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_bottom" />
+        <action
+            android:id="@+id/action_postFragment_to_postCategoryFragment"
+            app:destination="@id/postCategoryFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <action
+        android:id="@+id/action_postFragment_to_postCreateFragment"
+        app:destination="@id/postCreateFragment"
+        app:enterAnim="@anim/slide_in_bottom"
+        app:popExitAnim="@anim/slide_out_bottom" />
+    <fragment
+        android:id="@+id/postLikeTabFragment"
+        android:name="com.qure.presenation.view.people.PostLikeTabFragment"
+        android:label="PostLikeTabFragment"
+        tools:layout="@layout/fragment_post_like_tab" />
+    <fragment
+        android:id="@+id/postWriteTabFragment"
+        android:name="com.qure.presenation.view.people.PostWriteTabFragment"
+        android:label="PostWriteTabFragment"
+        tools:layout="@layout/fragment_post_write_tab" />
+    <fragment
+        android:id="@+id/profileDetailFragment"
+        android:name="com.qure.presenation.view.people.ProfileDetailFragment"
+        android:label="ProfileDetailFragment"
+        tools:layout="@layout/fragment_profile_detail">
+        <argument
+            android:name="uid"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_profileDetailFragment_to_profilePostDetailFragment"
+            app:destination="@id/profilePostDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/profilePostDetailFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_profileDetailFragment_to_profilePostDetailFragment"
+        app:destination="@id/profilePostDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        app:popUpTo="@id/profilePostDetailFragment"
+        app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/postCommentsTabFragment"
+        android:name="com.qure.presenation.view.people.PostCommentsTabFragment"
+        android:label="PostCommentsTabFragment"
+        tools:layout="@layout/fragment_post_comments_tab" />
+    <fragment
+        android:id="@+id/peopleFragment"
+        android:name="com.qure.presenation.view.people.PeopleFragment"
+        android:label="PeopleFragment"
+        tools:layout="@layout/fragment_people">
+
+        <action
+            android:id="@+id/action_peopleFragment_to_profileDialogFragment"
+            app:destination="@id/profileDialogFragment" />
+        <action
+            android:id="@+id/action_peopleFragment_to_profileDetailFragment"
+            app:destination="@id/profileDetailFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_bottom" />
+
+    </fragment>
+
+    <dialog
+        android:id="@+id/profileDialogFragment"
+        android:name="com.qure.presenation.view.people.ProfileDialogFragment"
+        android:label="ProfileDialogFragment"
+        tools:layout="@layout/dialog_profile">
+
+        <argument
+            android:name="people_other_person_uid"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_profileDialogFragment_to_profileDetailFragment"
+            app:destination="@id/profileDetailFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_bottom" />
+
+        <action
+            android:id="@+id/action_peopleFragment_to_messageFragment"
+            app:destination="@id/messageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </dialog>
+
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.qure.presenation.view.chat.MessageFragment"
+        android:label="MessageFragment"
+        tools:layout="@layout/fragment_message">
+        <argument
+            android:name="chatroom"
+            app:argType="com.qure.domain.model.ChatRoom" />
+
+        <argument
+            android:name="otherUid"
+            app:argType="string" />
+        <argument
+            android:name="notification"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_messageFragment_to_userChatRoomAddFragment"
+            app:destination="@id/userChatRoomAddFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <action
+        android:id="@+id/action_peopleFragment_to_profileDetailFragment"
+        app:destination="@id/profileDetailFragment"
+        app:enterAnim="@anim/slide_in_bottom"
+        app:popExitAnim="@anim/slide_out_bottom" />
+    <fragment
+        android:id="@+id/profilePostDetailFragment"
+        android:name="com.qure.presenation.view.post.PostDetailFragment"
+        android:label="PostDetailFragment"
+        tools:layout="@layout/fragment_post_detail">
+
+        <argument
+            android:name="post"
+            app:argType="com.qure.domain.model.PostModel$Post" />
+    </fragment>
+    <fragment
         android:id="@+id/splashFragment"
         android:name="com.qure.presenation.view.SplashFragment"
         android:label="SplashFragment"
@@ -14,8 +284,9 @@
             android:id="@+id/action_splashFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_peopleContainerFragment"
-            app:destination="@id/peopleContainerFragment" />
+            android:id="@+id/action_splashFragment_to_peopleFragment"
+            app:destination="@id/peopleFragment" />
+
     </fragment>
 
 
@@ -26,7 +297,7 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_loginBottomSheetDialog"
-            app:destination="@id/loginBottomSheetDialog" />
+            app:destination="@id/loginBottomSheetDialog"/>
     </fragment>
     <dialog
         android:id="@+id/loginBottomSheetDialog"
@@ -43,8 +314,8 @@
             app:popExitAnim="@anim/slide_out_right"/>
 
         <action
-            android:id="@+id/action_loginBottomSheetDialog_to_peopleContainerFragment"
-            app:destination="@+id/peopleContainerFragment"
+            android:id="@+id/action_loginBottomSheetDialog_to_peopleFragment"
+            app:destination="@+id/peopleFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -57,31 +328,20 @@
         android:name="com.qure.presenation.view.login.ProfileSettingFragment"
         android:label="ProfileSettingFragment"
         tools:layout="@layout/fragment_profile_setting">
+
         <action
-            android:id="@+id/action_profileSettingFragment_to_peopleContainerFragment"
-            app:destination="@id/peopleContainerFragment" />
+            android:id="@+id/action_profileSettingFragment_to_peopleFragment"
+            app:destination="@id/peopleFragment" />
     </fragment>
 
+
     <fragment
-        android:id="@+id/peopleContainerFragment"
-        android:name="com.qure.presenation.view.people.PeopleContainerFragment"
-        android:label="fragment_people_container"
-        tools:layout="@layout/fragment_people_container" />
-    <fragment
-        android:id="@+id/postContainerFragment"
-        android:name="com.qure.presenation.view.post.PostContainerFragment"
-        android:label="fragment_post_container"
-        tools:layout="@layout/fragment_post_container" />
-    <fragment
-        android:id="@+id/chatContainerFragment"
-        android:name="com.qure.presenation.view.chat.ChatContainerFragment"
-        android:label="fragment_chat_container"
-        tools:layout="@layout/fragment_chat_container" />
-    <fragment
-        android:id="@+id/settingContainerFragment"
-        android:name="com.qure.presenation.view.setting.SettingContainerFragment"
-        android:label="fragment_setting_container"
-        tools:layout="@layout/fragment_setting_container" />
+        android:id="@+id/settingFragment"
+        android:name="com.qure.presenation.view.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+
+    </fragment>
 
 
 </navigation>

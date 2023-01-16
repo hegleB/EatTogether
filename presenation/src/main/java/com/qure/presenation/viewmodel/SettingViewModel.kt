@@ -13,7 +13,4 @@ class SettingViewModel @Inject constructor(
 
     var isNotify = MutableLiveData<Boolean>()
 
-    fun logout() {
-        auth.signOut()
-    }
 }

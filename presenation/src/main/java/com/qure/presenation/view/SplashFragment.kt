@@ -53,15 +53,15 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
                 }
 
                 if (firebaseAuth.currentUser == null || !isTrue) {
-                    findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                    findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
                 } else {
                     lifecycleScope.launchWhenResumed {
-                        findNavController().navigate(R.id.action_splashFragment_to_peopleContainerFragment)
+                        findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToPeopleFragment())
                     }
                 }
             }
         } else {
-            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
         }
     }
 }

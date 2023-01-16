@@ -185,7 +185,7 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
     }
 
     private fun moveHomePage() {
-        findNavController().navigate(R.id.action_loginBottomSheetDialog_to_peopleContainerFragment)
+        findNavController().navigate(R.id.action_loginBottomSheetDialog_to_peopleFragment)
     }
 
     private fun failGoogleAuthMessage() {

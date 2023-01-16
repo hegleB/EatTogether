@@ -61,7 +61,7 @@ class ProfileSettingFragment :
     }
 
     private fun moveToHome() {
-        findNavController().navigate(R.id.action_profileSettingFragment_to_peopleContainerFragment)
+        findNavController().navigate(R.id.action_loginBottomSheetDialog_to_profileSettingFragment)
     }
 
     private fun checkProfileName(): Boolean {
