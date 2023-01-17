@@ -1,7 +1,6 @@
 package com.qure.presenation.viewmodel
 
 import android.net.Uri
-import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,7 +25,6 @@ import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -525,7 +523,8 @@ class PostViewModel @Inject constructor(
                 uploadTask.addOnSuccessListener {
 
                     riverRef.downloadUrl.addOnSuccessListener { uri ->
-                        firestore.collection(POSTS_COLLECTION_PATH).document(key).collection("images")
+                        firestore.collection(POSTS_COLLECTION_PATH).document(key).collection(
+                            IMAGES_COLLECTION_GROUP)
                             .document().set(PostModel.PostImage(key, uri.toString()))
                         imageList.add(uri.toString())
                         firestore.collection(POSTS_COLLECTION_PATH).document(key).update(

@@ -1,6 +1,5 @@
 package com.qure.presenation.view.setting
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -15,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.User
 import com.qure.domain.utils.*
 import com.qure.presenation.R
-import com.qure.presenation.view.MainActivity
 import com.qure.presenation.viewmodel.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,7 +46,7 @@ class SettingFragment : PreferenceFragmentCompat() {
     }
 
     private fun setCurrentLoginInfo(uid: String, loginInfo: Preference?) {
-        firestore.collection("users").document(uid).get().addOnCompleteListener { task ->
+        firestore.collection(USERS_COLLECTION_PATH).document(uid).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val email = task.result.toObject(User::class.java)
                 loginInfo!!.summary = email!!.userid

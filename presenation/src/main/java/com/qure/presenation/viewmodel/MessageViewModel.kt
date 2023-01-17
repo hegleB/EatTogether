@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.qure.domain.utils.ErrorMessage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,8 +14,7 @@ import com.qure.domain.repository.AddChatMessage
 import com.qure.domain.repository.UpdateChatRoom
 import com.qure.domain.usecase.chat.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
-import com.qure.domain.utils.Const
-import com.qure.domain.utils.Resource
+import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -100,7 +98,7 @@ class MessageViewModel @Inject constructor(
 
     fun readMessage() {
         val roomId = _chatroom.value?.roomId ?: ""
-        firestore.collection("chat").whereEqualTo("roomId", roomId)
+        firestore.collection(CHAT_COLLECTION_PATH).whereEqualTo(ROOM_ID_FIELD, roomId)
             .get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot != null) {
@@ -116,7 +114,7 @@ class MessageViewModel @Inject constructor(
             val data =
                 document.toObject(ChatMessage::class.java)?.readUsers ?: mutableMapOf()
             data.put(currentUser, true)
-            document.reference.update("readUsers", data)
+            document.reference.update(READ_USERS_FIELD, data)
             val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
             unreadCount.put(currentUser, 0)
             updateChatRoom(roomId)
@@ -157,12 +155,12 @@ class MessageViewModel @Inject constructor(
     }
 
     private fun updateLastMessaage(editText: String) {
-        firestore.collection(Const.CHATROOMS_COLLECTION_PATH)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
-            .update("lastmsg", editText)
-        firestore.collection(Const.CHATROOMS_COLLECTION_PATH)
+            .update(LAST_MESSAGE_FIELD, editText)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
-            .update("lastDate", Date().time.toString())
+            .update(LAST_DATE_FIELD, Date().time.toString())
     }
 
     private fun updateUnreadCount() {
@@ -173,9 +171,9 @@ class MessageViewModel @Inject constructor(
                 unreadCount.put(user, count.plus(1))
             }
         }
-        firestore.collection(Const.CHATROOMS_COLLECTION_PATH)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
-            .update("unreadCount", unreadCount)
+            .update(UNREAD_COUNT_FIELD, unreadCount)
     }
 
     fun setChatMessage(chatMessage: ChatMessage) = viewModelScope.launch {
@@ -216,15 +214,15 @@ class MessageViewModel @Inject constructor(
         addedUsers: MutableList<String>,
         userCount: Int?
     ) {
-        firestore.collection(Const.CHATROOMS_COLLECTION_PATH)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
-            .update("unreadCount", unreadCount)
-        firestore.collection(Const.CHATROOMS_COLLECTION_PATH)
+            .update(UNREAD_COUNT_FIELD, unreadCount)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
-            .update("users", addedUsers)
-        firestore.collection(Const.CHATROOMS_COLLECTION_PATH)
+            .update(USERS_FIELD, addedUsers)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
-            .update("userCount", userCount)
+            .update(USER_COUNT_FIELD, userCount)
     }
 
     fun setSelectedUsers(users: MutableList<User>) {
