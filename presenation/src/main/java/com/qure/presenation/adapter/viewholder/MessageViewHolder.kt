@@ -2,7 +2,6 @@ package com.qure.presenation.adapter.viewholder
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.qure.domain.model.ChatMessage

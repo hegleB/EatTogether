@@ -10,7 +10,6 @@ import com.qure.domain.usecase.comment.GetReCommentsUseCase
 import com.qure.domain.usecase.comment.UpdateRecommentLikeUseCase
 import com.qure.presenation.R
 import com.qure.presenation.adapter.CommentsAdapter
-import com.qure.presenation.adapter.PostAdapter
 import com.qure.presenation.adapter.PostImagesAdapter
 import com.qure.presenation.databinding.FragmentPostDetailBinding
 import com.qure.presenation.utils.BottomNavigationEvent

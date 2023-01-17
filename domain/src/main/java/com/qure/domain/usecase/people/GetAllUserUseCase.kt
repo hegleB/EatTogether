@@ -1,7 +1,5 @@
 package com.qure.domain.usecase.people
 
-
-import com.qure.domain.model.User
 import com.qure.domain.repository.UserRepository
 import javax.inject.Inject
 

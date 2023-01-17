@@ -1,10 +1,7 @@
 package com.qure.presenation.view.people
 
-import android.util.Log
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.quer.presenation.base.BaseFragment
 import com.qure.presenation.R
 import com.qure.presenation.adapter.PeopleAdapter

@@ -1,13 +1,10 @@
 package com.qure.presenation.view
 
 import android.util.Log
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -16,7 +13,6 @@ import com.qure.domain.model.ChatRoom
 import com.qure.presenation.R
 import com.qure.presenation.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 @AndroidEntryPoint

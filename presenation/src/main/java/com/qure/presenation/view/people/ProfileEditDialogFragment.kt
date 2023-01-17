@@ -1,10 +1,6 @@
 package com.qure.presenation.view.people
 
-import android.util.Log
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavArgs
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.qure.presenation.R
 import com.qure.presenation.base.BaseDialogFragment
 import com.qure.presenation.databinding.FragmentProfileEditDialogBinding

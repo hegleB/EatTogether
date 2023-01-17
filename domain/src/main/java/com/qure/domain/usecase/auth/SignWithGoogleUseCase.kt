@@ -1,6 +1,5 @@
 package com.qure.domain.usecase.auth
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthCredential
 import com.qure.domain.repository.AuthRepository
 import javax.inject.Inject

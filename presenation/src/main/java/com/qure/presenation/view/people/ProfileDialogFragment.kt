@@ -1,28 +1,16 @@
 package com.qure.presenation.view.people
 
-import android.os.Bundle
-import android.view.View
-import androidx.compose.animation.core.snap
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.tasks.Task
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.qure.domain.model.ChatRoom
-import com.qure.domain.model.User
 import com.qure.presenation.R
 import com.qure.presenation.base.BaseBottomSheetFragment
 import com.qure.presenation.databinding.DialogProfileBinding
 import com.qure.presenation.viewmodel.ChatViewModel
 import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.tasks.asDeferred
-import kotlinx.coroutines.tasks.asTask
 import javax.inject.Inject
 
 @AndroidEntryPoint

@@ -1,7 +1,6 @@
 package com.qure.presenation.view.post
 
 import android.net.Uri
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar

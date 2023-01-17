@@ -2,11 +2,9 @@ package com.qure.presenation.view.post
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.quer.presenation.base.BaseFragment
-import com.qure.domain.model.Comments
 import com.qure.domain.usecase.comment.CheckReCommentUseCase
 import com.qure.presenation.R
 import com.qure.presenation.adapter.ReCommentsAdapter

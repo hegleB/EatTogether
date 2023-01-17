@@ -1,14 +1,9 @@
 package com.qure.presenation.view.login
 
 import android.net.Uri
-import android.util.Log
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.StorageException
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.quer.presenation.base.BaseFragment

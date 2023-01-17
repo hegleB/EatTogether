@@ -9,7 +9,6 @@ import com.qure.presenation.R
 import com.qure.presenation.adapter.viewholder.MessageViewHolder
 import com.qure.presenation.databinding.ItemChatLeftBinding
 import com.qure.presenation.databinding.ItemChatRightBinding
-import com.qure.presenation.viewmodel.MessageViewModel
 
 class ChatAdapter(val userCount: Int, val uid: String) :
     ListAdapter<ChatMessage, MessageViewHolder>(itemCallback) {

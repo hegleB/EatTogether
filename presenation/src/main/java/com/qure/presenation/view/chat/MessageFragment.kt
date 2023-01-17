@@ -1,8 +1,6 @@
 package com.qure.presenation.view.chat
 
 import android.net.Uri
-import android.os.Bundle
-import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -24,7 +22,6 @@ import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import gun0912.tedbottompicker.TedBottomPicker
 import gun0912.tedbottompicker.TedBottomSheetDialogFragment
-import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
 

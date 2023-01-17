@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.qure.domain.model.*
+import com.qure.domain.model.User
 import com.qure.domain.repository.*
 import com.qure.domain.usecase.people.GetAllUserUseCase
 import com.qure.domain.usecase.people.GetUserInfoUseCase
@@ -23,7 +23,6 @@ import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

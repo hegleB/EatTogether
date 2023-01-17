@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
-import com.bumptech.glide.Glide
 import com.qure.domain.model.PostModel
 import com.qure.presenation.base.BaseAdapter
 import com.qure.presenation.base.BaseViewHolder

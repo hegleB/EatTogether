@@ -1,7 +1,6 @@
 package com.qure.presenation.utils
 
 import android.content.Context
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 
 class KeyboardEvent(val context: Context) {
