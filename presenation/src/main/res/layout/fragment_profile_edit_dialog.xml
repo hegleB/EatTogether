@@ -25,7 +25,7 @@
             android:layout_marginTop="16dp"
             android:text="취소"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:onClick="@{() -> viewmdoel.cancelProfileEdit()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +39,7 @@
             android:layout_marginEnd="16dp"
             android:text="확인"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:onClick="@{() -> viewmdoel.submitProfileEdit()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

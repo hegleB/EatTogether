@@ -88,7 +88,7 @@
                     android:background="@drawable/img_chat_left"
                     android:maxWidth="200dp"
                     android:text="@{chatLeft.message}"
-                    android:textSize="18dp" />
+                    android:textSize="18sp" />
 
 
                 <ImageView

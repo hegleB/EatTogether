@@ -19,7 +19,7 @@
             android:layout_height="0dp"
             android:gravity="center_vertical"
             android:text="@{name}"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:paddingStart="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

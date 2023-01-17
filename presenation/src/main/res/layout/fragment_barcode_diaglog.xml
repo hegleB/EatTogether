@@ -82,7 +82,7 @@
             android:layout_marginEnd="184dp"
             android:text="남은 시간 "
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView_fragmentDialogBarcode_barcode" />
 
@@ -94,7 +94,7 @@
             android:layout_marginTop="28dp"
             countBarcode="@{viewmodel.barcdoeCount}"
             android:textColor="#FF0000"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.068"
             app:layout_constraintStart_toEndOf="@+id/textView4"
@@ -107,7 +107,7 @@
             android:layout_marginTop="28dp"
             android:text="초"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView_fragmentDialogBarcode_counter"
