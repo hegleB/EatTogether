@@ -4,7 +4,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.Barcode
 import com.qure.domain.model.BarcodeTime
 import com.qure.domain.repository.*
-import com.qure.domain.utils.Constants
+import com.qure.domain.utils.BARCODE_COLLECTION_PATH
+import com.qure.domain.utils.BARCODE_TIME_COLLECTION_PATH
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -17,7 +18,7 @@ class BarcodeRepositoryImpl @Inject constructor(
 
     override suspend fun getBarcodeTime(uid: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.BARCODE_TIME_COLLECTION_PATH).document(uid)
+        val callback = firestore.collection(BARCODE_TIME_COLLECTION_PATH).document(uid)
             .addSnapshotListener { snapshot, e ->
                 val barcodeResource = if (snapshot != null) {
                     val barcodeTime = snapshot.toObject(BarcodeTime::class.java)
@@ -36,7 +37,7 @@ class BarcodeRepositoryImpl @Inject constructor(
     override suspend fun setBarcodeTime(uid: String): AddBarcodeTime {
         return try {
             val now = System.currentTimeMillis() + MAX_BARCODE_TIME
-            firestore.collection(Constants.BARCODE_TIME_COLLECTION_PATH)
+            firestore.collection(BARCODE_TIME_COLLECTION_PATH)
                 .document(uid)
                 .set(BarcodeTime(now))
                 .await()
@@ -49,7 +50,7 @@ class BarcodeRepositoryImpl @Inject constructor(
 
     override suspend fun checkBarcodeTime(uid: String): CheckBarcodeTime {
         return try {
-            firestore.collection(Constants.BARCODE_TIME_COLLECTION_PATH)
+            firestore.collection(BARCODE_TIME_COLLECTION_PATH)
                 .document(uid)
                 .get()
                 .await()
@@ -61,7 +62,7 @@ class BarcodeRepositoryImpl @Inject constructor(
 
     override suspend fun getBarcodeInfo(uid: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.BARCODE_COLLECTION_PATH)
+        val callback = firestore.collection(BARCODE_COLLECTION_PATH)
             .document(uid)
             .addSnapshotListener { snapshot, e ->
                 val barcodeInfoResource = if (snapshot != null) {
@@ -79,7 +80,7 @@ class BarcodeRepositoryImpl @Inject constructor(
 
     override suspend fun setBarcodeInfo(uid: String, randomValue: String): AddBarcodeInfo {
         return try {
-            firestore.collection(Constants.BARCODE_COLLECTION_PATH)
+            firestore.collection(BARCODE_COLLECTION_PATH)
                 .document(uid)
                 .set(Barcode(randomValue))
                 .await()
@@ -91,7 +92,7 @@ class BarcodeRepositoryImpl @Inject constructor(
 
     override suspend fun deleteBarcodeInfo(uid: String): DeleteBarcodeInfo {
         return try {
-            firestore.collection(Constants.BARCODE_COLLECTION_PATH)
+            firestore.collection(BARCODE_COLLECTION_PATH)
                 .document(uid)
                 .delete()
                 .await()
@@ -103,7 +104,7 @@ class BarcodeRepositoryImpl @Inject constructor(
 
     override suspend fun deleteBarcodeTime(uid: String): DeleteBarcodeTime {
         return try {
-            firestore.collection(Constants.BARCODE_COLLECTION_PATH)
+            firestore.collection(BARCODE_COLLECTION_PATH)
                 .document(uid)
                 .delete()
                 .await()

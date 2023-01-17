@@ -5,11 +5,9 @@ import com.qure.domain.model.BarcodeScan
 import com.qure.domain.repository.AddMeetingCount
 import com.qure.domain.repository.MeetingRepository
 import com.qure.domain.repository.UpdateMeetingCount
-import com.qure.domain.utils.Constants
+import com.qure.domain.utils.MEETING_COLLECTION_PATH
 import com.qure.domain.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -20,7 +18,7 @@ class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun setMeetingCount(uid: String, count: Int): AddMeetingCount {
         return try {
-            firestore.collection(Constants.MEETING_COLLECTION_PATH)
+            firestore.collection(MEETING_COLLECTION_PATH)
                 .document(uid).set(BarcodeScan(count))
             Resource.Success(true)
         } catch (e: Exception) {
@@ -30,7 +28,7 @@ class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun getMeetingCount(uid: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.MEETING_COLLECTION_PATH)
+        val callback = firestore.collection(MEETING_COLLECTION_PATH)
             .document(uid)
             .addSnapshotListener { snapshot, e ->
                 val meetingCountResource = if (snapshot != null) {
@@ -48,7 +46,7 @@ class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun updateMeetingCount(uid: String, count: Int): UpdateMeetingCount {
         return try {
-            firestore.collection(Constants.MEETING_COLLECTION_PATH).document(uid)
+            firestore.collection(MEETING_COLLECTION_PATH).document(uid)
                 .update("meeting", count)
                 .await()
             Resource.Success(true)

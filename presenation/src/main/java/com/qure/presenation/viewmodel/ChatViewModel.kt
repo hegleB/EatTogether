@@ -15,6 +15,7 @@ import com.qure.domain.repository.AddChatRoom
 import com.qure.domain.usecase.chat.GetAllChatRoomUseCase
 import com.qure.domain.usecase.chat.SetChatRoomUseCase
 import com.qure.domain.usecase.people.GetUserInfoUseCase
+import com.qure.domain.utils.CHATROOMS_COLLECTION_PATH
 import com.qure.domain.utils.Resource
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -92,7 +93,7 @@ class ChatViewModel @Inject constructor(
             ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
 
     fun setChatRoom(otherUid: String): ChatRoom {
-        val chatRoomId = firestore.collection("chatrooms").document().id
+        val chatRoomId = firestore.collection(CHATROOMS_COLLECTION_PATH).document().id
         val users = arrayListOf(otherUid, curruntUid)
         val userPhoto = user.value?.userphoto ?: ""
         val otherUserPhoto = _otherUser.value?.userphoto ?: ""

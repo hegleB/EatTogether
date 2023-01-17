@@ -2,22 +2,18 @@ package com.qure.presenation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.Comments
-import com.qure.domain.usecase.comment.CheckReCommentUseCase
-import com.qure.domain.utils.Constants
-import com.qure.domain.utils.Resource
-import com.qure.presenation.R
+import com.qure.domain.utils.COMMENTS_COLLECTION_PATH
+import com.qure.domain.utils.COMMENTS_LIKE_COUNT_FIELD
+import com.qure.domain.utils.REPLY_COLLECTION_PATH
 import com.qure.presenation.databinding.ItemRecommentsBinding
 import com.qure.presenation.viewmodel.PostViewModel
-import kotlinx.coroutines.launch
 
 class ReCommentsAdapter(
     val postViewModel: PostViewModel,
@@ -71,12 +67,12 @@ class ReCommentsAdapter(
 
         private fun updateLikeCount(commentKey: String, recommentKey: String, fieldValue: FieldValue) {
             FirebaseFirestore.getInstance()
-                .collection(Constants.COMMENTS_COLLECTION_PATH)
+                .collection(COMMENTS_COLLECTION_PATH)
                 .document(commentKey)
-                .collection(Constants.REPLY_COLLECTION_PATH)
+                .collection(REPLY_COLLECTION_PATH)
                 .document(recommentKey)
                 .update(
-                    "comments_likeCount",
+                    COMMENTS_LIKE_COUNT_FIELD,
                     fieldValue
                 )
         }

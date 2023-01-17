@@ -22,8 +22,7 @@ import com.qure.domain.repository.*
 import com.qure.domain.usecase.comment.*
 import com.qure.domain.usecase.people.GetUserInfoUseCase
 import com.qure.domain.usecase.post.*
-import com.qure.domain.utils.ErrorMessage
-import com.qure.domain.utils.Resource
+import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -431,7 +430,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun writeComments(content: String) = viewModelScope.launch {
-        val commentId = firestore.collection("comments").document().id
+        val commentId = firestore.collection(COMMENTS_COLLECTION_PATH).document().id
         if (writer.value != null) {
             val writer = writer.value!!
             val recomments = Comments(
@@ -453,7 +452,7 @@ class PostViewModel @Inject constructor(
 
     fun writeReComments(content: String) = viewModelScope.launch {
         val commentId = _recomment.value?.comments_commentskey ?: ""
-        val replyId = firestore.collection("comments").document().id
+        val replyId = firestore.collection(COMMENTS_COLLECTION_PATH).document().id
         if (writer.value != null) {
             val writer = writer.value!!
             val comments = Comments(
@@ -513,7 +512,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun createPost() = viewModelScope.launch {
-        val key = firestore.collection("posts").document().id
+        val key = firestore.collection(POSTS_COLLECTION_PATH).document().id
         val createImages = createPostImage.value ?: arrayListOf()
         val imageList = arrayListOf<String>()
         if (createImages.isNotEmpty()) {
@@ -526,13 +525,14 @@ class PostViewModel @Inject constructor(
                 uploadTask.addOnSuccessListener {
 
                     riverRef.downloadUrl.addOnSuccessListener { uri ->
-                        firestore.collection("posts").document(key).collection("images")
+                        firestore.collection(POSTS_COLLECTION_PATH).document(key).collection("images")
                             .document().set(PostModel.PostImage(key, uri.toString()))
                         imageList.add(uri.toString())
-                        firestore.collection("posts").document(key).update("postImages", imageList)
+                        firestore.collection(POSTS_COLLECTION_PATH).document(key).update(
+                            POST_IMAGES_FIELD, imageList)
                     }
                 }
-                firestore.collection("posts").document(key).set(post)
+                firestore.collection(POSTS_COLLECTION_PATH).document(key).set(post)
                 uploadTask.addOnProgressListener {
                     val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
                     if (progress == 100.0) {
@@ -571,11 +571,11 @@ class PostViewModel @Inject constructor(
         uri: Uri,
         imageList: ArrayList<String>
     ) {
-        firestore.collection("posts").document(key).collection("images")
+        firestore.collection(POSTS_COLLECTION_PATH).document(key).collection(IMAGES_COLLECTION_GROUP)
             .document().set(PostModel.PostImage(key, uri.toString()))
         imageList.add(uri.toString())
-        firestore.collection("posts").document(key)
-            .update("postImages", imageList)
+        firestore.collection(POSTS_COLLECTION_PATH).document(key)
+            .update(POST_IMAGES_FIELD, imageList)
     }
 
     private fun uploadProgress(

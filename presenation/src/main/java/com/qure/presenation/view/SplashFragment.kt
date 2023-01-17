@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.quer.presenation.base.BaseFragment
+import com.qure.domain.utils.USERS_COLLECTION_PATH
 import com.qure.presenation.R
 import com.qure.presenation.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +43,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
         val uid = firebaseAuth.currentUser?.uid
         var isTrue = false
         if (uid != null) {
-            firestore.collection("users").document(uid).addSnapshotListener { snapshot, e ->
+            firestore.collection(USERS_COLLECTION_PATH).document(uid).addSnapshotListener { snapshot, e ->
                 if (e != null) {
                 }
                 val data = snapshot?.data

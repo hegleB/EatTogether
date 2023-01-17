@@ -4,11 +4,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.qure.domain.model.Comments
 import com.qure.domain.repository.*
-import com.qure.domain.utils.Constants
-import com.qure.domain.utils.Resource
+import com.qure.domain.utils.*
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -19,11 +16,11 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun getComments(postKey: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
-            .whereEqualTo("comments_postkey", postKey)
-            .whereEqualTo("comments_depth", 0)
-            .orderBy("comments_timestamp", Query.Direction.ASCENDING)
-            .orderBy("comments_replyTimeStamp", Query.Direction.ASCENDING)
+        val callback = firestore.collection(COMMENTS_COLLECTION_PATH)
+            .whereEqualTo(COMMENTS_POST_KEY_FIELD, postKey)
+            .whereEqualTo(COMMENTS_DEPTH_FIELD, 0)
+            .orderBy(COMMENTS_TIMESTAMP_FIELD, Query.Direction.ASCENDING)
+            .orderBy(COMMENTS_REPLY_TIMESTAMP_FIELD, Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, e ->
                 val commentsResource = if (snapshot != null) {
                     val commets = snapshot.toObjects(Comments::class.java)
@@ -40,7 +37,7 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun setComments(comments: Comments): AddComments {
         return try {
-            firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
+            firestore.collection(COMMENTS_COLLECTION_PATH)
                 .document(comments.comments_commentskey)
                 .set(comments)
                 .await()
@@ -52,12 +49,12 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun getReComments(recomments: Comments) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collectionGroup(Constants.REPLY_COLLECTION_PATH)
-            .whereEqualTo("comments_postkey", recomments.comments_postkey)
-            .whereEqualTo("comments_depth", 1)
-            .whereEqualTo("comments_commentskey", recomments.comments_commentskey)
-            .orderBy("comments_timestamp", Query.Direction.ASCENDING)
-            .orderBy("comments_replyTimeStamp", Query.Direction.ASCENDING)
+        val callback = firestore.collectionGroup(REPLY_COLLECTION_PATH)
+            .whereEqualTo(COMMENTS_POST_KEY_FIELD, recomments.comments_postkey)
+            .whereEqualTo(COMMENTS_DEPTH_FIELD, 1)
+            .whereEqualTo(COMMENTS_COMMENT_KEY_FIELD, recomments.comments_commentskey)
+            .orderBy(COMMENTS_TIMESTAMP_FIELD, Query.Direction.ASCENDING)
+            .orderBy(COMMENTS_REPLY_TIMESTAMP_FIELD, Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, e ->
                 val reCommentsResource = if (snapshot != null) {
                     val commets = snapshot.toObjects(Comments::class.java)
@@ -74,9 +71,9 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun setReComments(recomments: Comments): AddReComments {
         return try {
-            firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
+            firestore.collection(COMMENTS_COLLECTION_PATH)
                 .document(recomments.comments_commentskey)
-                .collection(Constants.REPLY_COLLECTION_PATH)
+                .collection(REPLY_COLLECTION_PATH)
                 .document(recomments.comments_replyKey)
                 .set(recomments)
                 .await()
@@ -88,7 +85,7 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun checkComment(commentKey: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
+        val callback = firestore.collection(COMMENTS_COLLECTION_PATH)
             .document(commentKey)
             .addSnapshotListener { snapshot, e ->
                 val commentResource = if (snapshot != null) {
@@ -106,12 +103,12 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun checkReComment(recomments: Comments) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collectionGroup(Constants.REPLY_COLLECTION_PATH)
-            .whereEqualTo("comments_postkey", recomments.comments_postkey)
-            .whereEqualTo("comments_depth", 1)
-            .whereEqualTo("comments_commentskey", recomments.comments_commentskey)
-            .whereEqualTo("comments_timestamp", recomments.comments_timestamp)
-            .whereEqualTo("comments_replyTimeStamp", recomments.comments_replyTimeStamp)
+        val callback = firestore.collectionGroup(REPLY_COLLECTION_PATH)
+            .whereEqualTo(COMMENTS_POST_KEY_FIELD, recomments.comments_postkey)
+            .whereEqualTo(COMMENTS_DEPTH_FIELD, 1)
+            .whereEqualTo(COMMENTS_COMMENT_KEY_FIELD, recomments.comments_commentskey)
+            .whereEqualTo(COMMENTS_TIMESTAMP_FIELD, recomments.comments_timestamp)
+            .whereEqualTo(COMMENTS_REPLY_TIMESTAMP_FIELD, recomments.comments_replyTimeStamp)
             .addSnapshotListener { snapshot, e ->
                 val recommentResource = if (snapshot != null && !snapshot.isEmpty) {
                     val recomment = snapshot.toObjects(Comments::class.java).get(0)
@@ -131,9 +128,9 @@ class CommentRepositoryImpl @Inject constructor(
         commentLikeList: ArrayList<String>
     ): UpdateCommentsLike {
         return try {
-            firestore.collection(Constants.COMMENTS_COLLECTION_PATH)
+            firestore.collection(COMMENTS_COLLECTION_PATH)
                 .document(commentKey)
-                .update("comments_likeCount", commentLikeList)
+                .update(COMMENTS_LIKE_COUNT_FIELD, commentLikeList)
                 .await()
             Resource.Success(true)
         } catch (e: Exception) {
@@ -146,12 +143,12 @@ class CommentRepositoryImpl @Inject constructor(
         count: ArrayList<String>
     ): UpdateReCommentsLike {
         return try {
-            firestore.collectionGroup(Constants.REPLY_COLLECTION_PATH)
-                .whereEqualTo("comments_postkey", recomments.comments_postkey)
-                .whereEqualTo("comments_depth", 1)
-                .whereEqualTo("comments_commentskey", recomments.comments_commentskey)
-                .whereEqualTo("comments_timestamp", recomments.comments_timestamp)
-                .whereEqualTo("comments_replyTimeStamp", recomments.comments_replyTimeStamp)
+            firestore.collectionGroup(REPLY_COLLECTION_PATH)
+                .whereEqualTo(COMMENTS_POST_KEY_FIELD, recomments.comments_postkey)
+                .whereEqualTo(COMMENTS_DEPTH_FIELD, 1)
+                .whereEqualTo(COMMENTS_COMMENT_KEY_FIELD, recomments.comments_commentskey)
+                .whereEqualTo(COMMENTS_TIMESTAMP_FIELD, recomments.comments_timestamp)
+                .whereEqualTo(COMMENTS_REPLY_TIMESTAMP_FIELD, recomments.comments_replyTimeStamp)
                 .get()
                 .await()
             Resource.Success(true)
@@ -165,9 +162,9 @@ class CommentRepositoryImpl @Inject constructor(
         count: String
     ): UpdateCommentsCount {
         return try {
-            firestore.collection(Constants.POSTS_COLLECTION_PATH)
+            firestore.collection(POSTS_COLLECTION_PATH)
                 .document(postKey)
-                .update("commentsCount", count)
+                .update(COMMENTS_COUNT_FIELD, count)
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(e.message)

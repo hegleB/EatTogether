@@ -1,16 +1,12 @@
 package com.qure.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.qure.domain.model.User
 import com.qure.domain.repository.AddUser
 import com.qure.domain.repository.UpdateUser
 import com.qure.domain.repository.UserRepository
-import com.qure.domain.utils.Constants
-import com.qure.domain.utils.Resource
+import com.qure.domain.utils.*
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -21,7 +17,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setUser(uid: String, user: User): AddUser {
         return try {
-            firestore.collection(Constants.USERS_COLLECTION_PATH)
+            firestore.collection(USERS_COLLECTION_PATH)
                 .document(uid ?: "")
                 .set(user)
                 .await()
@@ -33,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(uid: String) = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.USERS_COLLECTION_PATH)
+        val callback = firestore.collection(USERS_COLLECTION_PATH)
             .document(uid ?: "")
             .addSnapshotListener { snapshot, e ->
                 val userResource = if (snapshot != null) {
@@ -51,7 +47,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getAllUser() = callbackFlow {
         trySend(Resource.Loading())
-        val callback = firestore.collection(Constants.USERS_COLLECTION_PATH)
+        val callback = firestore.collection(USERS_COLLECTION_PATH)
             .addSnapshotListener { snapshot, e ->
                 val usersResource = if (snapshot != null) {
                     val users = snapshot.toObjects(User::class.java)
@@ -74,11 +70,11 @@ class UserRepositoryImpl @Inject constructor(
         image: String
     ): UpdateUser {
         return try {
-            val userRef = firestore.collection(Constants.USERS_COLLECTION_PATH).document(uid)
+            val userRef = firestore.collection(USERS_COLLECTION_PATH).document(uid)
             firestore.runBatch {
-                it.update(userRef, "usernm", name)
-                it.update(userRef, "usermsg", msg)
-                it.update(userRef, "userphoto", image)
+                it.update(userRef, USER_NAME_FIELD, name)
+                it.update(userRef, USER_MESSAGE_FIELD, msg)
+                it.update(userRef, USER_PHOTO_FIELD, image)
             }
             Resource.Success(true)
         } catch (e: Exception) {

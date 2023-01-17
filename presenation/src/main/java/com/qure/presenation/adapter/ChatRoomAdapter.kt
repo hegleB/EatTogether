@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.ChatRoom
 import com.qure.domain.model.User
+import com.qure.domain.utils.USERS_COLLECTION_PATH
 import com.qure.presenation.adapter.bindingadapter.ImageBindingAdapter
 import com.qure.presenation.base.BaseAdapter
 import com.qure.presenation.base.BaseViewHolder
@@ -60,7 +61,7 @@ class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
                         binding.circleImageViewItemChat,
                         element.photo.get(i)
                     )
-                    FirebaseFirestore.getInstance().collection("users").document(i).get()
+                    FirebaseFirestore.getInstance().collection(USERS_COLLECTION_PATH).document(i).get()
                         .addOnSuccessListener { snapshot ->
                             val user = snapshot.toObject(User::class.java)
                             users += user!!.usernm + ", "
