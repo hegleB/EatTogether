@@ -24,39 +24,47 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
     lateinit var firestore: FirebaseFirestore
 
     override fun init() {
-        val fadeIn = ObjectAnimator.ofFloat(binding.textViewSplash, "alpha", 0f, 1f)
-        fadeIn.duration = 1700
-        fadeIn.start()
-
-        Handler(Looper.myLooper()!!).postDelayed({
-            fetchWelcome()
-        }, 2000)
+        ObjectAnimator.ofFloat(binding.textViewSplash, ANIMATOR_PROPERTY_NAME, 0f, 1f).apply {
+            duration = DURATION_VALUE
+            start()
+            Handler(Looper.myLooper()!!).postDelayed({
+                fetchWelcome()
+            }, FADEIN_DELAY)
+        }
     }
 
     fun fetchWelcome() {
-        val uid = firebaseAuth.currentUser?.uid
-        var isTrue = false
-        if (uid != null) {
-            firestore.collection(USERS_COLLECTION_PATH).document(uid).addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                }
-                val data = snapshot?.data
-
-
-                if (data != null) {
-                    isTrue = true
-                }
-
-                if (firebaseAuth.currentUser == null || !isTrue) {
-                    findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
-                } else {
-                    lifecycleScope.launchWhenResumed {
-                        findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToPeopleFragment())
-                    }
-                }
-            }
-        } else {
-            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+        val uid = firebaseAuth.currentUser?.uid ?: ""
+        when (uid.isNullOrEmpty()) {
+            true -> findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+            else -> isExistCurrentUser(uid)
         }
     }
+
+    private fun isExistCurrentUser(uid: String) {
+        firestore.collection(USERS_COLLECTION_PATH)
+            .document(uid)
+            .addSnapshotListener { snapshot, e ->
+                val isTrue = isExistSnapShoteData(snapshot?.data)
+                checkLoginSate(isTrue)
+            }
+    }
+
+    private fun checkLoginSate(isTrue: Boolean): Unit =
+        when (isNotExistCurrentUser(isTrue)) {
+            true -> findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+            else -> findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToPeopleFragment())
+        }
+
+    private fun isNotExistCurrentUser(isTrue: Boolean): Boolean =
+        firebaseAuth.currentUser == null || !isTrue
+
+    private fun isExistSnapShoteData(data: Map<String, Any>?): Boolean =
+        data != null
+
+    companion object {
+        const val DURATION_VALUE = 1700L
+        const val FADEIN_DELAY = 2000L
+        const val ANIMATOR_PROPERTY_NAME = "alpha"
+     }
 }
