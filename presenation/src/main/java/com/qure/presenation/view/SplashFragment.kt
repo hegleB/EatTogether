@@ -3,7 +3,6 @@ package com.qure.presenation.view
 import android.animation.ObjectAnimator
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
