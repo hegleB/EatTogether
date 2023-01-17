@@ -94,12 +94,8 @@
 
             <com.yy.mobile.rollingtextview.RollingTextView
                 android:id="@+id/rollingTextView_fragmentPeople_postCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/MyProfileCountRollingTextView"
                 app:rollingText="@{viewmodel.postCount}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
@@ -116,11 +112,7 @@
 
             <com.yy.mobile.rollingtextview.RollingTextView
                 android:id="@+id/rollingTextView_fragmentPeople_meetingCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/MyProfileCountRollingTextView"
                 app:rollingText="@{viewmodel.meetingCount}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -138,12 +130,8 @@
 
             <com.yy.mobile.rollingtextview.RollingTextView
                 android:id="@+id/rollingTextView_fragmentPeople_likeCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="50dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/MyProfileCountRollingTextView"
                 app:rollingText="@{viewmodel.likeCount}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/constraintLayout_fragmentPeople_view"

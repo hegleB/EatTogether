@@ -34,27 +34,20 @@
 
         <TextView
             android:id="@+id/textView_fragmentProfile_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:onClick="@{() -> viewmodel.cancelProfile()}"
             android:text="취소"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:textSize="20sp"
+            style="@style/UserProfileEditTextView"
+            android:layout_marginStart="16dp"
             android:visibility="@{viewmodel.profileEditState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <ImageView
-            android:id="@+id/imageView_fragmentProfile_close"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <ImageButton
+            android:id="@+id/imageButton_fragmentProfile_close"
+            style="@style/UserProfileImageButton"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:background="@drawable/ic_baseline_close_24"
-            android:backgroundTint="@color/black"
             android:visibility="@{viewmodel.profileEditState == false ? View.VISIBLE : View.INVISIBLE}"
             android:onClick="@{() -> viewmodel.closeProfile()}"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,14 +55,9 @@
 
         <TextView
             android:id="@+id/textView_fragmentProfile_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:onClick="@{() -> viewmodel.submitProfile()}"
             android:text="완료"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:textSize="20sp"
+            style="@style/UserProfileEditTextView"
             android:visibility="@{viewmodel.profileEditState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -87,8 +75,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView_fragmentProfile_changeImage"
+        <ImageButton
+            android:id="@+id/imageButton_fragmentProfile_changeImage"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@color/white"
@@ -147,12 +135,7 @@
 
         <com.yy.mobile.rollingtextview.RollingTextView
             android:id="@+id/rollingTextView_fragmentProfile_postCount"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:textStyle="bold"
+            style="@style/UserProfileCountRollingTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.151"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,12 +144,8 @@
 
         <TextView
             android:id="@+id/textView_fragmentProfile_post"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
             android:text="Post"
-            android:textSize="12sp"
+            style="@style/UserProfilePostTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.149"
             app:layout_constraintStart_toStartOf="parent"
@@ -174,12 +153,7 @@
 
         <com.yy.mobile.rollingtextview.RollingTextView
             android:id="@+id/rollingTextView_fragmentProfile_meetingCount"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:textStyle="bold"
+            style="@style/UserProfileCountRollingTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.295"
             app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_postCount"
@@ -188,12 +162,8 @@
 
         <TextView
             android:id="@+id/textView_fragmentProfile_meeting"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
             android:text="Meeting"
-            android:textSize="12sp"
+            style="@style/UserProfilePostTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.295"
             app:layout_constraintStart_toEndOf="@+id/textView_fragmentProfile_post"
@@ -201,12 +171,7 @@
 
         <com.yy.mobile.rollingtextview.RollingTextView
             android:id="@+id/rollingTextView_fragmentProfile_likeCount"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:textStyle="bold"
+            style="@style/UserProfileCountRollingTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.54"
             app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_meetingCount"
@@ -216,51 +181,39 @@
 
         <TextView
             android:id="@+id/textView_fragmentProfile_like"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
             android:text="Like"
-            android:textSize="12sp"
+            style="@style/UserProfilePostTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.54"
             app:layout_constraintStart_toEndOf="@+id/textView_fragmentProfile_meeting"
             app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_likeCount" />
 
-        <ImageView
-            android:id="@+id/imageView_fragmentProfile_profileEdit"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="16dp"
+        <ImageButton
+            android:id="@+id/imageButton_fragmentProfile_profileEdit"
+            style="@style/UserProfileImageButton"
             android:layout_marginEnd="12dp"
             android:visibility="@{viewmodel.profileQRState == true ? View.VISIBLE : View.INVISIBLE}"
             android:background="@drawable/ic_pencil"
             android:onClick="@{() -> viewmodel.editProfile()}"
-            app:layout_constraintEnd_toStartOf="@+id/imageView_fragmentProfile_qrcode"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton_fragmentProfile_qrcode"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView_fragmentProfile_qrcode"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="16dp"
+        <ImageButton
+            android:id="@+id/imageButton_fragmentProfile_qrcode"
+            style="@style/UserProfileImageButton"
             android:layout_marginEnd="60dp"
             android:background="@drawable/ic_baseline_qr_code_24"
-            android:backgroundTint="@color/black"
             android:onClick="@{() -> viewmodel.showProfileQRCode()}"
             android:visibility="@{viewmodel.profileQRState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <ImageView
-            android:id="@+id/imageView_fragmentProfile_scanner"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="16dp"
+        <ImageButton
+            android:id="@+id/imageButton_fragmentProfile_scanner"
+            style="@style/UserProfileImageButton"
             android:layout_marginEnd="16dp"
             android:background="@drawable/ic_baseline_qr_code_scanner_24"
-            android:backgroundTint="@color/black"
             android:onClick="@{() -> viewmodel.showProfileQRScanner()}"
             android:visibility="@{viewmodel.profileQRState == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -283,7 +236,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.948"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_fragmentProfile_profileEdit" />
+            app:layout_constraintTop_toBottomOf="@+id/imageButton_fragmentProfile_profileEdit" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spinKitViwe_fragmentProfile_loading"
