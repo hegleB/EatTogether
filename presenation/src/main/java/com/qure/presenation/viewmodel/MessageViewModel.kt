@@ -201,18 +201,21 @@ class MessageViewModel @Inject constructor(
         val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
         val users = _chatroom.value?.users ?: mutableListOf()
         val userCount = _chatroom.value?.userCount?.plus(_selectedUsers.value?.size ?: 0)
+        val userPhoto = _chatroom.value?.photo ?: mutableMapOf()
 
         for (user in _selectedUsers.value ?: emptyList()) {
             unreadCount.put(user.uid, 0)
             users.add(user.uid)
+            userPhoto.put(user.uid, user.userphoto)
         }
-        updateChatRoomUsers(unreadCount, users, userCount)
+        updateChatRoomUsers(unreadCount, users, userCount, userPhoto)
     }
 
     private fun updateChatRoomUsers(
         unreadCount: MutableMap<String, Int>,
         addedUsers: MutableList<String>,
-        userCount: Int?
+        userCount: Int?,
+        userPhoto: MutableMap<String, String>
     ) {
         firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
@@ -223,6 +226,9 @@ class MessageViewModel @Inject constructor(
         firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")
             .update(USER_COUNT_FIELD, userCount)
+        firestore.collection(CHATROOMS_COLLECTION_PATH)
+            .document(_chatroom.value?.roomId ?: "")
+            .update(PHOTO_FIELD, userPhoto)
     }
 
     fun setSelectedUsers(users: MutableList<User>) {
