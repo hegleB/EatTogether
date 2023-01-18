@@ -13,12 +13,12 @@ import java.util.ArrayList
 
 class BottomImagePicker(val context: Context, val requestActivity: FragmentActivity) {
 
-    fun getSnackBarMessage(
+    fun showSnackBarMessage(
         constrainLayout: ConstraintLayout,
         deniedPermissions: ArrayList<String>
     ) {
         Snackbar.make(
-            constrainLayout, "Permission Denied\n" +
+            constrainLayout, PERMISSION_DENIED +
                     deniedPermissions.toString(), Snackbar.LENGTH_LONG
         ).show()
     }
@@ -26,8 +26,8 @@ class BottomImagePicker(val context: Context, val requestActivity: FragmentActiv
     fun setPermission(permissionListener: PermissionListener) {
         TedPermission.with(context)
             .setPermissionListener(permissionListener)
-            .setRationaleMessage("사진을 추가하기 위해서는 권한 설정이 필요합니다.")
-            .setDeniedMessage("[설정] > [권한] 에서 권한을 허용할 수 있습니다..")
+            .setRationaleMessage(RATIONALE_MESSAGE)
+            .setDeniedMessage(DENIED_MESSAGE)
             .setPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
@@ -47,6 +47,13 @@ class BottomImagePicker(val context: Context, val requestActivity: FragmentActiv
             setTitleBackgroundResId(R.color.light_red)
             setGalleryTileBackgroundResId(R.color.white)
             setCompleteButtonText(CompleteButtonText)
-            setEmptySelectionText("사진 선택")
+            setEmptySelectionText(EMPTY_SELECTION_TEXT)
         }
+
+    companion object {
+        const val PERMISSION_DENIED = "Permission Denied\n"
+        const val RATIONALE_MESSAGE = "사진을 추가하기 위해서는 권한 설정이 필요합니다."
+        const val DENIED_MESSAGE = "[설정] > [권한] 에서 권한을 허용할 수 있습니다.."
+        const val EMPTY_SELECTION_TEXT = "사진 선택"
+    }
 }

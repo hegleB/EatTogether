@@ -93,7 +93,7 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
     }
 
     private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
-        bottomImagePicker.getSnackBarMessage(
+        bottomImagePicker.showSnackBarMessage(
             binding.constrainLayoutFragmentMessageMessage,
             deniedPermissions ?: arrayListOf()
         )
@@ -101,14 +101,11 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
 
     private fun openImagePicker() {
         bottomImagePicker.openImagePicker("3개만 선택이 가능합니다.", "선택")
-            .showMultiImage(object :
-                TedBottomSheetDialogFragment.OnMultiImageSelectedListener {
-                override fun onImagesSelected(uriList: MutableList<Uri>) {
-                    if (uriList.size > 0) {
-                        uploadImageMessage(uriList)
-                    }
+            .showMultiImage { uriList ->
+                if (uriList.size > 0) {
+                    uploadImageMessage(uriList)
                 }
-            })
+            }
     }
 
     private fun uploadImageMessage(uriList: MutableList<Uri>) {
@@ -135,9 +132,11 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
                     when (item!!.itemId) {
                         R.id.menu_add_user -> {
-                            findNavController().navigate(MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(
-                                args.chatroom
-                            ))
+                            findNavController().navigate(
+                                MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(
+                                    args.chatroom
+                                )
+                            )
                             return true
                         }
                         else -> {

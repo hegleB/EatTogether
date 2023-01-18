@@ -108,7 +108,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
     }
 
     private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
-        bottomImagePicker.getSnackBarMessage(
+        bottomImagePicker.showSnackBarMessage(
             binding.constraintLayoutFragmentPostCreate,
             deniedPermissions ?: arrayListOf()
         )
@@ -116,13 +116,10 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
 
     private fun openImagePicker() {
         bottomImagePicker.openImagePicker("3개만 선택이 가능합니다.", "선택")
-            .showMultiImage(object :
-                TedBottomSheetDialogFragment.OnMultiImageSelectedListener {
-                override fun onImagesSelected(uriList: MutableList<Uri>) {
-                    val list = getImageUri(uriList)
-                    postViewModel.getPostCreateImage(list)
-                }
-            })
+            .showMultiImage { uriList ->
+                val list = getImageUri(uriList)
+                postViewModel.getPostCreateImage(list)
+            }
     }
 
     private fun getImageUri(uriList: MutableList<Uri>): ArrayList<String> {
