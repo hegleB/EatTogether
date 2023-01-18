@@ -50,7 +50,16 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
 dependencies {
+    ktlint("com.pinterest:ktlint:0.48.1") {
+        attributes {
+            attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
+        }
+    }
 
     implementation project(path:':domain')
     implementation project(path:':data')
@@ -111,4 +120,21 @@ dependencies {
     implementation (Preference.PREFERENCE)
 
     implementation (Zxing.ZXING)
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args "src/**/*.kt"
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args "-F", "src/**/*.kt"
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
 }
