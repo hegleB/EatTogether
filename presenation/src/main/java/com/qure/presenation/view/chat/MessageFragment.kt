@@ -50,10 +50,12 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
 
     private fun initViewModel() {
         binding.viewmodel = messageViewModel
-        messageViewModel.getChatRoom(args.chatroom)
-        messageViewModel.getMessage(args.chatroom.roomId)
-        messageViewModel.getUserInfo()
-        messageViewModel.readMessage()
+        messageViewModel.apply {
+            getChatRoom(args.chatroom)
+            getMessage(args.chatroom.roomId)
+            getUserInfo()
+            readMessage()
+        }
     }
 
     private fun observeViewModel() {
@@ -117,32 +119,31 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
     }
 
     private fun setMessageToolbar() {
-        binding.apply {
-            toolBarFragmentMessage.inflateMenu(R.menu.chat_navigation)
-            toolBarFragmentMessage.setNavigationIcon(R.drawable.ic_back)
-            toolBarFragmentMessage.setNavigationOnClickListener {
+        binding.toolBarFragmentMessage.apply {
+            inflateMenu(R.menu.chat_navigation)
+            setNavigationIcon(R.drawable.ic_back)
+            setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
-
-            binding.toolBarFragmentMessage.setOnMenuItemClickListener(object :
-                Toolbar.OnMenuItemClickListener {
-                override fun onMenuItemClick(item: MenuItem?): Boolean {
-                    when (item!!.itemId) {
-                        R.id.menu_add_user -> {
-                            findNavController().navigate(
-                                MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(
-                                    args.chatroom
-                                )
-                            )
-                            return true
-                        }
-                        else -> {
-                            return true
-                        }
-                    }
-                }
-
-            })
+            clickAddUserMenu()
         }
+    }
+
+    private fun clickAddUserMenu() {
+        binding.toolBarFragmentMessage.setOnMenuItemClickListener(object :
+            Toolbar.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when (item!!.itemId) {
+                    R.id.menu_add_user -> moveToAddChatRoomUser()
+                }
+                return true
+            }
+        })
+    }
+
+    private fun moveToAddChatRoomUser() {
+        findNavController().navigate(
+            MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(args.chatroom)
+        )
     }
 }
