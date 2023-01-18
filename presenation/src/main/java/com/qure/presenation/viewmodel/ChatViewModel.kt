@@ -11,9 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.ChatRoom
 import com.qure.domain.model.User
 import com.qure.domain.repository.AddChatRoom
-import com.qure.domain.usecase.chat.GetAllChatRoomUseCase
-import com.qure.domain.usecase.chat.SetChatRoomUseCase
-import com.qure.domain.usecase.people.GetUserInfoUseCase
+import com.qure.domain.usecase.ChatUseCase
+import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.CHATROOMS_COLLECTION_PATH
 import com.qure.domain.utils.Resource
 import com.qure.presenation.base.BaseViewModel
@@ -25,9 +24,8 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val getAllChatRoomUseCase: GetAllChatRoomUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val setChatRoomUseCase: SetChatRoomUseCase
+    private val userUseCase: UserUseCase,
+    private val chatUseCase: ChatUseCase,
 ) : BaseViewModel() {
 
     private val _user: MutableLiveData<User> = MutableLiveData()
@@ -58,7 +56,7 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun getUser(uid: String) = viewModelScope.launch {
-        getUserInfoUseCase(uid).collect {
+        userUseCase.getUser(uid).collect {
             when (it) {
                 is Resource.Success -> {
                     if (uid == curruntUid) {
@@ -74,7 +72,7 @@ class ChatViewModel @Inject constructor(
     private fun isCurrentUser(uid: String) = uid == curruntUid
 
     fun getAllChatRoom() = viewModelScope.launch {
-        getAllChatRoomUseCase(curruntUid)
+        chatUseCase.getAllChatRoom(curruntUid)
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -125,6 +123,6 @@ class ChatViewModel @Inject constructor(
     }
 
     fun addChatRoom(chatRoom: ChatRoom) = viewModelScope.launch {
-        addChatRoom = setChatRoomUseCase(chatRoom)
+        addChatRoom = chatUseCase.setChatRoom(chatRoom)
     }
 }

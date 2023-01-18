@@ -4,10 +4,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.quer.presenation.base.BaseFragment
-import com.qure.domain.usecase.comment.CheckCommentUseCase
-import com.qure.domain.usecase.comment.CheckReCommentUseCase
-import com.qure.domain.usecase.comment.GetReCommentsUseCase
-import com.qure.domain.usecase.comment.UpdateRecommentLikeUseCase
 import com.qure.presenation.R
 import com.qure.presenation.adapter.CommentsAdapter
 import com.qure.presenation.adapter.PostImagesAdapter
@@ -17,25 +13,11 @@ import com.qure.presenation.utils.KeyboardEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.fragment_post_detail) {
 
     private val postViewModel: PostViewModel by activityViewModels()
-
-    @Inject
-    lateinit var getReCommentsUseCase: GetReCommentsUseCase
-
-    @Inject
-    lateinit var updateRecommentLikeUseCase: UpdateRecommentLikeUseCase
-
-    @Inject
-    lateinit var checkCommentUseCase: CheckCommentUseCase
-
-    @Inject
-    lateinit var checkReCommentUseCase: CheckReCommentUseCase
-
 
     private val commentAdapter: CommentsAdapter by lazy {
         CommentsAdapter(

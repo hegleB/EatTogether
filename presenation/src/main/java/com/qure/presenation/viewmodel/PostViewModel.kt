@@ -18,9 +18,9 @@ import com.qure.domain.model.PostModel
 import com.qure.domain.model.PostModel.Post
 import com.qure.domain.model.User
 import com.qure.domain.repository.*
-import com.qure.domain.usecase.comment.*
-import com.qure.domain.usecase.people.GetUserInfoUseCase
-import com.qure.domain.usecase.post.*
+import com.qure.domain.usecase.CommentUseCase
+import com.qure.domain.usecase.PostUseCase
+import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
@@ -30,24 +30,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val getAllPostUseCase: GetAllPostUseCase,
-    private val setPostUseCase: SetPostUseCase,
-    private val getCommentsUseCase: GetCommentsUseCase,
-    private val setCommentsUseCase: SetCommentsUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val updateLikeCountUseCase: UpdateLikeCountUseCase,
-    private val updateCommentLikeUseCase: UpdateCommentLikeUseCase,
-    private val checkPostUseCase: CheckPostUseCase,
-    private val checkCommentUseCase: CheckCommentUseCase,
-    private val checkReCommentUseCase: CheckReCommentUseCase,
-    private val getReCommentsUseCase: GetReCommentsUseCase,
-    private val setReCommentsUseCase: SetReCommentsUseCase,
-    private val getCategoryPostUseCase: GetCategoryPostUseCase,
-    private val getProfileCreatedPostsUseCase: GetProfileCreatedPostsUseCase,
-    private val getProfileLikedPostsUseCase: GetProfileLikedPostsUseCase,
-    private val getProfileCommentsCreatedPostsUseCase: GetProfileCommentsCreatedPostsUseCase,
-    private val updateCommentsCountUseCase: UpdateCommentsCountUseCase,
-    private val getPostImageUseCase: GetPostImageUseCase,
+    private val commentUseCase: CommentUseCase,
+    private val postUseCase: PostUseCase,
+    private val userUseCase: UserUseCase,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage
@@ -208,7 +193,7 @@ class PostViewModel @Inject constructor(
         private set
 
     fun getAllPost() = viewModelScope.launch {
-        getAllPostUseCase()
+        postUseCase.getAllPost()
             .collect {
                 when (it) {
                     is Resource.Loading -> showProgress()
@@ -222,7 +207,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun getCategoryPost() = viewModelScope.launch {
-        getCategoryPostUseCase(categoryName.value ?: "")
+        postUseCase.getCategoryPost(categoryName.value ?: "")
             .collect {
                 when (it) {
                     is Resource.Loading -> showProgress()
@@ -236,7 +221,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun getProfileCreatedPosts() = viewModelScope.launch {
-        getProfileCreatedPostsUseCase(profileUid.value ?: "")
+        postUseCase.getProfileCreatedPosts(profileUid.value ?: "")
             .collect {
                 when (it) {
                     is Resource.Loading -> showProgress()
@@ -250,7 +235,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun getProfileLikedPosts() = viewModelScope.launch {
-        getProfileLikedPostsUseCase(profileUid.value ?: "").collect {
+        postUseCase.getProfileLikedPosts(profileUid.value ?: "").collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -263,7 +248,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun getProfileCommentsCreatedPosts() = viewModelScope.launch {
-        getProfileCommentsCreatedPostsUseCase(profileUid.value ?: "").collect {
+        postUseCase.getProfileCommentsCreatedPosts(profileUid.value ?: "").collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -277,7 +262,7 @@ class PostViewModel @Inject constructor(
 
 
     fun getUserInfo() = viewModelScope.launch {
-        getUserInfoUseCase(currentUid).collect {
+        userUseCase.getUser(currentUid).collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -291,7 +276,7 @@ class PostViewModel @Inject constructor(
 
 
     fun getComments() = viewModelScope.launch {
-        getCommentsUseCase(_postKey.value ?: "").collect {
+        commentUseCase.getComments(_postKey.value ?: "").collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -305,11 +290,11 @@ class PostViewModel @Inject constructor(
 
     fun updateCommentsCount(count: String) = viewModelScope.launch {
         updateCommentsCount = Resource.Loading()
-        updateCommentsCount = updateCommentsCountUseCase(_postKey.value ?: "", count)
+        updateCommentsCount = commentUseCase.updateCommentsCount(_postKey.value ?: "", count)
     }
 
     fun getReComments(recomment: Comments) = viewModelScope.launch {
-        getReCommentsUseCase(recomment).collect {
+        commentUseCase.getReComments(recomment).collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -322,7 +307,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun checkPost() = viewModelScope.launch {
-        checkPostUseCase(_postKey.value ?: "").collect {
+        postUseCase.checkPost(_postKey.value ?: "").collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -336,7 +321,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun checkComment(commentKey: String) = viewModelScope.launch {
-        checkCommentUseCase(commentKey)
+        commentUseCase.checkComment(commentKey)
             .collect {
                 when (it) {
                     is Resource.Loading -> showProgress()
@@ -352,7 +337,7 @@ class PostViewModel @Inject constructor(
 
     fun checkReComment(recomment: Comments) = viewModelScope.launch {
         _recomment.value = recomment
-        checkReCommentUseCase(recomment)
+        commentUseCase.checkReComment(recomment)
             .collect {
                 when (it) {
                     is Resource.Loading -> showProgress()
@@ -399,7 +384,7 @@ class PostViewModel @Inject constructor(
         val likeList = _likeList.value ?: arrayListOf()
         likeList.add(currentUid)
         updateLike = Resource.Loading()
-        updateLike = updateLikeCountUseCase(likeList, _postKey.value ?: "")
+        updateLike = postUseCase.updateLike(likeList, _postKey.value ?: "")
     }
 
     fun addCommentlikeCount() = viewModelScope.launch {
@@ -407,7 +392,7 @@ class PostViewModel @Inject constructor(
         likeList.add(currentUid)
         if (commentKey.value != null) {
             updateCommentsLike = Resource.Loading()
-            updateCommentsLike = updateCommentLikeUseCase(_commentKey.value ?: "", likeList)
+            updateCommentsLike = commentUseCase.updateCommentLike(_commentKey.value ?: "", likeList)
         }
     }
 
@@ -415,7 +400,7 @@ class PostViewModel @Inject constructor(
         val likeList = _likeList.value ?: arrayListOf()
         likeList.remove(currentUid)
         updateLike = Resource.Loading()
-        updateLike = updateLikeCountUseCase(likeList, _postKey.value ?: "")
+        updateLike = postUseCase.updateLike(likeList, _postKey.value ?: "")
     }
 
     fun removeCommentLikeCount() = viewModelScope.launch {
@@ -423,7 +408,7 @@ class PostViewModel @Inject constructor(
         likeList.remove(currentUid)
         if (_commentKey.value != null) {
             updateCommentsLike = Resource.Loading()
-            updateCommentsLike = updateCommentLikeUseCase(_commentKey.value ?: "", likeList)
+            updateCommentsLike = commentUseCase.updateCommentLike(_commentKey.value ?: "", likeList)
         }
     }
 
@@ -444,7 +429,7 @@ class PostViewModel @Inject constructor(
                 0
             )
             addComments = Resource.Loading()
-            addComments = setCommentsUseCase(recomments)
+            addComments = commentUseCase.setComments(recomments)
         }
     }
 
@@ -467,7 +452,7 @@ class PostViewModel @Inject constructor(
                 replyId
             )
             addReComments = Resource.Loading()
-            addReComments = setReCommentsUseCase(comments)
+            addReComments = commentUseCase.setReComments(comments)
         }
     }
 
@@ -488,7 +473,7 @@ class PostViewModel @Inject constructor(
             postImages
         )
         addPost = Resource.Loading()
-        addPost = setPostUseCase(post)
+        addPost = postUseCase.setPost(post)
         initWritedPost()
     }
 
@@ -500,7 +485,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun getPostImages() = viewModelScope.launch {
-        getPostImageUseCase(_postKey.value ?: "").collect {
+        postUseCase.getPostImage(_postKey.value ?: "").collect {
             when (it) {
                 is Resource.Success -> {
                     _postDetailImageList.value = it.data

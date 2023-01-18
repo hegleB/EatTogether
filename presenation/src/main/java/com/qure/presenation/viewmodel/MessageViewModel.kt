@@ -14,10 +14,8 @@ import com.qure.domain.model.ChatRoom
 import com.qure.domain.model.User
 import com.qure.domain.repository.AddChatMessage
 import com.qure.domain.repository.UpdateChatRoom
-import com.qure.domain.usecase.chat.GetAllMessageUseCase
-import com.qure.domain.usecase.chat.SetChatMessageUsecase
-import com.qure.domain.usecase.chat.UpdateChatRoomUseCase
-import com.qure.domain.usecase.people.GetUserInfoUseCase
+import com.qure.domain.usecase.ChatUseCase
+import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
@@ -28,12 +26,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MessageViewModel @Inject constructor(
-    val firestore: FirebaseFirestore,
-    val firebaseAuth: FirebaseAuth,
-    val getAllMessageUsecase: GetAllMessageUseCase,
-    val setChatMessageUsecase: SetChatMessageUsecase,
-    val getUserInfoUseCase: GetUserInfoUseCase,
-    val updateChatRoomUseCase: UpdateChatRoomUseCase
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth,
+    private val userUseCase: UserUseCase,
+    private val chatUseCase: ChatUseCase,
 ) : BaseViewModel() {
 
     private val _user: MutableLiveData<User> = MutableLiveData(User())
@@ -75,7 +71,7 @@ class MessageViewModel @Inject constructor(
         private set
 
     fun getUserInfo() = viewModelScope.launch {
-        getUserInfoUseCase(currentUser).collect {
+        userUseCase.getUser(currentUser).collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -88,7 +84,7 @@ class MessageViewModel @Inject constructor(
     }
 
     fun getMessage(roomId: String) = viewModelScope.launch {
-        getAllMessageUsecase(roomId).collect {
+        chatUseCase.getAllMessage(roomId).collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -129,7 +125,7 @@ class MessageViewModel @Inject constructor(
         val unreadCount = _chatroom.value?.unreadCount ?: mutableMapOf()
         unreadCount.put(currentUser, 0)
         updateChatRoom = Resource.Loading()
-        updateChatRoom = updateChatRoomUseCase(roomId, unreadCount)
+        updateChatRoom = chatUseCase.updateChatRoom(roomId, unreadCount)
     }
 
     fun findMydocument(documents: List<DocumentSnapshot>): List<DocumentSnapshot> =
@@ -182,7 +178,7 @@ class MessageViewModel @Inject constructor(
 
     fun setChatMessage(chatMessage: ChatMessage) = viewModelScope.launch {
         addChatMessage = Resource.Loading()
-        addChatMessage = setChatMessageUsecase(chatMessage)
+        addChatMessage = chatUseCase.setChatMessage(chatMessage)
     }
 
     fun getChatRoom(chatroom: ChatRoom) {

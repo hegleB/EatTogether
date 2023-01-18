@@ -17,13 +17,8 @@ import com.qure.domain.model.Setting
 import com.qure.domain.model.User
 import com.qure.domain.repository.AddMeetingCount
 import com.qure.domain.repository.AddSetting
-import com.qure.domain.usecase.auth.SignInWithFacebookUseCase
-import com.qure.domain.usecase.auth.SignWithGoogleUseCase
-import com.qure.domain.usecase.people.GetAllUserUseCase
-import com.qure.domain.usecase.people.GetMessageTokenUseCase
-import com.qure.domain.usecase.profile.GetCurrentUserUseCase
-import com.qure.domain.usecase.profile.SetMeetingCountUseCase
-import com.qure.domain.usecase.profile.SetUserUseCase
+import com.qure.domain.usecase.AuthUseCase
+import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.usecase.setting.SetSettingUseCase
 import com.qure.domain.utils.ErrorMessage
 import com.qure.domain.utils.Resource
@@ -35,14 +30,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val signWithGoogleUseCase: SignWithGoogleUseCase,
-    private val signWithFacebookUserCase: SignInWithFacebookUseCase,
-    private val getAllUserUseCase: GetAllUserUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getMessageTokenUseCase: GetMessageTokenUseCase,
-    private val setUserUseCase: SetUserUseCase,
+    private val authUseCase: AuthUseCase,
+    private val userUseCase: UserUseCase,
     private val setSettingUseCase: SetSettingUseCase,
-    private val setMeetingCountUseCase: SetMeetingCountUseCase,
     private val firebaseStorage: FirebaseStorage,
 ) : BaseViewModel() {
 
@@ -123,7 +113,7 @@ class AuthViewModel @Inject constructor(
 
     fun accessGoogle(credential: AuthCredential) {
         showProgress()
-        signWithGoogleUseCase.signWithGoogle(credential).addOnCompleteListener {
+        authUseCase.signWithGoogle(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 hideProgress()
                 _signInGoogleState.value = Resource.Success(it.result?.user!!)
@@ -135,7 +125,7 @@ class AuthViewModel @Inject constructor(
 
     fun accessFacebook(token: AccessToken) = viewModelScope.launch {
         showProgress()
-        signWithFacebookUserCase.signWithFacebook(token).addOnCompleteListener {
+        authUseCase.signWithFacebook(token).addOnCompleteListener {
             if (it.isSuccessful) {
                 hideProgress()
                 _signInFacebookState.value = Resource.Success(it.result.user!!)
@@ -146,7 +136,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun getAllUser() = viewModelScope.launch {
-        getAllUserUseCase().collect {
+        userUseCase.getAllUser().collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -181,7 +171,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun getMessageToken() = viewModelScope.launch {
-        getMessageTokenUseCase.getMessageToken().addOnCompleteListener {
+        userUseCase.getUserMessageToken().addOnCompleteListener {
             if (it.isSuccessful) {
                 val token = it.result.toString()
                 _userMessageToken.value = token
@@ -190,7 +180,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun getCurrentUser() {
-        _currentUser.value = getCurrentUserUseCase.getCurrentUser()
+        _currentUser.value = userUseCase.getCurrentUser()
     }
 
     fun setUserProfile(): User = User(
@@ -237,12 +227,12 @@ class AuthViewModel @Inject constructor(
 
     fun setUser() = viewModelScope.launch {
         setUser = Resource.Loading()
-        setUser = setUserUseCase(currentUser.value?.uid ?: "", setUserProfile())
+        setUser = userUseCase.setUser(currentUser.value?.uid ?: "", setUserProfile())
     }
 
     fun setMeeting() = viewModelScope.launch {
         addMeetingCount = Resource.Loading()
-        addMeetingCount = setMeetingCountUseCase(currentUser.value?.uid ?: "", 0)
+        addMeetingCount = userUseCase.setMeetingCount(currentUser.value?.uid ?: "", 0)
     }
 
     fun setFireStoreUser(now: Long) {

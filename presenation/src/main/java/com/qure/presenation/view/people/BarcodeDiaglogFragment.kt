@@ -15,6 +15,7 @@ class BarcodeDiaglogFragment :
     BaseDialogFragment<FragmentBarcodeDiaglogBinding>(R.layout.fragment_barcode_diaglog) {
 
     private val peopleViewModel: PeopleViewModel by viewModels()
+    private var mCountDown: CountDownTimer? = null
 
     override fun init() {
         initViewModel()
@@ -53,7 +54,6 @@ class BarcodeDiaglogFragment :
 
     private fun countBarcode() {
         peopleViewModel.countBarcodeTime(15L)
-        var mCountDown: CountDownTimer? = null
         mCountDown = object : CountDownTimer(16000, 1000) {
             override fun onTick(l: Long) {
                 val num = l / 1000L

@@ -13,11 +13,9 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.User
 import com.qure.domain.repository.*
-import com.qure.domain.usecase.people.GetAllUserUseCase
-import com.qure.domain.usecase.people.GetUserInfoUseCase
-import com.qure.domain.usecase.post.GetLikeCountUseCase
-import com.qure.domain.usecase.post.GetPostCountUseCase
-import com.qure.domain.usecase.profile.*
+import com.qure.domain.usecase.BarcodeUseCase
+import com.qure.domain.usecase.PostUseCase
+import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.ErrorMessage
 import com.qure.domain.utils.Resource
 import com.qure.presenation.Event
@@ -28,20 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PeopleViewModel @Inject constructor(
-    private val getAllUserUseCase: GetAllUserUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getLikeCountUseCase: GetLikeCountUseCase,
-    private val getPostCountUseCase: GetPostCountUseCase,
-    private val getMeetingCountUseCase: GetMeetingCountUseCase,
-    private val updateMeetingCountUseCase: UpdateMeetingCountUseCase,
-    private val deleteBarcodeTimeUseCase: DeleteBarcodeTimeUseCase,
-    private val deleteBarcodeUseCase: DeleteBarcodeUseCase,
-    private val setBarcodeTimeUseCase: SetBarcodeTimeUseCase,
-    private val setBarcodeUseCase: SetBarcodeUseCase,
-    private val checkBarcodeTimeUseCase: CheckBarcodeTimeUseCase,
-    private val getBarcodeTimeUseCase: GetBarcodeTimeUseCase,
-    private val updateUserUseCase: UpdateUserUseCase,
+    private val userUseCase: UserUseCase,
+    private val postUseCase: PostUseCase,
+    private val barcodeUseCase: BarcodeUseCase,
     private val firebaseStorage: FirebaseStorage
 ) : BaseViewModel() {
 
@@ -216,10 +203,10 @@ class PeopleViewModel @Inject constructor(
     var updateUser by mutableStateOf<UpdateUser>(Resource.Success(false))
         private set
 
-    fun getCurrentUser() = getCurrentUserUseCase.getCurrentUser()
+    fun getCurrentUser() = userUseCase.getCurrentUser()
 
     fun getAllUser(user: User) = viewModelScope.launch {
-        getAllUserUseCase()
+        userUseCase.getAllUser()
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -235,7 +222,7 @@ class PeopleViewModel @Inject constructor(
         users.filter { !it.isSameUid(user.uid) }
 
     fun getUserInfo(uid: String) = viewModelScope.launch {
-        getUserInfoUseCase(uid)
+        userUseCase.getUser(uid)
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -253,7 +240,7 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun getPostCount(uid: String) = viewModelScope.launch {
-        getPostCountUseCase(uid)
+        postUseCase.getPostCount(uid)
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -267,11 +254,11 @@ class PeopleViewModel @Inject constructor(
     fun updateMeetingCount() = viewModelScope.launch {
         val count = meetingCount.value?.toInt()?.plus(1) ?: meetingCount.value!!.toInt()
         updateMeetingCount = Resource.Loading()
-        updateMeetingCount = updateMeetingCountUseCase(currentUid, count)
+        updateMeetingCount = userUseCase.updateMeetingCount(currentUid, count)
     }
 
     fun getMeetingCount(uid: String) = viewModelScope.launch {
-        getMeetingCountUseCase(uid)
+        userUseCase.getMeetingCount(uid)
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -284,7 +271,7 @@ class PeopleViewModel @Inject constructor(
 
 
     fun getLikeCount(uid: String) = viewModelScope.launch {
-        getLikeCountUseCase(uid)
+        postUseCase.getLikeCount(uid)
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -296,27 +283,27 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun deleteBarcode() = viewModelScope.launch {
-        deleteBarcodeInfo = deleteBarcodeUseCase(currentUid)
+        deleteBarcodeInfo = barcodeUseCase.deleteBarcodeInfo(currentUid)
     }
 
     fun deleteBarcodeTime() = viewModelScope.launch {
-        deleteBarcodeTime = deleteBarcodeTimeUseCase(currentUid)
+        deleteBarcodeTime = barcodeUseCase.deleteBarcodeTime(currentUid)
     }
 
     fun setBarcode(randomBarcode: String) = viewModelScope.launch {
-        addBarcodeInfo = setBarcodeUseCase(currentUid, randomBarcode)
+        addBarcodeInfo = barcodeUseCase.setBarcodeInfo(currentUid, randomBarcode)
     }
 
     fun setBarcodeTime() = viewModelScope.launch {
-        addBarcodeTime = setBarcodeTimeUseCase(currentUid)
+        addBarcodeTime = barcodeUseCase.setBarcodeTime(currentUid)
     }
 
     fun checkBarcodeTime() = viewModelScope.launch {
-        checkBarcodeTime = checkBarcodeTimeUseCase(currentUid)
+        checkBarcodeTime = barcodeUseCase.checkBarcodeTime(currentUid)
     }
 
     fun getBarcodeTime() = viewModelScope.launch {
-        getBarcodeTimeUseCase(currentUid).collect {
+        barcodeUseCase.getBarcodeTime(currentUid).collect {
                 when (it) {
                     is Resource.Success -> {
                         var data = it.data!!
@@ -356,7 +343,7 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun chageProfile() = viewModelScope.launch {
-        updateUser = updateUserUseCase(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
+        updateUser = userUseCase.updateUser(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
     }
 
 

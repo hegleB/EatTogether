@@ -5,7 +5,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.quer.presenation.base.BaseFragment
-import com.qure.domain.usecase.comment.CheckReCommentUseCase
 import com.qure.presenation.R
 import com.qure.presenation.adapter.ReCommentsAdapter
 import com.qure.presenation.databinding.FragmentReCommentsBinding
@@ -13,13 +12,9 @@ import com.qure.presenation.utils.KeyboardEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.fragment_re_comments) {
-
-    @Inject
-    lateinit var checkReCommentUseCase: CheckReCommentUseCase
 
     private val args: ReCommentsFragmentArgs by navArgs()
     private val postViewModel: PostViewModel by activityViewModels()
