@@ -1,11 +1,8 @@
 package com.qure.presenation.view.login
 
-import android.net.Uri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
 import com.qure.presenation.R
@@ -15,8 +12,6 @@ import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.utils.SnackBar
 import com.qure.presenation.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import gun0912.tedbottompicker.TedBottomPicker
-import gun0912.tedbottompicker.TedBottomSheetDialogFragment
 
 @AndroidEntryPoint
 class ProfileSettingFragment :
@@ -102,7 +97,6 @@ class ProfileSettingFragment :
                 is Resource.Success -> {
                     addFirebaseStore()
                     moveToHome()
-
                 }
                 is Resource.Error -> {
                     SnackBar.show(requireView(), IMAGE_UPLOAD_FAIL_MESSAGE)

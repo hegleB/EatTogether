@@ -20,6 +20,7 @@ class ProfileDialogFragment :
     private val peopleViewModel: PeopleViewModel by activityViewModels()
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val args: ProfileDialogFragmentArgs by navArgs()
+
     @Inject
     lateinit var firestore: FirebaseFirestore
 
@@ -36,7 +37,6 @@ class ProfileDialogFragment :
     }
 
     private fun observeViewModel() {
-
         peopleViewModel.otherProfileInfo.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
             moveToProfile(args.peopleOtherPersonUid)
@@ -54,14 +54,16 @@ class ProfileDialogFragment :
     private fun moveToProfile(uid: String) {
         val direction =
             ProfileDialogFragmentDirections.actionProfileDialogFragmentToProfileDetailFragment(
-                uid
+                uid,
             )
         findNavController().navigate(direction)
     }
 
     private fun moveToChatRoom(chatRoom: ChatRoom) {
         val direction = ProfileDialogFragmentDirections.actionPeopleFragmentToMessageFragment(
-            chatRoom, args.peopleOtherPersonUid,false
+            chatRoom,
+            args.peopleOtherPersonUid,
+            false,
         )
         findNavController().navigate(direction)
     }
@@ -74,6 +76,5 @@ class ProfileDialogFragment :
             val chatRoom = chatViewModel.setChatRoom(args.peopleOtherPersonUid)
             moveToChatRoom(chatRoom)
         }
-
     }
 }

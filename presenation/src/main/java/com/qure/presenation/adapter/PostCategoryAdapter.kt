@@ -16,7 +16,6 @@ class PostCategoryAdapter(val categoryList: Array<String>, val itemclick: (Strin
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemPostCategoryBinding.inflate(layoutInflater, parent, false)

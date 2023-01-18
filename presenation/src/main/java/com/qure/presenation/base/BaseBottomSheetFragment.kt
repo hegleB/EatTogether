@@ -18,9 +18,8 @@ abstract class BaseBottomSheetFragment<T : ViewDataBinding>(@LayoutRes val layou
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-
         binding = DataBindingUtil.inflate(inflater, layoutResInt, container, false)
         init()
         binding.lifecycleOwner = this
@@ -38,7 +37,6 @@ abstract class BaseBottomSheetFragment<T : ViewDataBinding>(@LayoutRes val layou
         val behavior = BottomSheetBehavior.from<View>(bottomSheet!!)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
@@ -48,9 +46,7 @@ abstract class BaseBottomSheetFragment<T : ViewDataBinding>(@LayoutRes val layou
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
     }
-
 
     abstract fun init()
 }

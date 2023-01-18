@@ -112,7 +112,8 @@ class ProfileDetailFragment :
         peopleViewModel.profileQRCode.observe(this) {
             if (it.consumed) return@observe
             BarcodeDiaglogFragment().show(
-                fragmentManager!!, "BarcodeDialogFragment"
+                fragmentManager!!,
+                "BarcodeDialogFragment",
             )
             it.consume()
         }
@@ -136,7 +137,8 @@ class ProfileDetailFragment :
         peopleViewModel.profileMessageEdit.observe(this) {
             if (it.consumed) return@observe
             ProfileEditDialogFragment().show(
-                fragmentManager!!, MESSAGE_TAG
+                fragmentManager!!,
+                MESSAGE_TAG,
             )
             with(peopleViewModel) {
                 profileTag(MESSAGE_TAG)
@@ -160,7 +162,6 @@ class ProfileDetailFragment :
             peopleViewModel.updateEditText()
         }
     }
-
 
     private fun setEditProfileView() {
         binding.apply {
@@ -282,7 +283,7 @@ class ProfileDetailFragment :
             TabLayoutMediator(
                 tabLayoutFragmentProfile,
                 viewPagerFragmentProfile,
-                { tab, position -> tab.text = tabTitles[position] }
+                { tab, position -> tab.text = tabTitles[position] },
             ).attach()
         }
     }

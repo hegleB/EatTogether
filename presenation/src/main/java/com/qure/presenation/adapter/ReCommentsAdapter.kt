@@ -17,7 +17,7 @@ import com.qure.presenation.viewmodel.PostViewModel
 
 class ReCommentsAdapter(
     val postViewModel: PostViewModel,
-    val viewLifecycleOwner: LifecycleOwner
+    val viewLifecycleOwner: LifecycleOwner,
 ) : ListAdapter<Comments, ReCommentsAdapter.ViewHolder>(itemCallback) {
 
     companion object {
@@ -54,12 +54,12 @@ class ReCommentsAdapter(
                     LIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
                         element.comments_replyKey,
-                        FieldValue.arrayRemove(postViewModel.currentUid)
+                        FieldValue.arrayRemove(postViewModel.currentUid),
                     )
                     UNLIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
                         element.comments_replyKey,
-                        FieldValue.arrayUnion(postViewModel.currentUid)
+                        FieldValue.arrayUnion(postViewModel.currentUid),
                     )
                 }
             }
@@ -73,7 +73,7 @@ class ReCommentsAdapter(
                 .document(recommentKey)
                 .update(
                     COMMENTS_LIKE_COUNT_FIELD,
-                    fieldValue
+                    fieldValue,
                 )
         }
     }
@@ -83,7 +83,7 @@ class ReCommentsAdapter(
         val binding = ItemRecommentsBinding.inflate(
             layoutInflater,
             parent,
-            false
+            false,
         )
 
         return ViewHolder(binding)
@@ -93,5 +93,4 @@ class ReCommentsAdapter(
         val comment = getItem(position)
         holder.bind(comment)
     }
-
 }

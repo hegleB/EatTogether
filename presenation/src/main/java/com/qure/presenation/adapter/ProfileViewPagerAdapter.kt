@@ -14,7 +14,7 @@ class ProfileViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifec
     private val fragmentLaunchers: List<Fragment> = listOf(
         PostWriteTabFragment(uid),
         PostLikeTabFragment(uid),
-        PostCommentsTabFragment(uid)
+        PostCommentsTabFragment(uid),
     )
 
     override fun getItemCount(): Int {

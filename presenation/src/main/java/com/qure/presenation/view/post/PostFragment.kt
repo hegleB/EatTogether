@@ -23,11 +23,13 @@ class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
         }
     }
     private val postCategoryAdapter: PostCategoryAdapter by lazy {
-        PostCategoryAdapter(resources.getStringArray(R.array.categey_name),
+        PostCategoryAdapter(
+            resources.getStringArray(R.array.categey_name),
             {
                 val direction = PostFragmentDirections.actionPostFragmentToPostCategoryFragment(it)
                 findNavController().navigate(direction)
-            })
+            },
+        )
     }
 
     override fun init() {
@@ -51,7 +53,6 @@ class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
     }
 
     private fun observeViewModel() {
-
         postViewModel.postList.observe(viewLifecycleOwner) {
             postAdapter.submitList(it)
         }

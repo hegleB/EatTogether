@@ -59,7 +59,6 @@ object TextBindingAdapter {
     @BindingAdapter("timeText")
     @JvmStatic
     fun timeText(textView: TextView, createTime: String) {
-
         val SEC = 60
         val MIN = 60
         val HOUR = 24
@@ -87,19 +86,19 @@ object TextBindingAdapter {
     @BindingAdapter("createImageText")
     @JvmStatic
     fun createImageText(textView: TextView, count: Int) {
-        textView.setText("${count}/3")
+        textView.setText("$count/3")
     }
 
     @BindingAdapter("likeCountText")
     @JvmStatic
     fun likeCountText(textView: TextView, count: Int) {
-        textView.setText("좋아요 ${count}")
+        textView.setText("좋아요 $count")
     }
 
     @BindingAdapter("commentsCountText")
     @JvmStatic
     fun commentsCountText(textView: TextView, count: String) {
-        textView.setText("댓글 ${count}")
+        textView.setText("댓글 $count")
     }
 
     @BindingAdapter("chattimeText")
@@ -117,7 +116,6 @@ object TextBindingAdapter {
     @BindingAdapter("chatRoomCountText")
     @JvmStatic
     fun chatRoomCount(textView: TextView, chatroomCount: Int) {
-
         if (chatroomCount == 2) {
             textView.visibility = View.INVISIBLE
         } else {
@@ -125,5 +123,4 @@ object TextBindingAdapter {
             textView.setText(chatroomCount.toString())
         }
     }
-
 }

@@ -30,7 +30,6 @@ class PostCategoryFragment :
         initViewModel()
         initAdapter()
         observeViewModel()
-
     }
 
     private fun initViewModel() {

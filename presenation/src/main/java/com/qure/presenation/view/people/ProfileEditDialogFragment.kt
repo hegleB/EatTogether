@@ -32,7 +32,6 @@ class ProfileEditDialogFragment :
         peopleViewModel.apply {
             updateEditText()
         }
-
     }
 
     private fun observeViewModel() {
@@ -53,7 +52,6 @@ class ProfileEditDialogFragment :
     private fun submitProfile() {
         hideKeyboard()
         peopleViewModel.updateEditText()
-
     }
 
     private fun openKeyboard() {
@@ -67,5 +65,4 @@ class ProfileEditDialogFragment :
     private fun setUpDialogFragment() {
         ResizeDialog(context!!, dialog!!).setUpDialogFragment()
     }
-
 }

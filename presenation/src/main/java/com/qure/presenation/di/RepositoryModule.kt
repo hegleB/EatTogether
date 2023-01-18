@@ -16,59 +16,57 @@ object RepositoryModule {
     @Provides
     fun provideAuthRepository(
         firebaseAuth: FirebaseAuth,
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth, firestore)
     }
 
     @Provides
     fun provideUserRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): UserRepository {
         return UserRepositoryImpl(firestore)
     }
 
     @Provides
     fun providePostRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): PostRepository {
         return PostRepositoryImpl(firestore)
     }
 
     @Provides
     fun provideBarcodeRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): BarcodeRepository {
         return BarcodeRepositoryImpl(firestore)
     }
 
     @Provides
     fun provideMeetingRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): MeetingRepository {
         return MeetingRepositoryImpl(firestore)
     }
 
     @Provides
     fun provideSettingRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): SettingRepository {
         return SettingRepositoryImpl(firestore)
     }
 
     @Provides
     fun provideCommentsRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): CommentRepository {
         return CommentRepositoryImpl(firestore)
     }
 
     @Provides
     fun provideChatRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ): ChatRepository {
         return ChatRepositoryImpl(firestore)
     }
-
-
 }

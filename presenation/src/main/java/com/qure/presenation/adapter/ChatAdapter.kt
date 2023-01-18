@@ -37,14 +37,13 @@ class ChatAdapter(val userCount: Int, val uid: String) :
         return when (viewType) {
             R.layout.item_chat_left -> MessageViewHolder.ChatLeftViewHoler(
                 ItemChatLeftBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                userCount
+                userCount,
             )
             else -> MessageViewHolder.ChatRightViewHolder(
                 ItemChatRightBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                userCount
+                userCount,
             )
         }
-
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {

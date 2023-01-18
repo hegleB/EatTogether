@@ -11,7 +11,7 @@ import com.qure.presenation.viewmodel.PostViewModel
 
 class PostCreateImageAdapter(
     val postViewModel: PostViewModel,
-    val viewLifecycleOwner: LifecycleOwner
+    val viewLifecycleOwner: LifecycleOwner,
 ) : BaseAdapter<String>(itemCallback) {
 
     companion object {
@@ -28,10 +28,10 @@ class PostCreateImageAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, String> {
         return ViewHolder(
-            ItemCreateImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCreateImageBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 

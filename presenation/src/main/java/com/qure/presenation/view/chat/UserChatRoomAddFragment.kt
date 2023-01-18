@@ -10,7 +10,6 @@ import com.qure.presenation.databinding.FragmentUserChatRoomAddBinding
 import com.qure.presenation.viewmodel.MessageViewModel
 import com.qure.presenation.viewmodel.PeopleViewModel
 
-
 class UserChatRoomAddFragment :
     BaseFragment<FragmentUserChatRoomAddBinding>(R.layout.fragment_user_chat_room_add) {
 
@@ -45,7 +44,6 @@ class UserChatRoomAddFragment :
         messageViewModel.user.observe(viewLifecycleOwner) {
             peopleViewModel.getAllUser(it)
         }
-
 
         peopleViewModel.userList.observe(viewLifecycleOwner) {
             adapter.submitList(it)

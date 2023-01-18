@@ -13,21 +13,21 @@ import com.qure.presenation.viewmodel.PostViewModel
 
 class ProfilePostAdapter(
     val itemClick: (PostModel.Post) -> Unit,
-    val postsViewModel: PostViewModel
+    val postsViewModel: PostViewModel,
 ) : BaseAdapter<PostModel.Post>(itemCallback) {
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<PostModel.Post>() {
             override fun areItemsTheSame(
                 oldItem: PostModel.Post,
-                newItem: PostModel.Post
+                newItem: PostModel.Post,
             ): Boolean {
                 return oldItem.hashCode() == newItem.hashCode()
             }
 
             override fun areContentsTheSame(
                 oldItem: PostModel.Post,
-                newItem: PostModel.Post
+                newItem: PostModel.Post,
             ): Boolean {
                 return oldItem == newItem
             }
@@ -36,10 +36,10 @@ class ProfilePostAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, PostModel.Post> {
         return PostHolder(
-            ItemProfileViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemProfileViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 

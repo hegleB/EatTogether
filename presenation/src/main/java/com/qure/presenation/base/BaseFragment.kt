@@ -16,9 +16,8 @@ abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: In
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-
         binding = DataBindingUtil.inflate(inflater, layoutResInt, container, false)
         init()
         binding.lifecycleOwner = this
@@ -26,6 +25,4 @@ abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: In
     }
 
     abstract fun init()
-
-
 }

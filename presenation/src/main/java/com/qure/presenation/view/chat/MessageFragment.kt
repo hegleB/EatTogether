@@ -9,17 +9,16 @@ import androidx.navigation.fragment.navArgs
 import com.google.firebase.storage.FirebaseStorage
 import com.gun0912.tedpermission.PermissionListener
 import com.quer.presenation.base.BaseFragment
-import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.R
 import com.qure.presenation.adapter.ChatAdapter
 import com.qure.presenation.databinding.FragmentMessageBinding
+import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.KeyboardEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.MessageViewModel
 import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import gun0912.tedbottompicker.TedBottomSheetDialogFragment
 import java.util.*
 import javax.inject.Inject
 
@@ -143,7 +142,7 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
 
     private fun moveToAddChatRoomUser() {
         findNavController().navigate(
-            MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(args.chatroom)
+            MessageFragmentDirections.actionMessageFragmentToUserChatRoomAddFragment(args.chatroom),
         )
     }
 }

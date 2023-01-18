@@ -105,7 +105,6 @@ class MessageViewModel @Inject constructor(
                     val documents = findMydocument(snapshot.documents)
                     updateReadUsers(documents, roomId)
                 }
-
             }
     }
 
@@ -149,7 +148,7 @@ class MessageViewModel @Inject constructor(
             currentUser,
             _user.value?.usernm ?: "",
             editText,
-            messageType
+            messageType,
         )
         return chatMessage
     }
@@ -215,7 +214,7 @@ class MessageViewModel @Inject constructor(
         unreadCount: MutableMap<String, Int>,
         addedUsers: MutableList<String>,
         userCount: Int?,
-        userPhoto: MutableMap<String, String>
+        userPhoto: MutableMap<String, String>,
     ) {
         firestore.collection(CHATROOMS_COLLECTION_PATH)
             .document(_chatroom.value?.roomId ?: "")

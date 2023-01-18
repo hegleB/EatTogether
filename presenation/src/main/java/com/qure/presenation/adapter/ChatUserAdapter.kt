@@ -33,10 +33,10 @@ class ChatUserAdapter :
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, User> {
         return ChatViewHolder(
-            ItemChatPeopleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemChatPeopleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
@@ -45,7 +45,6 @@ class ChatUserAdapter :
 
         init {
             binding.apply {
-
             }
         }
 

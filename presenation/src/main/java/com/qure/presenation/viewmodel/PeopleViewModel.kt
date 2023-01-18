@@ -29,7 +29,7 @@ class PeopleViewModel @Inject constructor(
     private val userUseCase: UserUseCase,
     private val postUseCase: PostUseCase,
     private val barcodeUseCase: BarcodeUseCase,
-    private val firebaseStorage: FirebaseStorage
+    private val firebaseStorage: FirebaseStorage,
 ) : BaseViewModel() {
 
     val currentUid = getCurrentUser()?.uid ?: ""
@@ -269,7 +269,6 @@ class PeopleViewModel @Inject constructor(
             }
     }
 
-
     fun getLikeCount(uid: String) = viewModelScope.launch {
         postUseCase.getLikeCount(uid)
             .collect {
@@ -304,18 +303,17 @@ class PeopleViewModel @Inject constructor(
 
     fun getBarcodeTime() = viewModelScope.launch {
         barcodeUseCase.getBarcodeTime(currentUid).collect {
-                when (it) {
-                    is Resource.Success -> {
-                        var data = it.data!!
-                        var currentTime = System.currentTimeMillis()
-                        var resultTime = data - currentTime
-                        _barcodeTimeRemaining.value = resultTime
-                    }
-                    is Resource.Error -> ErrorMessage.print(it.message ?: "")
+            when (it) {
+                is Resource.Success -> {
+                    var data = it.data!!
+                    var currentTime = System.currentTimeMillis()
+                    var resultTime = data - currentTime
+                    _barcodeTimeRemaining.value = resultTime
                 }
+                is Resource.Error -> ErrorMessage.print(it.message ?: "")
             }
+        }
     }
-
 
     fun uploadImage() = viewModelScope.launch {
         val riverRef: StorageReference =
@@ -336,7 +334,6 @@ class PeopleViewModel @Inject constructor(
             } else {
                 _updatedState.value = Resource.Success("")
             }
-
         } catch (e: Exception) {
             _updatedState.value = Resource.Error(e.message)
         }
@@ -345,7 +342,6 @@ class PeopleViewModel @Inject constructor(
     fun chageProfile() = viewModelScope.launch {
         updateUser = userUseCase.updateUser(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
     }
-
 
     fun moveMyProfile() {
         _myProfileImage.value = Event(Unit)
@@ -365,7 +361,6 @@ class PeopleViewModel @Inject constructor(
 
     fun submitProfile() {
         _profileSubmit.value = Event(Unit)
-
     }
 
     fun editProfile() {
@@ -398,7 +393,6 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun updateEditText() {
-
         when (profileTag.value) {
             "name" -> _myName.value = profileEditText.value
             "message" -> _myMsg.value = profileEditText.value
@@ -452,7 +446,7 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun setEditedProfileState() {
-        _profileEditState.value =  true
+        _profileEditState.value = true
         _profileQRState.value = false
     }
 

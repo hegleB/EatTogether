@@ -35,7 +35,7 @@ class PostViewModel @Inject constructor(
     private val userUseCase: UserUseCase,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val firebaseStorage: FirebaseStorage
+    private val firebaseStorage: FirebaseStorage,
 ) : BaseViewModel() {
 
     val currentUid = firebaseAuth.currentUser?.uid ?: ""
@@ -260,7 +260,6 @@ class PostViewModel @Inject constructor(
         }
     }
 
-
     fun getUserInfo() = viewModelScope.launch {
         userUseCase.getUser(currentUid).collect {
             when (it) {
@@ -273,7 +272,6 @@ class PostViewModel @Inject constructor(
             }
         }
     }
-
 
     fun getComments() = viewModelScope.launch {
         commentUseCase.getComments(_postKey.value ?: "").collect {
@@ -426,7 +424,7 @@ class PostViewModel @Inject constructor(
                 arrayListOf(),
                 postKey.value ?: "",
                 commentId,
-                0
+                0,
             )
             addComments = Resource.Loading()
             addComments = commentUseCase.setComments(recomments)
@@ -449,7 +447,7 @@ class PostViewModel @Inject constructor(
                 _recomment.value?.comments_postkey ?: "",
                 commentId,
                 1,
-                replyId
+                replyId,
             )
             addReComments = Resource.Loading()
             addReComments = commentUseCase.setReComments(comments)
@@ -470,7 +468,7 @@ class PostViewModel @Inject constructor(
             _createPostKey.value ?: "",
             arrayListOf(),
             "0",
-            postImages
+            postImages,
         )
         addPost = Resource.Loading()
         addPost = postUseCase.setPost(post)
@@ -506,14 +504,16 @@ class PostViewModel @Inject constructor(
                     firebaseStorage.getReference().child("post_image/" + key + "/" + i + ".jpg")
                 val uploadTask: UploadTask = riverRef.putFile(createImages.get(i).toUri())
                 uploadTask.addOnSuccessListener {
-
                     riverRef.downloadUrl.addOnSuccessListener { uri ->
                         firestore.collection(POSTS_COLLECTION_PATH).document(key).collection(
-                            IMAGES_COLLECTION_GROUP)
+                            IMAGES_COLLECTION_GROUP,
+                        )
                             .document().set(PostModel.PostImage(key, uri.toString()))
                         imageList.add(uri.toString())
                         firestore.collection(POSTS_COLLECTION_PATH).document(key).update(
-                            POST_IMAGES_FIELD, imageList)
+                            POST_IMAGES_FIELD,
+                            imageList,
+                        )
                     }
                 }
                 firestore.collection(POSTS_COLLECTION_PATH).document(key).set(post)
@@ -537,7 +537,7 @@ class PostViewModel @Inject constructor(
         createImages: java.util.ArrayList<String>,
         i: Int,
         key: String,
-        imageList: ArrayList<String>
+        imageList: ArrayList<String>,
     ) {
         val uploadTask: UploadTask = riverRef.putFile(createImages.get(i).toUri())
         uploadTask.addOnSuccessListener {
@@ -553,7 +553,7 @@ class PostViewModel @Inject constructor(
     private fun setPostImages(
         key: String,
         uri: Uri,
-        imageList: ArrayList<String>
+        imageList: ArrayList<String>,
     ) {
         firestore.collection(POSTS_COLLECTION_PATH).document(key).collection(IMAGES_COLLECTION_GROUP)
             .document().set(PostModel.PostImage(key, uri.toString()))
@@ -565,7 +565,7 @@ class PostViewModel @Inject constructor(
     private fun uploadProgress(
         it: UploadTask.TaskSnapshot,
         key: String,
-        imageList: ArrayList<String>
+        imageList: ArrayList<String>,
     ) {
         val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
         if (progress == 100.0) {

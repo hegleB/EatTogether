@@ -67,7 +67,7 @@ object ImageBindingAdapter {
             "치킨" to R.drawable.img_chicken,
             "피자" to R.drawable.img_pizza,
             "카페/디저트" to R.drawable.img_cake,
-            "기타" to R.color.orange2
+            "기타" to R.color.orange2,
         )
         val image = categoryImages[categoryName] ?: R.drawable.img_error
         imageView.setImageResource(image)

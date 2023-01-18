@@ -20,7 +20,6 @@ import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_people) {
 
@@ -35,7 +34,6 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
         PeopleAdapter({ moveToProfileFragment(it.uid) })
     }
 
-
     override fun init() {
         BottomNavigationEvent().showBottomNavigation(activity!!)
         observeViewModel()
@@ -44,7 +42,6 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
         OnBackPressedListener().finish(requireActivity(), requireActivity())
         setBadge()
     }
-
 
     private fun initViewModel() {
         binding.viewmodel = peopleViewModel
@@ -79,7 +76,6 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
 
         peopleViewModel.userList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-
         }
 
         peopleViewModel.user.observe(viewLifecycleOwner) {
@@ -92,16 +88,15 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
     }
 
     private fun moveMyProfile(uid: String) {
-
         val direction = PeopleFragmentDirections.actionPeopleFragmentToProfileDetailFragment(
-            uid
+            uid,
         )
         findNavController().navigate(direction)
     }
 
     fun moveToProfileFragment(uid: String) {
         val direction = PeopleFragmentDirections.actionPeopleFragmentToProfileDialogFragment(
-            uid
+            uid,
         )
         findNavController().navigate(direction)
     }

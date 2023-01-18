@@ -31,17 +31,17 @@ class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, ChatRoom> {
         return ChatRoomHolder(
-            ItemChatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemChatBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
     inner class ChatRoomHolder(binding: ItemChatBinding) :
         BaseViewHolder<ItemChatBinding, ChatRoom>(binding) {
 
-        private val LAST_IMAGE_MESSAGE =  "사진을 보냈습니다."
+        private val LAST_IMAGE_MESSAGE = "사진을 보냈습니다."
         private val LAST_MESSAGE_START_URL = "https://firebasestorage"
         private val MIN_MESSAGE_COUNT = "0"
         private var userNames = "나, "
@@ -76,7 +76,7 @@ class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
         private fun setChatRoomUserImage(element: ChatRoom, key: String) {
             ImageBindingAdapter.userImage(
                 binding.circleImageViewItemChat,
-                element.photo.get(key)
+                element.photo.get(key),
             )
         }
 

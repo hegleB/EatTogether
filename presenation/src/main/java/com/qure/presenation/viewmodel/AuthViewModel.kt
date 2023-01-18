@@ -189,9 +189,8 @@ class AuthViewModel @Inject constructor(
         settingName.value ?: "",
         userMessageToken.value ?: "",
         settingImageUri.value ?: "",
-        settingMessage.value ?: ""
+        settingMessage.value ?: "",
     )
-
 
     fun getImageUri(uri: Uri) {
         _imageUri.value = uri

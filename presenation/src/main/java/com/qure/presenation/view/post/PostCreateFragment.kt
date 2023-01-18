@@ -6,15 +6,14 @@ import androidx.navigation.fragment.findNavController
 import com.gun0912.tedpermission.PermissionListener
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
-import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.R
 import com.qure.presenation.adapter.PostCreateImageAdapter
 import com.qure.presenation.databinding.FragmentPostCreateBinding
+import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import gun0912.tedbottompicker.TedBottomSheetDialogFragment
 
 @AndroidEntryPoint
 class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.fragment_post_create) {
@@ -78,7 +77,6 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
                 }
             }
         }
-
     }
 
     private fun menuItemClick() {

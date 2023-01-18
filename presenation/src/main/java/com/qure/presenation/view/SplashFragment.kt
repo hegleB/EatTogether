@@ -70,5 +70,5 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
         const val DURATION_VALUE = 1700L
         const val FADEIN_DELAY = 2000L
         const val ANIMATOR_PROPERTY_NAME = "alpha"
-     }
+    }
 }

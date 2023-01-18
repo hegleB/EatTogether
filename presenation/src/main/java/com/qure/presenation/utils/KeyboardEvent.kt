@@ -10,10 +10,9 @@ class KeyboardEvent(val context: Context) {
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(
             InputMethodManager.SHOW_FORCED,
-            InputMethodManager.HIDE_IMPLICIT_ONLY
+            InputMethodManager.HIDE_IMPLICIT_ONLY,
         )
     }
-
 
     fun hideKeyboard() {
         val immhide = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

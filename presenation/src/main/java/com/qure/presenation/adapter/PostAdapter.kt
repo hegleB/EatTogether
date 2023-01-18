@@ -28,10 +28,10 @@ class PostAdapter(val itemClick: (Post) -> Unit) : BaseAdapter<Post>(itemCallbac
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, Post> {
         return PostHolder(
-            ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
@@ -59,12 +59,10 @@ class PostAdapter(val itemClick: (Post) -> Unit) : BaseAdapter<Post>(itemCallbac
             val images = element.postImages
             binding.linearLayoutItemPostImage1.clipToOutline = true
             if (images.size == 1) {
-
                 binding.linearLayoutItemPostImage1.weightSum = 1F
                 Glide.with(itemView.context)
                     .load(images.get(0))
                     .into(binding.imageViewItemPostImage1)
-
             } else if (images.size == 2) {
                 binding.linearLayoutItemPostImage2.weightSum = 1F
 
@@ -78,7 +76,6 @@ class PostAdapter(val itemClick: (Post) -> Unit) : BaseAdapter<Post>(itemCallbac
                     load(images.get(1)).into(binding.imageViewItemPostImage2)
                     load(images.get(2)).into(binding.imageViewItemPostImage3)
                 }
-
             } else {
                 binding.linearLayoutItemPostImages.visibility = View.GONE
             }

@@ -16,9 +16,11 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val adapter: ChatRoomAdapter by lazy {
-        ChatRoomAdapter(chatViewModel.curruntUid , {
+        ChatRoomAdapter(chatViewModel.curruntUid, {
             val direction = ChatFragmentDirections.actionChatFragmentToMessageFragment(
-                it, "", false
+                it,
+                "",
+                false,
             )
             findNavController().navigate(direction)
         })

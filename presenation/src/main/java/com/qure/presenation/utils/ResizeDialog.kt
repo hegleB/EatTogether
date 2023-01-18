@@ -22,7 +22,6 @@ class ResizeDialog(val context: Context, val dialog: Dialog) {
             val window = dialog?.window
             window?.setLayout(width, height)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
         } else {
             val rect = windowManager?.currentWindowMetrics?.bounds
             val window = dialog?.window

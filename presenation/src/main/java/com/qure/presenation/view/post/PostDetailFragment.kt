@@ -28,7 +28,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
             },
             requireContext(),
             postViewModel,
-            viewLifecycleOwner
+            viewLifecycleOwner,
         )
     }
 
@@ -61,12 +61,10 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
             checkPost()
             getPostImages()
         }
-
     }
 
     private fun initPost() {
         binding.post = args.post
-
     }
 
     private fun initAdapter() {
@@ -84,7 +82,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
         postViewModel.commentsList.observe(viewLifecycleOwner) {
             postViewModel.updateCommentsCount(it.size.toString())
             commentAdapter.submitList(it)
-
         }
 
         postViewModel.postDetailImageList.observe(viewLifecycleOwner) {

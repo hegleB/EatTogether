@@ -12,7 +12,6 @@ class OnBackPressedListener {
             override fun handleOnBackPressed() {
                 activity?.finish()
             }
-
         })
     }
 

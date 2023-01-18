@@ -103,7 +103,7 @@ class ChatViewModel @Inject constructor(
         userPhoto: String,
         otherUid: String,
         otherUserPhoto: String,
-        users: ArrayList<String>
+        users: ArrayList<String>,
     ): ChatRoom {
         val chatRoom = ChatRoom(
             false,
@@ -111,13 +111,13 @@ class ChatViewModel @Inject constructor(
             "",
             mutableMapOf(
                 curruntUid to userPhoto,
-                otherUid to otherUserPhoto
+                otherUid to otherUserPhoto,
             ),
             "",
             "",
             users.size,
             mutableMapOf(curruntUid to 0, otherUid to 0),
-            users
+            users,
         )
         return chatRoom
     }

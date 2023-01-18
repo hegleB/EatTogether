@@ -3,9 +3,7 @@ package com.qure.presenation.utils
 import android.Manifest
 import android.content.Context
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.qure.presenation.R
@@ -26,7 +24,7 @@ class BottomImagePicker(val context: Context, val requestActivity: FragmentActiv
             setPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
             )
             check()
         }

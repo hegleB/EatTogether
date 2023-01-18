@@ -47,7 +47,6 @@ class BarcodeDiaglogFragment :
             binding.imageButtonFragmentDialogBarcodeRecreateBarcode.visibility = View.INVISIBLE
             it.consume()
         }
-
     }
 
     private fun countBarcode() {
@@ -73,7 +72,7 @@ class BarcodeDiaglogFragment :
     private fun createBarcode() {
         val uid = peopleViewModel.getCurrentUser()?.uid
         val random_num = (Math.random() * RANDOM_VALUE).toString()
-        val random_barcode = uid + "_" + random_num;
+        val random_barcode = uid + "_" + random_num
         peopleViewModel.setBarcode(random_barcode)
         peopleViewModel.createBarcod(random_barcode)
     }
@@ -85,5 +84,4 @@ class BarcodeDiaglogFragment :
         const val INIT_BARCODE_TIME = 0L
         const val RANDOM_VALUE = 100
     }
-
 }

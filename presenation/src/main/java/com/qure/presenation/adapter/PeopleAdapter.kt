@@ -25,10 +25,10 @@ class PeopleAdapter(val itemClick: (User) -> Unit) : BaseAdapter<User>(itemCallb
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, User> {
         return PeopleHolder(
-            ItemPeopleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemPeopleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 

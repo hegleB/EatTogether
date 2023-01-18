@@ -12,15 +12,14 @@ import com.qure.presenation.databinding.ItemChatRightBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 sealed class MessageViewHolder(
-    binding: ViewDataBinding
+    binding: ViewDataBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     abstract fun bind(item: ChatMessage)
 
     class ChatLeftViewHoler(
         private val binding: ItemChatLeftBinding,
-        private val userCount: Int
+        private val userCount: Int,
     ) : MessageViewHolder(binding) {
         private var beforeDay = ""
 
@@ -40,7 +39,6 @@ sealed class MessageViewHolder(
                 binding.msgItem.visibility = View.GONE
                 binding.msgItem.visibility = View.VISIBLE
                 binding.msgItem.setText(item.message)
-
             } else if (!item.message.equals("") && item.messagetype == "2") {
                 binding.imgItem.visibility = View.VISIBLE
                 binding.msgItem.visibility = View.GONE
@@ -73,7 +71,7 @@ sealed class MessageViewHolder(
 
     class ChatRightViewHolder(
         private val binding: ItemChatRightBinding,
-        private val userCount: Int
+        private val userCount: Int,
     ) : MessageViewHolder(binding) {
         private var beforeDay = ""
 
@@ -93,7 +91,6 @@ sealed class MessageViewHolder(
                 binding.msgItem.visibility = View.GONE
                 binding.msgItem.visibility = View.VISIBLE
                 binding.msgItem.setText(item.message)
-
             } else if (!item.message.equals("") && item.messagetype == "2") {
                 binding.imgItem.visibility = View.VISIBLE
                 binding.msgItem.visibility = View.GONE

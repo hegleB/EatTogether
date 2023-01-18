@@ -52,9 +52,7 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
         initViewModel()
         observeViewModel()
         auth = Firebase.auth
-
     }
-
 
     private fun initViewModel() {
         binding.viewmodel = authViewModel
@@ -96,33 +94,33 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
                 is Resource.Error -> {
                     SnackBar.show(requireView(), user.message.toString())
                 }
-
             }
         }
     }
-
 
     private fun loginFacebook() {
         LoginManager.getInstance()
             .logInWithReadPermissions(this, Arrays.asList("public_profile", "email"))
         callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance()
-            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult?) {
-                    authViewModel.accessFacebook(result!!.accessToken)
-                }
+            .registerCallback(
+                callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(result: LoginResult?) {
+                        authViewModel.accessFacebook(result!!.accessToken)
+                    }
 
-                override fun onCancel() {
-                    SnackBar.show(requireView(), FACEBOOCK_LOGIN_CACEL_MESSAGE)
-                    Snackbar.make(requireView(), FACEBOOCK_LOGIN_CACEL_MESSAGE, Snackbar.LENGTH_LONG).show()
-                }
+                    override fun onCancel() {
+                        SnackBar.show(requireView(), FACEBOOCK_LOGIN_CACEL_MESSAGE)
+                        Snackbar.make(requireView(), FACEBOOCK_LOGIN_CACEL_MESSAGE, Snackbar.LENGTH_LONG).show()
+                    }
 
-                override fun onError(error: FacebookException?) {
-                    Snackbar.make(requireView(), error?.message.toString(), Snackbar.LENGTH_LONG)
-                        .show()
-                }
-
-            })
+                    override fun onError(error: FacebookException?) {
+                        Snackbar.make(requireView(), error?.message.toString(), Snackbar.LENGTH_LONG)
+                            .show()
+                    }
+                },
+            )
     }
 
     private fun loginGoogle() {
@@ -132,7 +130,6 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
                 failGoogleAuthMessage()
             }
     }
-
 
     private fun launchSignIn(pendingIntent: PendingIntent) {
         try {
@@ -188,4 +185,4 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
         const val GOOGLE_AUTH_FAIL_MESSAGE = "구글 인증 실패"
         const val FACEBOOCK_LOGIN_CACEL_MESSAGE = "페이스북 로그인 취소"
     }
- }
+}

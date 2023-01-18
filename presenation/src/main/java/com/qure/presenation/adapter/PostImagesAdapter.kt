@@ -14,10 +14,10 @@ class PostImagesAdapter :
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, PostModel.PostImage> {
         return ViewHolder(
-            ItemPostImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemPostImageBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
@@ -34,14 +34,14 @@ class PostImagesAdapter :
         private val itemCallback = object : DiffUtil.ItemCallback<PostModel.PostImage>() {
             override fun areItemsTheSame(
                 oldItem: PostModel.PostImage,
-                newItem: PostModel.PostImage
+                newItem: PostModel.PostImage,
             ): Boolean {
                 return oldItem.postkey == newItem.postkey
             }
 
             override fun areContentsTheSame(
                 oldItem: PostModel.PostImage,
-                newItem: PostModel.PostImage
+                newItem: PostModel.PostImage,
             ): Boolean {
                 return oldItem == newItem
             }

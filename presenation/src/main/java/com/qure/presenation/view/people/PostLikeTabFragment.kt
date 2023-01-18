@@ -18,7 +18,7 @@ class PostLikeTabFragment(val uid: String) :
         ProfilePostAdapter({
             val direction =
                 ProfileDetailFragmentDirections.actionProfileDetailFragmentToProfilePostDetailFragment(
-                    it
+                    it,
                 )
             findNavController().navigate(direction)
         }, postsViewModel)
@@ -44,5 +44,4 @@ class PostLikeTabFragment(val uid: String) :
             profilePostAdapter.submitList(it)
         }
     }
-
 }

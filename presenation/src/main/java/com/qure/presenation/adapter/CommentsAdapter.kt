@@ -19,7 +19,7 @@ class CommentsAdapter(
     val itemClick: (Comments) -> Unit,
     val context: Context,
     val postViewModel: PostViewModel,
-    val viewLifecycleOwner: LifecycleOwner
+    val viewLifecycleOwner: LifecycleOwner,
 ) : ListAdapter<Comments, CommentsAdapter.ViewHolder>(itemCallback) {
 
     companion object {
@@ -51,7 +51,7 @@ class CommentsAdapter(
             clickCommentLike(element)
             val adapter = ReCommentsAdapter(
                 postViewModel,
-                viewLifecycleOwner
+                viewLifecycleOwner,
             )
             getReComment(adapter, element)
         }
@@ -66,10 +66,9 @@ class CommentsAdapter(
 
         private fun getReComment(
             adapter: ReCommentsAdapter,
-            element: Comments
+            element: Comments,
         ) {
             binding.recyclerViewItemCommentsRecomment.adapter = adapter
-            binding.recyclerViewItemCommentsRecomment
             FirebaseFirestore.getInstance().collectionGroup(REPLY_COLLECTION_PATH)
                 .whereEqualTo(COMMENTS_POST_KEY_FIELD, element.comments_postkey)
                 .whereEqualTo(COMMENTS_DEPTH_FIELD, 1)
@@ -89,12 +88,12 @@ class CommentsAdapter(
                 when (binding.textViewItemCommentsLike.currentTextColor) {
                     LIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
-                        FieldValue.arrayRemove(postViewModel.currentUid)
+                        FieldValue.arrayRemove(postViewModel.currentUid),
                     )
 
                     UNLIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
-                        FieldValue.arrayUnion(postViewModel.currentUid)
+                        FieldValue.arrayUnion(postViewModel.currentUid),
                     )
                 }
             }
@@ -106,7 +105,7 @@ class CommentsAdapter(
                 .document(commentKey)
                 .update(
                     "comments_likeCount",
-                    fieldValue
+                    fieldValue,
                 )
         }
     }
@@ -116,7 +115,7 @@ class CommentsAdapter(
         val binding = ItemCommentsBinding.inflate(
             layoutInflater,
             parent,
-            false
+            false,
         )
 
         return ViewHolder(binding)

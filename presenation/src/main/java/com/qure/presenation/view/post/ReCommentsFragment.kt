@@ -21,7 +21,7 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
     private val adapter: ReCommentsAdapter by lazy {
         ReCommentsAdapter(
             postViewModel,
-            viewLifecycleOwner
+            viewLifecycleOwner,
         )
     }
 
@@ -46,7 +46,6 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
             checkReComment(args.recomment)
             getReComments(args.recomment)
             getUserInfo()
-
         }
     }
 
@@ -56,7 +55,6 @@ class ReCommentsFragment : BaseFragment<FragmentReCommentsBinding>(R.layout.frag
                 0 -> binding.imageViewFragmentReCommentSendComments.visibility = View.GONE
                 else -> {
                     binding.imageViewFragmentReCommentSendComments.visibility = View.VISIBLE
-
                 }
             }
         }

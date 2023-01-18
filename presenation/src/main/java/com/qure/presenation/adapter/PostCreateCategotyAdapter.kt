@@ -22,7 +22,7 @@ class PostCreateCategotyAdapter(val itemClick: (String) -> Unit, val categoryLis
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemCreateCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCreateCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
