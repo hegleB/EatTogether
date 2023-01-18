@@ -237,22 +237,27 @@ class ProfileDetailFragment :
     private fun requestPermission() {
         val permissionListener: PermissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
-                bottomImagePicker.openImagePicker("1개만 선택이 가능합니다.", "선택")
-                    .showMultiImage { uriList ->
-                        if (uriList!!.size > 0) {
-                            peopleViewModel.changeImage(uriList.get(0))
-                        }
-                    }
+                openImagePicker()
             }
 
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
-                bottomImagePicker.showSnackBarMessage(
-                    binding.constraintLayoutFragmentProfile,
-                    deniedPermissions ?: arrayListOf()
-                )
+                showPermissionSnackBar(deniedPermissions)
             }
         }
         bottomImagePicker.setPermission(permissionListener)
+    }
+
+    private fun openImagePicker() {
+        bottomImagePicker.openImagePicker("1개만 선택이 가능합니다.", "선택")
+            .showMultiImage { uriList ->
+                if (uriList!!.size > 0) {
+                    peopleViewModel.changeImage(uriList.get(0))
+                }
+            }
+    }
+
+    private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
+        bottomImagePicker.showSnackBarMessage(requireView(), deniedPermissions ?: arrayListOf())
     }
 
     private fun updateProfile() {

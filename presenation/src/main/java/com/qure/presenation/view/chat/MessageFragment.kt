@@ -93,10 +93,7 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
     }
 
     private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
-        bottomImagePicker.showSnackBarMessage(
-            binding.constrainLayoutFragmentMessageMessage,
-            deniedPermissions ?: arrayListOf()
-        )
+        bottomImagePicker.showSnackBarMessage(requireView(), deniedPermissions ?: arrayListOf())
     }
 
     private fun openImagePicker() {

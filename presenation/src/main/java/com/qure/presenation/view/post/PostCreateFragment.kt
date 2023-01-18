@@ -107,10 +107,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
     }
 
     private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
-        bottomImagePicker.showSnackBarMessage(
-            binding.constraintLayoutFragmentPostCreate,
-            deniedPermissions ?: arrayListOf()
-        )
+        bottomImagePicker.showSnackBarMessage(requireView(), deniedPermissions ?: arrayListOf())
     }
 
     private fun openImagePicker() {

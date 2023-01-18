@@ -2,6 +2,7 @@ package com.qure.presenation.utils
 
 import android.Manifest
 import android.content.Context
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
@@ -13,11 +14,8 @@ import java.util.ArrayList
 
 class BottomImagePicker(val context: Context, val requestActivity: FragmentActivity) {
 
-    fun showSnackBarMessage(
-        constrainLayout: ConstraintLayout,
-        deniedPermissions: ArrayList<String>
-    ) {
-        SnackBar.show(constrainLayout, PERMISSION_DENIED + deniedPermissions.toString())
+    fun showSnackBarMessage(view: View, deniedPermissions: ArrayList<String>) {
+        SnackBar.show(view, PERMISSION_DENIED + deniedPermissions.toString())
     }
 
     fun setPermission(permissionListener: PermissionListener) {

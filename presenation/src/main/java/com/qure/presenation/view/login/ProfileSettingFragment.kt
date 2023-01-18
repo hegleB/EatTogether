@@ -10,7 +10,9 @@ import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
 import com.qure.presenation.R
 import com.qure.presenation.databinding.FragmentProfileSettingBinding
+import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.utils.OnBackPressedListener
+import com.qure.presenation.utils.SnackBar
 import com.qure.presenation.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import gun0912.tedbottompicker.TedBottomPicker
@@ -21,6 +23,9 @@ class ProfileSettingFragment :
     BaseFragment<FragmentProfileSettingBinding>(R.layout.fragment_profile_setting) {
 
     private val authViewModel: AuthViewModel by activityViewModels()
+    private val bottomImagePicker by lazy {
+        BottomImagePicker(requireContext(), requireActivity())
+    }
 
     override fun init() {
         initViewModel()
@@ -61,7 +66,7 @@ class ProfileSettingFragment :
 
     private fun checkProfileName(): Boolean {
         val name = binding.editTextFragmentProfileSettingName.text.toString()
-        return name.equals("")
+        return name.length == 0
     }
 
     private fun requestPermission() {
@@ -70,45 +75,24 @@ class ProfileSettingFragment :
                 openImagePicker()
             }
 
-            override fun onPermissionDenied(deniedPermissions: java.util.ArrayList<String>?) {
-                Snackbar.make(
-                    requireView(), "Permission Denied\n" +
-                            deniedPermissions.toString(), Snackbar.LENGTH_LONG
-                ).show()
+            override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
+                showPermissionSnackBar(deniedPermissions)
             }
-
         }
-        TedPermission.with(requireContext())
-            .setPermissionListener(permissionListener)
-            .setRationaleMessage("사진을 추가하기 위해서는 권한 설정이 필요합니다.")
-            .setDeniedMessage("[설정] > [권한] 에서 권한을 허용할 수 있습니다..")
-            .setPermissions(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.CAMERA,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            .check()
+        bottomImagePicker.setPermission(permissionListener)
+    }
+
+    private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
+        bottomImagePicker.showSnackBarMessage(requireView(), deniedPermissions ?: arrayListOf())
     }
 
     private fun openImagePicker() {
-        TedBottomPicker.with(requireActivity())
-            .setPeekHeight(1600)
-            .showGalleryTile(false)
-            .setPreviewMaxCount(1000)
-            .setSelectMaxCount(1)
-            .setSelectMaxCountErrorText("1개만 선택이 가능합니다.")
-            .showTitle(false)
-            .setTitleBackgroundResId(R.color.light_red)
-            .setGalleryTileBackgroundResId(R.color.white)
-            .setCompleteButtonText("선택")
-            .setEmptySelectionText("사진 선택")
-            .showMultiImage(object : TedBottomSheetDialogFragment.OnMultiImageSelectedListener {
-                override fun onImagesSelected(uriList: MutableList<Uri>?) {
-                    if (uriList!!.size > 0) {
-                        authViewModel.getImageUri(uriList.get(0))
-                    }
+        bottomImagePicker.openImagePicker("1개만 선택이 가능합니다.", "선택")
+            .showMultiImage { uriList ->
+                if (uriList!!.size > 0) {
+                    authViewModel.getImageUri(uriList.get(0))
                 }
-            })
+            }
     }
 
     private fun storageUser() {
