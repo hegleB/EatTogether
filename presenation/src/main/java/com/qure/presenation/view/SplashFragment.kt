@@ -3,6 +3,7 @@ package com.qure.presenation.view
 import android.animation.ObjectAnimator
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,10 +50,14 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
             }
     }
 
-    private fun checkLoginSate(isTrue: Boolean): Unit =
+    private fun checkLoginSate(isTrue: Boolean): Any =
         when (isNotExistCurrentUser(isTrue)) {
             true -> findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
-            else -> findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToPeopleFragment())
+            else -> {
+                lifecycleScope.launchWhenResumed {
+                    findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToPeopleFragment())
+                }
+            }
         }
 
     private fun isNotExistCurrentUser(isTrue: Boolean): Boolean =
