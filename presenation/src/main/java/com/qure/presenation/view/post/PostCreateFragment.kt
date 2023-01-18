@@ -3,11 +3,10 @@ package com.qure.presenation.view.post
 import android.net.Uri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
+import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.R
 import com.qure.presenation.adapter.PostCreateImageAdapter
 import com.qure.presenation.databinding.FragmentPostCreateBinding
@@ -15,7 +14,6 @@ import com.qure.presenation.utils.BottomNavigationEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import gun0912.tedbottompicker.TedBottomPicker
 import gun0912.tedbottompicker.TedBottomSheetDialogFragment
 
 @AndroidEntryPoint
@@ -24,6 +22,9 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
     private val postViewModel: PostViewModel by activityViewModels()
     private val adapter: PostCreateImageAdapter by lazy {
         PostCreateImageAdapter(postViewModel, viewLifecycleOwner)
+    }
+    private val bottomImagePicker by lazy {
+        BottomImagePicker(requireContext(), requireActivity())
     }
 
     override fun init() {
@@ -85,7 +86,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
         binding.toolBarFragmentPostCreate.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_create -> {
-                        postViewModel.createPost()
+                    postViewModel.createPost()
                     true
                 }
                 else -> false
@@ -99,50 +100,36 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
                 openImagePicker()
             }
 
-            override fun onPermissionDenied(deniedPermissions: java.util.ArrayList<String>?) {
-                Snackbar.make(
-                    binding.constraintLayoutFragmentPostCreate, "Permission Denied\n" +
-                            deniedPermissions.toString(), Snackbar.LENGTH_LONG
-                ).show()
+            override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
+                showPermissionSnackBar(deniedPermissions)
             }
-
         }
-        TedPermission.with(requireContext())
-            .setPermissionListener(permissionListener)
-            .setRationaleMessage("사진을 추가하기 위해서는 권한 설정이 필요합니다.")
-            .setDeniedMessage("[설정] > [권한] 에서 권한을 허용할 수 있습니다..")
-            .setPermissions(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.CAMERA,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            .check()
+        bottomImagePicker.setPermission(permissionListener)
+    }
+
+    private fun showPermissionSnackBar(deniedPermissions: ArrayList<String>?) {
+        bottomImagePicker.getSnackBarMessage(
+            binding.constraintLayoutFragmentPostCreate,
+            deniedPermissions ?: arrayListOf()
+        )
     }
 
     private fun openImagePicker() {
-        TedBottomPicker.with(requireActivity())
-            .setPeekHeight(1600)
-            .showGalleryTile(false)
-            .setPreviewMaxCount(1000)
-            .setSelectMaxCount(3)
-            .setSelectMaxCountErrorText("3개만 선택이 가능합니다.")
-            .showTitle(false)
-            .setTitleBackgroundResId(R.color.light_red)
-            .setGalleryTileBackgroundResId(R.color.white)
-            .setCompleteButtonText("선택")
-            .setEmptySelectionText("사진 선택")
-            .showMultiImage(object : TedBottomSheetDialogFragment.OnMultiImageSelectedListener {
+        bottomImagePicker.openImagePicker("3개만 선택이 가능합니다.", "선택")
+            .showMultiImage(object :
+                TedBottomSheetDialogFragment.OnMultiImageSelectedListener {
                 override fun onImagesSelected(uriList: MutableList<Uri>) {
-                    val list = arrayListOf<String>()
-
-                    for (uri in uriList) {
-                        list.add(uri.toString())
-                    }
-
+                    val list = getImageUri(uriList)
                     postViewModel.getPostCreateImage(list)
                 }
             })
     }
 
-
+    private fun getImageUri(uriList: MutableList<Uri>): ArrayList<String> {
+        val list = arrayListOf<String>()
+        for (uri in uriList) {
+            list.add(uri.toString())
+        }
+        return list
+    }
 }
