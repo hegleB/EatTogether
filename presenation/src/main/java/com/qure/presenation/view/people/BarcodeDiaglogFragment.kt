@@ -22,7 +22,6 @@ class BarcodeDiaglogFragment :
         observeViewModel()
         createBarcode()
         countBarcode()
-
     }
 
     override fun onResume() {
@@ -32,7 +31,6 @@ class BarcodeDiaglogFragment :
 
     private fun initViewModel() {
         binding.viewmodel = peopleViewModel
-
     }
 
     private fun observeViewModel() {
@@ -53,19 +51,17 @@ class BarcodeDiaglogFragment :
     }
 
     private fun countBarcode() {
-        peopleViewModel.countBarcodeTime(15L)
-        mCountDown = object : CountDownTimer(16000, 1000) {
+        peopleViewModel.countBarcodeTime(COUNT_BARCODE_TIME)
+        mCountDown = object : CountDownTimer(BARCODE_COUNTDOWN_MILLS, BARCOD_COUNTDOWN_INTERVAL) {
             override fun onTick(l: Long) {
-                val num = l / 1000L
+                val num = l / BARCOD_COUNTDOWN_INTERVAL
                 peopleViewModel.countBarcodeTime(num)
             }
 
             override fun onFinish() {
-                peopleViewModel.countBarcodeTime(0L)
+                peopleViewModel.countBarcodeTime(INIT_BARCODE_TIME)
                 peopleViewModel.deleteBarcode()
-                binding.apply {
-                    imageButtonFragmentDialogBarcodeRecreateBarcode.visibility = View.VISIBLE
-                }
+                binding.imageButtonFragmentDialogBarcodeRecreateBarcode.visibility = View.VISIBLE
             }
         }.start()
     }
@@ -75,11 +71,19 @@ class BarcodeDiaglogFragment :
     }
 
     private fun createBarcode() {
-        var uid = peopleViewModel.getCurrentUser()?.uid
-        var random_num = (Math.random() * 100).toString()
-        var random_barcode = uid + "_" + random_num;
+        val uid = peopleViewModel.getCurrentUser()?.uid
+        val random_num = (Math.random() * RANDOM_VALUE).toString()
+        val random_barcode = uid + "_" + random_num;
         peopleViewModel.setBarcode(random_barcode)
         peopleViewModel.createBarcod(random_barcode)
+    }
+
+    companion object {
+        const val COUNT_BARCODE_TIME = 15L
+        const val BARCODE_COUNTDOWN_MILLS = 1600L
+        const val BARCOD_COUNTDOWN_INTERVAL = 1000L
+        const val INIT_BARCODE_TIME = 0L
+        const val RANDOM_VALUE = 100
     }
 
 }
