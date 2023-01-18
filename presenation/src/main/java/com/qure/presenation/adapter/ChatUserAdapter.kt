@@ -13,7 +13,6 @@ import com.qure.presenation.databinding.ItemChatPeopleBinding
 class ChatUserAdapter :
     BaseAdapter<User>(itemCallback) {
 
-    val seletedUsers = mutableListOf<User>()
     var onItemSelectionChangeListener: ((MutableList<User>) -> Unit)? = null
 
     companion object {
@@ -53,17 +52,28 @@ class ChatUserAdapter :
         override fun bind(element: User) {
             super.bind(element)
             binding.user = element
+            val seletedUsers = mutableListOf<User>()
+            selectChatRoomAddUser(seletedUsers, element)
+        }
 
+        private fun selectChatRoomAddUser(seletedUsers: MutableList<User>, element: User) {
             binding.root.setOnClickListener {
-                if (seletedUsers.contains(element)) {
-                    seletedUsers.remove(element)
-                    binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.white))
-                } else {
-                    seletedUsers.add(element)
-                    binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.orange1))
+                when (seletedUsers.contains(element)) {
+                    true -> removeSelectedUser(seletedUsers, element)
+                    else -> addSelectedUser(seletedUsers, element)
                 }
                 onItemSelectionChangeListener?.let { it(seletedUsers) }
             }
+        }
+
+        private fun addSelectedUser(seletedUsers: MutableList<User>, element: User) {
+            seletedUsers.add(element)
+            binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.orange1))
+        }
+
+        private fun removeSelectedUser(seletedUsers: MutableList<User>, element: User) {
+            seletedUsers.remove(element)
+            binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.white))
         }
     }
 }
