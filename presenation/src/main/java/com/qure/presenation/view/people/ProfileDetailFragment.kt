@@ -1,8 +1,7 @@
 package com.qure.presenation.view.people
 
-
 import android.content.Intent
-import android.net.Uri
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -12,11 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.zxing.integration.android.IntentIntegrator
 import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
 import com.qure.presenation.CaptureActivity
@@ -24,10 +21,9 @@ import com.qure.presenation.R
 import com.qure.presenation.adapter.ProfileViewPagerAdapter
 import com.qure.presenation.databinding.FragmentProfileDetailBinding
 import com.qure.presenation.utils.BottomImagePicker
+import com.qure.presenation.utils.SnackBar
 import com.qure.presenation.viewmodel.PeopleViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import gun0912.tedbottompicker.TedBottomPicker
-import gun0912.tedbottompicker.TedBottomSheetDialogFragment
 
 @AndroidEntryPoint
 class ProfileDetailFragment :
@@ -38,7 +34,8 @@ class ProfileDetailFragment :
     private val bottomImagePicker by lazy {
         BottomImagePicker(requireContext(), requireActivity())
     }
-    private var currentUid = ""
+    private var countDownTimer: CountDownTimer? = null
+    private var currentUid: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +58,6 @@ class ProfileDetailFragment :
     }
 
     private fun initViewModel() {
-
         binding.viewmodel = peopleViewModel
         peopleViewModel.apply {
             getLikeCount(args.uid)
@@ -70,9 +66,7 @@ class ProfileDetailFragment :
             checkCurrentUser(args.uid)
             getUserInfo(args.uid)
             checkBarcodeTime()
-
         }
-
     }
 
     private fun observeViewModel() {
@@ -89,25 +83,29 @@ class ProfileDetailFragment :
 
         peopleViewModel.profileSubmit.observe(this) {
             if (it.consumed) return@observe
-            cancleEditProfile()
+            setEditProfileView()
             peopleViewModel.setClosedProfileState()
             it.consume()
         }
 
         peopleViewModel.profileCancel.observe(this) {
             if (it.consumed) return@observe
-            cancleEditProfile()
-            peopleViewModel.getUserInfo(args.uid)
-            peopleViewModel.setClosedProfileState()
-            peopleViewModel.setQRAbledState()
+            setEditProfileView()
+            with(peopleViewModel) {
+                getUserInfo(args.uid)
+                setClosedProfileState()
+                setQRAbledState()
+            }
             it.consume()
         }
 
         peopleViewModel.profileEdit.observe(this) {
             if (it.consumed) return@observe
-            editProfile()
-            peopleViewModel.setEditedProfileState()
-            peopleViewModel.setQRDisabledState()
+            setEditProfileView()
+            with(peopleViewModel) {
+                setEditedProfileState()
+                setQRDisabledState()
+            }
             it.consume()
         }
 
@@ -127,21 +125,23 @@ class ProfileDetailFragment :
 
         peopleViewModel.profileNameEdit.observe(this) {
             if (it.consumed) return@observe
-            ProfileEditDialogFragment().show(
-                fragmentManager!!, "name"
-            )
-            peopleViewModel.profileTag("name")
-            peopleViewModel.profileEdit(binding.textViewFragmentProfileName.text.toString())
+            ProfileEditDialogFragment().show(fragmentManager!!, NAME_TAG)
+            with(peopleViewModel) {
+                profileTag(NAME_TAG)
+                profileEdit(binding.textViewFragmentProfileName.text.toString())
+            }
             it.consume()
         }
 
         peopleViewModel.profileMessageEdit.observe(this) {
             if (it.consumed) return@observe
             ProfileEditDialogFragment().show(
-                fragmentManager!!, "message"
+                fragmentManager!!, MESSAGE_TAG
             )
-            peopleViewModel.profileTag("message")
-            peopleViewModel.profileEdit(binding.textViewFragmentProfileMessage.text.toString())
+            with(peopleViewModel) {
+                profileTag(MESSAGE_TAG)
+                profileEdit(binding.textViewFragmentProfileMessage.text.toString())
+            }
             it.consume()
         }
 
@@ -162,40 +162,21 @@ class ProfileDetailFragment :
     }
 
 
-    private fun editProfile() {
+    private fun setEditProfileView() {
         binding.apply {
-            circleImageViewFragmentProfileProfile.isEnabled = true
-            textViewFragmentProfileName.isEnabled = true
-            textViewFragmentProfileName.background =
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.shape_bottom_border2
-                )
-            textViewFragmentProfileMessage.isEnabled = true
-            textViewFragmentProfileMessage.background =
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.shape_bottom_border2
-                )
+            val isEnabled = circleImageViewFragmentProfileProfile.isEnabled
+            circleImageViewFragmentProfileProfile.isEnabled = if (isEnabled) false else true
+            textViewFragmentProfileName.isEnabled = if (isEnabled) false else true
+            textViewFragmentProfileMessage.isEnabled = if (isEnabled) false else true
+            textViewFragmentProfileName.background = getProfileNameDrawalbe(isEnabled)
+            textViewFragmentProfileMessage.background = getProfileNameDrawalbe(isEnabled)
         }
     }
 
-    fun cancleEditProfile() {
-        binding.apply {
-            circleImageViewFragmentProfileProfile.isEnabled = false
-            textViewFragmentProfileName.isEnabled = false
-            textViewFragmentProfileName.background =
-                ContextCompat.getDrawable(requireContext(), R.color.white)
-            textViewFragmentProfileMessage.isEnabled = false
-            textViewFragmentProfileMessage.background =
-                ContextCompat.getDrawable(requireContext(), R.color.white)
-            peopleViewModel.checkBarcode.observe(viewLifecycleOwner) {
-                if (!it) {
-                    peopleViewModel.setClosedProfileState()
-                } else {
-                    peopleViewModel.setEditedProfileState()
-                }
-            }
+    private fun getProfileNameDrawalbe(isEnabled: Boolean): Drawable? {
+        return when (isEnabled) {
+            false -> ContextCompat.getDrawable(requireContext(), R.drawable.shape_bottom_border2)
+            else -> ContextCompat.getDrawable(requireContext(), R.color.white)
         }
     }
 
@@ -210,34 +191,27 @@ class ProfileDetailFragment :
     }
 
     private fun scanBarcode() {
-
-        val integrator = IntentIntegrator.forSupportFragment(this@ProfileDetailFragment)
-        integrator.setCaptureActivity(CaptureActivity::class.java)
-        integrator.setOrientationLocked(true)
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-        integrator.setBarcodeImageEnabled(false)
-        integrator.setPrompt("스캔 중...")
-        integrator.initiateScan()
+        with(IntentIntegrator.forSupportFragment(this@ProfileDetailFragment)) {
+            setCaptureActivity(CaptureActivity::class.java)
+            setOrientationLocked(true)
+            setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+            setBarcodeImageEnabled(false)
+            setPrompt(PROMPT_TEXT)
+            initiateScan()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
-            if (result.contents != null) {
-
-                peopleViewModel.apply {
-                    val currentUid = getCurrentUser()?.uid ?: ""
-                    Snackbar.make(
-                        binding.constraintLayoutFragmentProfile,
-                        "확인 되었습니다.",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    setBarcodeTime()
-                    getMeetingCount(currentUid)
-                    countTime()
-                    updateMeetingCount()
-                }
+        if (result.contents != null) {
+            SnackBar.show(binding.constraintLayoutFragmentProfile, QR_SCAN_SNACKBAR_MESSAGE)
+            peopleViewModel.apply {
+                val currentUid = getCurrentUser()?.uid ?: ""
+                setBarcodeTime()
+                getMeetingCount(currentUid)
+                countTime()
+                updateMeetingCount()
             }
         }
     }
@@ -245,11 +219,9 @@ class ProfileDetailFragment :
     private fun countTime() {
         peopleViewModel.getBarcodeTime()
         checkOtherProfile()
-
-        var countDownTimer: CountDownTimer? = null
         peopleViewModel.barcodeTimeRemaining.observe(this) {
             peopleViewModel.setQRAbledState()
-            countDownTimer = object : CountDownTimer(it, 1000) {
+            countDownTimer = object : CountDownTimer(it, COUNTDOWN_INTERVAL) {
                 override fun onTick(l: Long) {
                     peopleViewModel.countBarcodeTime(l)
                 }
@@ -280,37 +252,34 @@ class ProfileDetailFragment :
                 )
             }
         }
-       bottomImagePicker.setPermission(permissionListener)
+        bottomImagePicker.setPermission(permissionListener)
     }
 
     private fun updateProfile() {
         peopleViewModel.uploadImage()
-
         peopleViewModel.updatedState.observe(this) {
             when (it) {
                 is Resource.Success -> {
                     peopleViewModel.chageProfile()
                     findNavController().popBackStack()
                 }
-                is Resource.Error -> {
-                    binding.spinKitViweFragmentProfileLoading.visibility =
-                        View.GONE
-                }
             }
         }
     }
 
     private fun initViewPager() {
+        val tabTitles = listOf("작성한 글", "좋아한 글", "댓글단 글")
         val profileViewPagerAdapter: ProfileViewPagerAdapter by lazy {
             ProfileViewPagerAdapter(childFragmentManager, lifecycle, args.uid)
         }
-        val tabTitles = listOf("작성한 글", "좋아한 글", "댓글단 글")
-        binding.viewPagerFragmentProfile.adapter = profileViewPagerAdapter
-        TabLayoutMediator(
-            binding.tabLayoutFragmentProfile,
-            binding.viewPagerFragmentProfile,
-            { tab, position -> tab.text = tabTitles[position] }
-        ).attach()
+        binding.apply {
+            viewPagerFragmentProfile.adapter = profileViewPagerAdapter
+            TabLayoutMediator(
+                tabLayoutFragmentProfile,
+                viewPagerFragmentProfile,
+                { tab, position -> tab.text = tabTitles[position] }
+            ).attach()
+        }
     }
 
     private fun onBackPressedEvent() {
@@ -323,5 +292,13 @@ class ProfileDetailFragment :
                 }
             }
         })
+    }
+
+    companion object {
+        const val NAME_TAG = "name"
+        const val MESSAGE_TAG = "message"
+        const val PROMPT_TEXT = "스캔 중..."
+        const val QR_SCAN_SNACKBAR_MESSAGE = "확인 되었습니다."
+        const val COUNTDOWN_INTERVAL = 1000L
     }
 }

@@ -17,23 +17,21 @@ class BottomImagePicker(val context: Context, val requestActivity: FragmentActiv
         constrainLayout: ConstraintLayout,
         deniedPermissions: ArrayList<String>
     ) {
-        Snackbar.make(
-            constrainLayout, PERMISSION_DENIED +
-                    deniedPermissions.toString(), Snackbar.LENGTH_LONG
-        ).show()
+        SnackBar.show(constrainLayout, PERMISSION_DENIED + deniedPermissions.toString())
     }
 
     fun setPermission(permissionListener: PermissionListener) {
-        TedPermission.with(context)
-            .setPermissionListener(permissionListener)
-            .setRationaleMessage(RATIONALE_MESSAGE)
-            .setDeniedMessage(DENIED_MESSAGE)
-            .setPermissions(
+        with(TedPermission.with(context)) {
+            setPermissionListener(permissionListener)
+            setRationaleMessage(RATIONALE_MESSAGE)
+            setDeniedMessage(DENIED_MESSAGE)
+            setPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
-            .check()
+            check()
+        }
     }
 
     fun openImagePicker(SelectMaxCountErrorText: String, CompleteButtonText: String) =

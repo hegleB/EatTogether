@@ -68,7 +68,6 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
 
         postViewModel.createPostImage.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-            adapter.notifyDataSetChanged()
         }
 
         postViewModel.updatedState.observe(viewLifecycleOwner) {

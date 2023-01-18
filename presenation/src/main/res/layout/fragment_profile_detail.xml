@@ -97,6 +97,7 @@
             android:layout_marginTop="28dp"
             android:enabled="false"
             android:onClick="@{() -> viewmodel.editProfileName()}"
+            android:clickable="@{viewmodel.profileEditState}"
             android:singleLine="true"
             android:text="@{viewmodel.myName}"
             android:textSize="28sp"
