@@ -41,6 +41,11 @@ class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
     inner class ChatRoomHolder(binding: ItemChatBinding) :
         BaseViewHolder<ItemChatBinding, ChatRoom>(binding) {
 
+        private val LAST_IMAGE_MESSAGE =  "사진을 보냈습니다."
+        private val LAST_MESSAGE_START_URL = "https://firebasestorage"
+        private val MIN_MESSAGE_COUNT = "0"
+        private var userNames = "나, "
+
         init {
             binding.apply {
                 itemView.setOnClickListener {
@@ -54,41 +59,53 @@ class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
         override fun bind(element: ChatRoom) {
             super.bind(element)
             binding.chat = element
-            var users = ""
-            for (i in element.photo.keys) {
-                if (!uid.equals(i)) {
-                    ImageBindingAdapter.userImage(
-                        binding.circleImageViewItemChat,
-                        element.photo.get(i)
-                    )
-                    FirebaseFirestore.getInstance().collection(USERS_COLLECTION_PATH).document(i).get()
-                        .addOnSuccessListener { snapshot ->
-                            val user = snapshot.toObject(User::class.java)
-                            users += user!!.usernm + ", "
-                            binding.textViewItemChatTitle.setText(
-                                users.substring(0, users.length - 2)
-                            )
-                        }
+            setChatRoomImageAndName(element)
+            setLastMessageText(element)
+            setMessageCount(element)
+        }
 
+        private fun setChatRoomImageAndName(element: ChatRoom) {
+            for (key in element.photo.keys) {
+                if (!uid.equals(key)) {
+                    setChatRoomUserImage(element, key)
+                    setChatRoomUserName(key)
                 }
             }
+        }
 
-            if (element.lastmsg.startsWith("https://firebasestorage")) {
-                binding.textViewItemChatLastMsg.setText("사진을 보냈습니다.")
+        private fun setChatRoomUserImage(element: ChatRoom, key: String) {
+            ImageBindingAdapter.userImage(
+                binding.circleImageViewItemChat,
+                element.photo.get(key)
+            )
+        }
 
-            } else {
-                binding.textViewItemChatLastMsg.setText(element.lastmsg)
-            }
+        private fun setChatRoomUserName(key: String) {
+            FirebaseFirestore.getInstance().collection(USERS_COLLECTION_PATH)
+                .document(key)
+                .addSnapshotListener { snapshot, e ->
+                    if (snapshot != null) {
+                        val user = snapshot.toObject(User::class.java)
+                        userNames += "${user?.usernm ?: ""}, "
+                        binding.textViewItemChatTitle.text = userNames.substring(0, userNames.length - 2)
+                    }
+                }
+        }
 
+        private fun setMessageCount(element: ChatRoom) {
             var cnt = element.unreadCount.get(uid)
-
-            if (cnt == 0) {
-                binding.textViewItemChatMsgCount.visibility = View.INVISIBLE
-            } else {
-                binding.textViewItemChatMsgCount.visibility = View.VISIBLE
-                binding.textViewItemChatMsgCount.setText(cnt.toString())
-
+            binding.apply {
+                textViewItemChatMsgCount.visibility = if (cnt == 0) View.INVISIBLE else View.VISIBLE
+                textViewItemChatMsgCount.text = if (cnt != 0) cnt.toString() else MIN_MESSAGE_COUNT
             }
         }
+
+        private fun setLastMessageText(element: ChatRoom) {
+            binding.textViewItemChatLastMsg.text =
+                if (isImageMessage(element)) LAST_IMAGE_MESSAGE else element.lastmsg
+        }
+
+        private fun isImageMessage(element: ChatRoom): Boolean =
+            element.lastmsg.startsWith(LAST_MESSAGE_START_URL)
     }
 }
