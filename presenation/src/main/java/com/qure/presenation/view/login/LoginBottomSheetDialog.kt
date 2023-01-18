@@ -25,6 +25,7 @@ import com.qure.domain.utils.Resource
 import com.qure.presenation.R
 import com.qure.presenation.base.BaseBottomSheetFragment
 import com.qure.presenation.databinding.DialogLoginBinding
+import com.qure.presenation.utils.SnackBar
 import com.qure.presenation.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -93,8 +94,7 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
                     authViewModel.isJoin(user.data!!)
                 }
                 is Resource.Error -> {
-                    Snackbar.make(requireView(), user.message.toString(), Snackbar.LENGTH_LONG)
-                        .show()
+                    SnackBar.show(requireView(), user.message.toString())
                 }
 
             }
@@ -113,7 +113,8 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
                 }
 
                 override fun onCancel() {
-                    Snackbar.make(requireView(), "페이스북 로그인 취소", Snackbar.LENGTH_LONG).show()
+                    SnackBar.show(requireView(), FACEBOOCK_LOGIN_CACEL_MESSAGE)
+                    Snackbar.make(requireView(), FACEBOOCK_LOGIN_CACEL_MESSAGE, Snackbar.LENGTH_LONG).show()
                 }
 
                 override fun onError(error: FacebookException?) {
@@ -180,6 +181,11 @@ class LoginBottomSheetDialog : BaseBottomSheetFragment<DialogLoginBinding>(R.lay
     }
 
     private fun failGoogleAuthMessage() {
-        Snackbar.make(requireView(), "구글 인증 실패", Snackbar.LENGTH_SHORT).show()
+        SnackBar.show(requireView(), GOOGLE_AUTH_FAIL_MESSAGE)
     }
-}
+
+    companion object {
+        const val GOOGLE_AUTH_FAIL_MESSAGE = "구글 인증 실패"
+        const val FACEBOOCK_LOGIN_CACEL_MESSAGE = "페이스북 로그인 취소"
+    }
+ }

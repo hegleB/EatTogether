@@ -45,10 +45,9 @@ class ProfileSettingFragment :
     private fun observeViewModel() {
         authViewModel.buttonSettingSubmit.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
-            if (checkProfileName()) {
-                Snackbar.make(requireView(), "이름을 입력하세요.", Snackbar.LENGTH_SHORT).show()
-            } else {
-                storageUser()
+            when {
+                checkProfileName() -> SnackBar.show(requireView(), PROFILE_NAME_EMPTY_MESSAGE)
+                else -> storageUser()
             }
             it.consume()
         }
@@ -106,7 +105,7 @@ class ProfileSettingFragment :
 
                 }
                 is Resource.Error -> {
-                    Snackbar.make(requireView(), "이미지 업로드 실패", Snackbar.LENGTH_LONG).show()
+                    SnackBar.show(requireView(), IMAGE_UPLOAD_FAIL_MESSAGE)
                 }
             }
         }
@@ -115,5 +114,10 @@ class ProfileSettingFragment :
     private fun addFirebaseStore() {
         val now = System.currentTimeMillis()
         authViewModel.setFireStoreUser(now)
+    }
+
+    companion object {
+        const val PROFILE_NAME_EMPTY_MESSAGE = "이름을 입력하세요."
+        const val IMAGE_UPLOAD_FAIL_MESSAGE = "이미지 업로드 실패"
     }
 }
