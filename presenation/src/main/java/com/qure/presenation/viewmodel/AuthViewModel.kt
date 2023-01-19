@@ -79,12 +79,8 @@ class AuthViewModel @Inject constructor(
         get() = _imageUri
 
     private val _settingImageUri: MutableLiveData<String> = MutableLiveData()
-    val settingImageUri: LiveData<String>
-        get() = _settingImageUri
 
     private val _userMessageToken: MutableLiveData<String> = MutableLiveData()
-    val userMessageToken: LiveData<String>
-        get() = _userMessageToken
 
     private val _settingState: MutableLiveData<Resource<User, String>> = MutableLiveData()
     val settingState: LiveData<Resource<User, String>>
@@ -183,15 +179,6 @@ class AuthViewModel @Inject constructor(
         _currentUser.value = userUseCase.getCurrentUser()
     }
 
-    fun setUserProfile(): User = User(
-        currentUser.value?.email ?: "",
-        currentUser.value?.uid ?: "",
-        settingName.value ?: "",
-        userMessageToken.value ?: "",
-        settingImageUri.value ?: "",
-        settingMessage.value ?: "",
-    )
-
     fun getImageUri(uri: Uri) {
         _imageUri.value = uri
     }
@@ -207,12 +194,12 @@ class AuthViewModel @Inject constructor(
                 uploadTask.addOnSuccessListener {
                     riverRef.downloadUrl.addOnSuccessListener {
                         _settingImageUri.value = it.toString()
-                        _settingState.value = Resource.Success(setUserProfile())
+                        _settingState.value = Resource.Success(User())
                         hideProgress()
                     }
                 }
             } else {
-                _settingState.value = Resource.Success(setUserProfile())
+                _settingState.value = Resource.Success(User())
             }
         } catch (e: Exception) {
             _settingState.value = Resource.Error(e.message)
@@ -226,7 +213,7 @@ class AuthViewModel @Inject constructor(
 
     fun setUser() = viewModelScope.launch {
         setUser = Resource.Loading()
-        setUser = userUseCase.setUser(currentUser.value?.uid ?: "", setUserProfile())
+        setUser = userUseCase.setUser(currentUser.value?.uid ?: "", User())
     }
 
     fun setMeeting() = viewModelScope.launch {

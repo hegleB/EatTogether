@@ -59,11 +59,7 @@ class ChatViewModel @Inject constructor(
         userUseCase.getUser(uid).collect {
             when (it) {
                 is Resource.Success -> {
-                    if (uid == curruntUid) {
-                        _user.value = it.data
-                    } else {
-                        _otherUser.value = it.data
-                    }
+                    if (uid == curruntUid) _user.value = it.data else _otherUser.value = it.data
                 }
             }
         }
@@ -75,9 +71,7 @@ class ChatViewModel @Inject constructor(
         chatUseCase.getAllChatRoom(curruntUid)
             .collect {
                 when (it) {
-                    is Resource.Success -> {
-                        _chatRooms.value = it.data
-                    }
+                    is Resource.Success -> _chatRooms.value = it.data
                     is Resource.Loading -> showProgress()
                 }
             }
@@ -93,32 +87,16 @@ class ChatViewModel @Inject constructor(
         val users = arrayListOf(otherUid, curruntUid)
         val userPhoto = user.value?.userphoto ?: ""
         val otherUserPhoto = _otherUser.value?.userphoto ?: ""
-        val chatRoom = getFirstchatRoom(chatRoomId, userPhoto, otherUid, otherUserPhoto, users)
-        addChatRoom(chatRoom)
-        return chatRoom
-    }
-
-    private fun getFirstchatRoom(
-        chatRoomId: String,
-        userPhoto: String,
-        otherUid: String,
-        otherUserPhoto: String,
-        users: ArrayList<String>,
-    ): ChatRoom {
+        val photos = mutableMapOf(curruntUid to userPhoto, otherUid to otherUserPhoto)
+        val unreadUsers = mutableMapOf(curruntUid to 0, otherUid to 0)
         val chatRoom = ChatRoom(
-            false,
-            chatRoomId,
-            "",
-            mutableMapOf(
-                curruntUid to userPhoto,
-                otherUid to otherUserPhoto,
-            ),
-            "",
-            "",
-            users.size,
-            mutableMapOf(curruntUid to 0, otherUid to 0),
-            users,
+            roomId = chatRoomId,
+            photo = photos,
+            userCount = users.size,
+            unreadCount = unreadUsers,
+            users = users
         )
+        addChatRoom(chatRoom)
         return chatRoom
     }
 

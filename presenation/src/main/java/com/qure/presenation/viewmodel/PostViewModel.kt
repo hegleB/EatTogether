@@ -85,8 +85,6 @@ class PostViewModel @Inject constructor(
     val createPostContent: MutableLiveData<String> = MutableLiveData()
 
     private val _createPostKey: MutableLiveData<String> = MutableLiveData()
-    val createPostKey: MutableLiveData<String>
-        get() = _createPostKey
 
     private val _updatedState: MutableLiveData<Resource<String, String>> = MutableLiveData()
     val updatedState: MutableLiveData<Resource<String, String>>
@@ -161,14 +159,6 @@ class PostViewModel @Inject constructor(
     private val _buttonUploadImage: MutableLiveData<Event<Unit>> = MutableLiveData()
     val buttonUploadImage: LiveData<Event<Unit>>
         get() = _buttonUploadImage
-
-    private val _toolbarPostCreate: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val toolbarPostCreate: LiveData<Event<Unit>>
-        get() = _toolbarPostCreate
-
-    private val _postImageList: MutableLiveData<List<String>> = MutableLiveData(listOf())
-    val postImageList: LiveData<List<String>>
-        get() = _postImageList
 
     private val _postDetailImageList: MutableLiveData<List<PostModel.PostImage>> = MutableLiveData()
     val postDetailImageList: LiveData<List<PostModel.PostImage>>
@@ -414,18 +404,7 @@ class PostViewModel @Inject constructor(
         val commentId = firestore.collection(COMMENTS_COLLECTION_PATH).document().id
         if (writer.value != null) {
             val writer = writer.value!!
-            val recomments = Comments(
-                writer.uid,
-                writer.usernm,
-                writer.userphoto,
-                content,
-                System.currentTimeMillis().toString(),
-                System.currentTimeMillis().toString(),
-                arrayListOf(),
-                postKey.value ?: "",
-                commentId,
-                0,
-            )
+            val recomments = getComments(writer, content, commentId, 0)
             addComments = Resource.Loading()
             addComments = commentUseCase.setComments(recomments)
         }
@@ -436,23 +415,28 @@ class PostViewModel @Inject constructor(
         val replyId = firestore.collection(COMMENTS_COLLECTION_PATH).document().id
         if (writer.value != null) {
             val writer = writer.value!!
-            val comments = Comments(
-                writer.uid,
-                writer.usernm,
-                writer.userphoto,
-                content,
-                System.currentTimeMillis().toString(),
-                System.currentTimeMillis().toString(),
-                arrayListOf(),
-                _recomment.value?.comments_postkey ?: "",
-                commentId,
-                1,
-                replyId,
-            )
+            val comments = getComments(writer, content, commentId, 1, replyId)
             addReComments = Resource.Loading()
             addReComments = commentUseCase.setReComments(comments)
         }
     }
+
+
+    private fun getComments(
+        writer: User, content: String, commentId: String, commentsDepth: Int, replyId: String = ""
+    ) = Comments(
+        writer.uid,
+        writer.usernm,
+        writer.userphoto,
+        content,
+        System.currentTimeMillis().toString(),
+        System.currentTimeMillis().toString(),
+        arrayListOf(),
+        postKey.value ?: "",
+        commentId,
+        commentsDepth,
+        replyId,
+    )
 
     fun setPost(key: String, postImages: ArrayList<String>) = viewModelScope.launch {
         _createPostKey.value = key
@@ -575,10 +559,6 @@ class PostViewModel @Inject constructor(
 
     fun backPostCategory() {
         _toolbarBack.value = Event(Unit)
-    }
-
-    fun getPostList(postImageList: List<String>) {
-        _postImageList.value = postImageList
     }
 
     fun sendComment(commentText: String) {

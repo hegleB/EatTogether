@@ -54,7 +54,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
     private fun initViewModel() {
         binding.viewmodel = postViewModel
         postViewModel.apply {
-            getPostList(args.post.postImages)
             getPostKey(args.post.key)
             getComments()
             getUserInfo()

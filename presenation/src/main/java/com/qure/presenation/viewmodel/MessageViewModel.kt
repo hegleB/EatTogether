@@ -143,12 +143,12 @@ class MessageViewModel @Inject constructor(
 
     private fun getChatMessage(editText: String, messageType: String): ChatMessage {
         val chatMessage = ChatMessage(
-            _chatroom.value?.roomId ?: "",
-            _user.value?.userphoto ?: "",
-            currentUser,
-            _user.value?.usernm ?: "",
-            editText,
-            messageType,
+            roomId = _chatroom.value?.roomId ?: "",
+            userImage =_user.value?.userphoto ?: "",
+            uid = currentUser,
+            usernm =_user.value?.usernm ?: "",
+            message = editText,
+            messagetype = messageType,
         )
         return chatMessage
     }

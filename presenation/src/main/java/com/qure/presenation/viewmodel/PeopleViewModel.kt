@@ -63,12 +63,8 @@ class PeopleViewModel @Inject constructor(
         get() = _myImage
 
     private val _myToken: MutableLiveData<String> = MutableLiveData()
-    val myToken: LiveData<String>
-        get() = _myToken
 
     private val _myId: MutableLiveData<String> = MutableLiveData()
-    val myId: LiveData<String>
-        get() = _myId
 
     private val _user: MutableLiveData<User> = MutableLiveData()
     val user: LiveData<User>
@@ -209,10 +205,7 @@ class PeopleViewModel @Inject constructor(
         userUseCase.getAllUser()
             .collect {
                 when (it) {
-                    is Resource.Success -> {
-                        val users = getRemovedCurrentUser(it.data!!, user)
-                        _userList.value = users
-                    }
+                    is Resource.Success -> _userList.value = getRemovedCurrentUser(it.data!!, user)
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -243,9 +236,7 @@ class PeopleViewModel @Inject constructor(
         postUseCase.getPostCount(uid)
             .collect {
                 when (it) {
-                    is Resource.Success -> {
-                        _postCount.value = it.data.toString()
-                    }
+                    is Resource.Success -> _postCount.value = it.data.toString()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -261,9 +252,7 @@ class PeopleViewModel @Inject constructor(
         userUseCase.getMeetingCount(uid)
             .collect {
                 when (it) {
-                    is Resource.Success -> {
-                        _meetingCount.value = it.data.toString()
-                    }
+                    is Resource.Success -> _meetingCount.value = it.data.toString()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -273,9 +262,7 @@ class PeopleViewModel @Inject constructor(
         postUseCase.getLikeCount(uid)
             .collect {
                 when (it) {
-                    is Resource.Success -> {
-                        _likeCount.value = it.data.toString()
-                    }
+                    is Resource.Success -> _likeCount.value = it.data.toString()
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
             }
@@ -304,15 +291,17 @@ class PeopleViewModel @Inject constructor(
     fun getBarcodeTime() = viewModelScope.launch {
         barcodeUseCase.getBarcodeTime(currentUid).collect {
             when (it) {
-                is Resource.Success -> {
-                    var data = it.data!!
-                    var currentTime = System.currentTimeMillis()
-                    var resultTime = data - currentTime
-                    _barcodeTimeRemaining.value = resultTime
-                }
+                is Resource.Success -> _barcodeTimeRemaining.value = getCurrentBarcodeTime(it)
                 is Resource.Error -> ErrorMessage.print(it.message ?: "")
             }
         }
+    }
+
+    private fun getCurrentBarcodeTime(it: BarcodeTimeResource): Long {
+        var data = it.data!!
+        var currentTime = System.currentTimeMillis()
+        var resultTime = data - currentTime
+        return resultTime
     }
 
     fun uploadImage() = viewModelScope.launch {
@@ -323,14 +312,7 @@ class PeopleViewModel @Inject constructor(
             if (myUri.value != null) {
                 _updatedState.value = Resource.Loading()
                 val uploadTask: UploadTask = riverRef.putFile(myImage.value!!.toUri())
-                uploadTask.addOnSuccessListener {
-                    riverRef.downloadUrl.addOnSuccessListener {
-                        _myImage.value = it.toString()
-                        _updatedState.value = Resource.Success("업로드 성공")
-                    }
-                }.addOnFailureListener {
-                    _updatedState.value = Resource.Success("")
-                }
+                uploadTakListener(uploadTask, riverRef)
             } else {
                 _updatedState.value = Resource.Success("")
             }
@@ -339,8 +321,27 @@ class PeopleViewModel @Inject constructor(
         }
     }
 
+    private fun uploadTakListener(
+        uploadTask: UploadTask,
+        riverRef: StorageReference
+    ) {
+        uploadTask.addOnSuccessListener {
+            riverRef.downloadUrl.addOnSuccessListener {
+                _myImage.value = it.toString()
+                _updatedState.value = Resource.Success("업로드 성공")
+            }
+        }.addOnFailureListener {
+            _updatedState.value = Resource.Success("")
+        }
+    }
+
     fun chageProfile() = viewModelScope.launch {
-        updateUser = userUseCase.updateUser(currentUid, myName.value ?: "", myMsg.value ?: "", myImage.value ?: "")
+        updateUser = userUseCase.updateUser(
+            currentUid,
+            myName.value ?: "",
+            myMsg.value ?: "",
+            myImage.value ?: "",
+        )
     }
 
     fun moveMyProfile() {
