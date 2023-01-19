@@ -499,33 +499,7 @@ class PostViewModel @Inject constructor(
         if (createImages.isNotEmpty()) {
             showProgress()
             _updatedState.value = Resource.Loading()
-            for (i in createImages.indices) {
-                val riverRef: StorageReference =
-                    firebaseStorage.getReference().child("post_image/" + key + "/" + i + ".jpg")
-                val uploadTask: UploadTask = riverRef.putFile(createImages.get(i).toUri())
-                uploadTask.addOnSuccessListener {
-                    riverRef.downloadUrl.addOnSuccessListener { uri ->
-                        firestore.collection(POSTS_COLLECTION_PATH).document(key).collection(
-                            IMAGES_COLLECTION_GROUP,
-                        )
-                            .document().set(PostModel.PostImage(key, uri.toString()))
-                        imageList.add(uri.toString())
-                        firestore.collection(POSTS_COLLECTION_PATH).document(key).update(
-                            POST_IMAGES_FIELD,
-                            imageList,
-                        )
-                    }
-                }
-                firestore.collection(POSTS_COLLECTION_PATH).document(key).set(post)
-                uploadTask.addOnProgressListener {
-                    val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
-                    if (progress == 100.0) {
-                        setPost(key, imageList)
-                        hideProgress()
-                        _updatedState.value = Resource.Success("성공")
-                    }
-                }
-            }
+            uploadImages(createImages, key, imageList)
         } else {
             setPost(key, imageList)
             _updatedState.value = Resource.Success("성공")
@@ -533,18 +507,30 @@ class PostViewModel @Inject constructor(
     }
 
     private fun uploadImages(
-        riverRef: StorageReference,
         createImages: java.util.ArrayList<String>,
-        i: Int,
         key: String,
-        imageList: ArrayList<String>,
+        imageList: ArrayList<String>
     ) {
-        val uploadTask: UploadTask = riverRef.putFile(createImages.get(i).toUri())
+        for (image in createImages.indices) {
+            val riverRef =
+                firebaseStorage.getReference().child("post_image/" + key + "/" + image + ".jpg")
+            val uploadTask: UploadTask = riverRef.putFile(createImages[image].toUri())
+            uploadTaskListener(uploadTask, riverRef, key, imageList)
+        }
+    }
+
+    private fun uploadTaskListener(
+        uploadTask: UploadTask,
+        riverRef: StorageReference,
+        key: String,
+        imageList: ArrayList<String>
+    ) {
         uploadTask.addOnSuccessListener {
             riverRef.downloadUrl.addOnSuccessListener { uri ->
                 setPostImages(key, uri, imageList)
             }
         }
+        firestore.collection(POSTS_COLLECTION_PATH).document(key).set(post)
         uploadTask.addOnProgressListener {
             uploadProgress(it, key, imageList)
         }
@@ -563,11 +549,11 @@ class PostViewModel @Inject constructor(
     }
 
     private fun uploadProgress(
-        it: UploadTask.TaskSnapshot,
+        uploadTask: UploadTask.TaskSnapshot,
         key: String,
         imageList: ArrayList<String>,
     ) {
-        val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+        val progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
         if (progress == 100.0) {
             setPost(key, imageList)
             _updatedState.value = Resource.Success("성공")
