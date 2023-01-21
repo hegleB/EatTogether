@@ -1,4 +1,6 @@
 import Versions.GLIDE_VERSION
+import Versions.JUNIT_VERSION
+import Versions.MOCKK_VERSION
 import Versions.NAV_VERSION
 import Versions.PAGING_VERSION
 
@@ -6,6 +8,8 @@ object Versions {
     const val NAV_VERSION = "2.4.0-alpha10"
     const val PAGING_VERSION = "3.1.1"
     const val GLIDE_VERSION = "4.11.0"
+    const val MOCKK_VERSION = "1.9.1"
+    const val JUNIT_VERSION = "5.8.2"
 
 }
 
@@ -89,5 +93,21 @@ object RollingText {
 
 object Preference {
     const val PREFERENCE = "androidx.preference:preference:1.1.0"
+}
+
+object Testing {
+    const val ASSERTJ = "org.assertj:assertj-core:3.21.0"
+
+    const val JUNIT_JUPITER_API =  "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
+    const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+    const val JUNIT_JUPITER_PARAMS = "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
+    const val JUNIT_VINTAGE = "org.junit.vintage:junit-vintage-engine:$JUNIT_VERSION"
+
+    const val TEST_RULE = "androidx.test:rules:1.1.0"
+    const val ARCH_CORE_TESTING = "android.arch.core:core-testing:1.1.0"
+    const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3"
+
+    const val MOCKK = "io.mockk:mockk:$MOCKK_VERSION"
+    const val MOCKK_ANDROID = "io.mockk:mockk-android:$MOCKK_VERSION"
 }
 

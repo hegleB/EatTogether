@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id("de.mannodermaus.android-junit5") version "1.8.2.1"
 }
 
 android {
@@ -48,6 +49,10 @@ android {
     buildFeatures {
         dataBinding true
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 configurations {
@@ -71,8 +76,21 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+
+    testImplementation (Testing.ASSERTJ)
+
+    testImplementation (Testing.JUNIT_JUPITER_API)
+    testRuntimeOnly (Testing.JUNIT_JUPITER_ENGINE)
+    testImplementation (Testing.JUNIT_JUPITER_PARAMS)
+    testRuntimeOnly (Testing.JUNIT_VINTAGE)
+
+    androidTestImplementation (Testing.TEST_RULE)
+    testImplementation (Testing.ARCH_CORE_TESTING)
+    testImplementation (Testing.COROUTINES_TEST)
+
+    testImplementation (Testing.MOCKK)
+    androidTestImplementation (Testing.MOCKK_ANDROID)
 
     implementation platform(Firebase.FIREBASE_BOM)
     implementation (Firebase.FIREBASE_PLAY_SERVICES)
