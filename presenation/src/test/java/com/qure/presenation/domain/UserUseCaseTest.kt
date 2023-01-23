@@ -29,10 +29,8 @@ class UserUseCaseTest : BaseTest() {
     @Test
     fun `가입된 유저 정보를 가져온다`() = runTest {
         val expected = User("abs@abs.com", "abs", "abs")
-        launch {
-            assertThat(userUseCase.getUser("abs").first().data).isEqualTo(expected)
-            assertThat(userUseCase.getUser("").first().data).isEqualTo(User())
-        }
+        assertThat(userUseCase.getUser("abs").first().data).isEqualTo(expected)
+        assertThat(userUseCase.getUser("").first().data).isEqualTo(User())
     }
 
     @Test
@@ -42,9 +40,7 @@ class UserUseCaseTest : BaseTest() {
             User("a@a.com", "a", "a"),
             User("abs@abs.com", "abs", "abs")
         )
-        launch {
-            assertThat(userUseCase.getAllUser().first().data).isEqualTo(expected)
-        }
+        assertThat(userUseCase.getAllUser().first().data).isEqualTo(expected)
     }
 
     @Test
