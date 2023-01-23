@@ -178,7 +178,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun getProfileCommentsCreatedPosts(uid: String) = callbackFlow {
         trySend(Resource.Loading())
-        val commentCreatedsPost = mutableListOf<Post>()
+        var commentCreatedsPost = listOf<Post>()
         val callback =
             firestore.collection(POSTS_COLLECTION_PATH)
                 .orderBy(TIMESTAMP_FIELD, Query.Direction.DESCENDING)
@@ -191,14 +191,7 @@ class PostRepositoryImpl @Inject constructor(
                             val posts = post.result.toObjects(Post::class.java)
                             val commentsPost = snapshot.result.toObjects(Comments::class.java)
                             for (post in posts) {
-                                for (comment in commentsPost) {
-                                    if (post.key.equals(comment.comments_postkey) && !commentCreatedsPost.contains(
-                                            post
-                                        )
-                                    ) {
-                                        commentCreatedsPost.add(post)
-                                    }
-                                }
+                                commentCreatedsPost = getCommentCreatedPost(commentsPost, post)
                             }
                             trySend(Resource.Success(commentCreatedsPost))
                         }
@@ -206,6 +199,19 @@ class PostRepositoryImpl @Inject constructor(
         awaitClose {
             callback.isCanceled
         }
+    }
+
+    private fun getCommentCreatedPost(
+        commentsPost: List<Comments>,
+        post: Post,
+    ): List<Post> {
+        val commentCreatedsPost = mutableListOf<Post>()
+        for (comment in commentsPost) {
+            if (post.key.equals(comment.comments_postkey) && !commentCreatedsPost.contains(post)) {
+                commentCreatedsPost.add(post)
+            }
+        }
+        return commentCreatedsPost
     }
 
     override suspend fun getPostImage(postKey: String) = callbackFlow {
