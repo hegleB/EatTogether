@@ -14,4 +14,7 @@ data class Comments(
     val comments_commentskey: String = "",
     val comments_depth: Int = 0,
     val comments_replyKey: String = ""
-) : Serializable
+) : Serializable {
+    fun isSameCommentUid(uid: String) =
+        this.comments_uid == uid
+}
