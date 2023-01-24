@@ -47,11 +47,11 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
         binding.viewmodel = peopleViewModel
 
         peopleViewModel.apply {
-            val uid = getCurrentUser()?.uid ?: ""
-            getUserInfo(uid)
-            getPostCount(uid)
-            getLikeCount(uid)
-            getMeetingCount(uid)
+
+            getUserInfo(this@PeopleFragment.currentUid)
+            getPostCount(this@PeopleFragment.currentUid)
+            getLikeCount(this@PeopleFragment.currentUid)
+            getMeetingCount(this@PeopleFragment.currentUid)
             refreshAdapter()
         }
     }
@@ -65,7 +65,7 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
     }
 
     private fun observeViewModel() {
-        val uid = peopleViewModel.getCurrentUser()?.uid ?: ""
+        val uid = currentUid
         peopleViewModel.myProfileImage.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
             peopleViewModel.setClosedProfileState()
@@ -113,7 +113,7 @@ class PeopleFragment : BaseFragment<FragmentPeopleBinding>(R.layout.fragment_peo
 
     private fun findMyChatroomMessage(currentId: String, badge: BadgeDrawable) {
         firestore.collection(CHATROOMS_COLLECTION_PATH).whereArrayContains(USERS_FIELD, currentId)
-            .addSnapshotListener { snapshot, e ->
+            .addSnapshotListener { snapshot, _ ->
                 if (snapshot != null) {
                     val count =
                         getMessageCount(snapshot.toObjects(ChatRoom::class.java), currentId)

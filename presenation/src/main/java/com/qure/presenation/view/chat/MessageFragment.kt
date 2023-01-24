@@ -29,7 +29,7 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
     private val peopleViewModel: PeopleViewModel by activityViewModels()
     private val args by navArgs<MessageFragmentArgs>()
     private val adapter: ChatAdapter by lazy {
-        ChatAdapter(args.chatroom.userCount, peopleViewModel.currentUid)
+        ChatAdapter(args.chatroom.userCount, currentUid)
     }
     private val bottomImagePicker by lazy {
         BottomImagePicker(requireContext(), requireActivity())

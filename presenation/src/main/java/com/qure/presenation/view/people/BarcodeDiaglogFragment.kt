@@ -36,6 +36,7 @@ class BarcodeDiaglogFragment :
     private fun observeViewModel() {
         peopleViewModel.cancelBarcode.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
+            peopleViewModel.deleteBarcode()
             dismiss()
             it.consume()
         }
@@ -70,16 +71,16 @@ class BarcodeDiaglogFragment :
     }
 
     private fun createBarcode() {
-        val uid = peopleViewModel.getCurrentUser()?.uid
+        peopleViewModel.getCurrentUser(currentUid)
         val random_num = (Math.random() * RANDOM_VALUE).toString()
-        val random_barcode = uid + "_" + random_num
+        val random_barcode = currentUid + "_" + random_num
         peopleViewModel.setBarcode(random_barcode)
         peopleViewModel.createBarcod(random_barcode)
     }
 
     companion object {
-        const val COUNT_BARCODE_TIME = 15L
-        const val BARCODE_COUNTDOWN_MILLS = 1600L
+        const val COUNT_BARCODE_TIME = 15000L
+        const val BARCODE_COUNTDOWN_MILLS = 16000L
         const val BARCOD_COUNTDOWN_INTERVAL = 1000L
         const val INIT_BARCODE_TIME = 0L
         const val RANDOM_VALUE = 100

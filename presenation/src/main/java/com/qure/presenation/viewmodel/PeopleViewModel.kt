@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -29,10 +30,11 @@ class PeopleViewModel @Inject constructor(
     private val userUseCase: UserUseCase,
     private val postUseCase: PostUseCase,
     private val barcodeUseCase: BarcodeUseCase,
-    private val firebaseStorage: FirebaseStorage,
 ) : BaseViewModel() {
 
-    val currentUid = getCurrentUser()?.uid ?: ""
+    private val _currentUid: MutableLiveData<String> = MutableLiveData()
+    val currentUid: LiveData<String>
+        get() = _currentUid
 
     private val _myProfileImage: MutableLiveData<Event<Unit>> = MutableLiveData()
     val myProfileImage: LiveData<Event<Unit>>
@@ -199,7 +201,9 @@ class PeopleViewModel @Inject constructor(
     var updateUser by mutableStateOf<UpdateUser>(Resource.Success(false))
         private set
 
-    fun getCurrentUser() = userUseCase.getCurrentUser()
+    fun getCurrentUser(currentUid: String) {
+        _currentUid.value = currentUid
+    }
 
     fun getAllUser(user: User) = viewModelScope.launch {
         userUseCase.getAllUser()
@@ -225,7 +229,7 @@ class PeopleViewModel @Inject constructor(
                         _myImage.value = user?.userphoto
                         _myId.value = user?.userid
                         _myToken.value = user?.token
-                        _user.value = user
+                        _user.value = user!!
                     }
                     is Resource.Error -> ErrorMessage.print(it.message ?: "")
                 }
@@ -245,7 +249,7 @@ class PeopleViewModel @Inject constructor(
     fun updateMeetingCount() = viewModelScope.launch {
         val count = meetingCount.value?.toInt()?.plus(1) ?: meetingCount.value!!.toInt()
         updateMeetingCount = Resource.Loading()
-        updateMeetingCount = userUseCase.updateMeetingCount(currentUid, count)
+        updateMeetingCount = userUseCase.updateMeetingCount(_currentUid.value ?: "", count)
     }
 
     fun getMeetingCount(uid: String) = viewModelScope.launch {
@@ -269,27 +273,27 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun deleteBarcode() = viewModelScope.launch {
-        deleteBarcodeInfo = barcodeUseCase.deleteBarcodeInfo(currentUid)
+        deleteBarcodeInfo = barcodeUseCase.deleteBarcodeInfo(_currentUid.value ?: "")
     }
 
     fun deleteBarcodeTime() = viewModelScope.launch {
-        deleteBarcodeTime = barcodeUseCase.deleteBarcodeTime(currentUid)
+        deleteBarcodeTime = barcodeUseCase.deleteBarcodeTime(_currentUid.value ?: "")
     }
 
     fun setBarcode(randomBarcode: String) = viewModelScope.launch {
-        addBarcodeInfo = barcodeUseCase.setBarcodeInfo(currentUid, randomBarcode)
+        addBarcodeInfo = barcodeUseCase.setBarcodeInfo(_currentUid.value ?: "", randomBarcode)
     }
 
     fun setBarcodeTime() = viewModelScope.launch {
-        addBarcodeTime = barcodeUseCase.setBarcodeTime(currentUid)
+        addBarcodeTime = barcodeUseCase.setBarcodeTime(_currentUid.value ?: "")
     }
 
     fun checkBarcodeTime() = viewModelScope.launch {
-        checkBarcodeTime = barcodeUseCase.checkBarcodeTime(currentUid)
+        checkBarcodeTime = barcodeUseCase.checkBarcodeTime(_currentUid.value ?: "")
     }
 
     fun getBarcodeTime() = viewModelScope.launch {
-        barcodeUseCase.getBarcodeTime(currentUid).collect {
+        barcodeUseCase.getBarcodeTime(_currentUid.value ?: "").collect {
             when (it) {
                 is Resource.Success -> _barcodeTimeRemaining.value = getCurrentBarcodeTime(it)
                 is Resource.Error -> ErrorMessage.print(it.message ?: "")
@@ -306,7 +310,7 @@ class PeopleViewModel @Inject constructor(
 
     fun uploadImage() = viewModelScope.launch {
         val riverRef: StorageReference =
-            firebaseStorage.getReference()
+            FirebaseStorage.getInstance().getReference()
                 .child("profile_image/" + currentUid + ".jpg")
         try {
             if (myUri.value != null) {
@@ -337,7 +341,7 @@ class PeopleViewModel @Inject constructor(
 
     fun chageProfile() = viewModelScope.launch {
         updateUser = userUseCase.updateUser(
-            currentUid,
+            _currentUid.value ?: "",
             myName.value ?: "",
             myMsg.value ?: "",
             myImage.value ?: "",

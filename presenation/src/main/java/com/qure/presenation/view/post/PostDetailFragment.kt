@@ -53,7 +53,9 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
 
     private fun initViewModel() {
         binding.viewmodel = postViewModel
+
         postViewModel.apply {
+            getCurrentUid(this@PostDetailFragment.currentUid)
             getPostKey(args.post.key)
             getComments()
             getUserInfo()

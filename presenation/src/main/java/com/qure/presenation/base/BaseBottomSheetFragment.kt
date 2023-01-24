@@ -9,12 +9,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.auth.FirebaseAuth
 
 abstract class BaseBottomSheetFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: Int) :
     BottomSheetDialogFragment() {
 
     lateinit var binding: T
-
+    val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

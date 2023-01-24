@@ -9,12 +9,11 @@ import javax.inject.Inject
 class UserUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
-    private val meetingRepository: MeetingRepository
+    private val meetingRepository: MeetingRepository,
 ) {
     suspend fun getAllUser() = userRepository.getAllUser()
     suspend fun getUserMessageToken() = authRepository.geMessageToken()
     suspend fun getUser(uid: String) = userRepository.getUser(uid)
-    fun getCurrentUser() = authRepository.getCurrentUser()
     suspend fun getMeetingCount(uid: String) = meetingRepository.getMeetingCount(uid)
     suspend fun setMeetingCount(uid: String, count: Int) =
         meetingRepository.setMeetingCount(uid, count)

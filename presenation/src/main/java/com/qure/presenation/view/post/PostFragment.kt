@@ -43,6 +43,7 @@ class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
     private fun initViewModel() {
         binding.viewmodel = postViewModel
         postViewModel.getAllPost()
+        postViewModel.getCurrentUid(currentUid)
     }
 
     private fun initAdapter() {

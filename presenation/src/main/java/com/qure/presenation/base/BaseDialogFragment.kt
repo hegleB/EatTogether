@@ -8,11 +8,13 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
+import com.google.firebase.auth.FirebaseAuth
 
 abstract class BaseDialogFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: Int) :
     DialogFragment() {
 
     lateinit var binding: T
+    lateinit var currentUid: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,6 +22,7 @@ abstract class BaseDialogFragment<T : ViewDataBinding>(@LayoutRes val layoutResI
         savedInstanceState: Bundle?,
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layoutResInt, container, false)
+        currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         init()
         binding.lifecycleOwner = this
         return binding.root

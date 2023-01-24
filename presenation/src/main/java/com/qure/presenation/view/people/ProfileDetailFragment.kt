@@ -35,7 +35,6 @@ class ProfileDetailFragment :
         BottomImagePicker(requireContext(), requireActivity())
     }
     private var countDownTimer: CountDownTimer? = null
-    private var currentUid: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +43,19 @@ class ProfileDetailFragment :
     }
 
     override fun init() {
-        initViewModel()
         observeViewModel()
         onBackPressedEvent()
         checkOtherProfile()
-        currentUid = peopleViewModel.getCurrentUser()?.uid ?: ""
         binding.circleImageViewFragmentProfileProfile.isEnabled = false
     }
 
     override fun onResume() {
         super.onResume()
+        initViewModel()
         initViewPager()
+        if (binding.circleImageViewFragmentProfileProfile.isEnabled) {
+            peopleViewModel.setQRDisabledState()
+        }
     }
 
     private fun initViewModel() {
@@ -66,13 +67,17 @@ class ProfileDetailFragment :
             checkCurrentUser(args.uid)
             getUserInfo(args.uid)
             checkBarcodeTime()
+            if (args.uid == this@ProfileDetailFragment.currentUid) {
+                setQRAbledState()
+            } else {
+                setQRDisabledState()
+            }
         }
     }
 
     private fun observeViewModel() {
         peopleViewModel.profileClose.observe(this) {
             if (it.consumed) return@observe
-            peopleViewModel.setQRAbledState()
             if (args.uid.equals(currentUid)) {
                 updateProfile()
             } else {
@@ -208,7 +213,7 @@ class ProfileDetailFragment :
         if (result.contents != null) {
             SnackBar.show(binding.constraintLayoutFragmentProfile, QR_SCAN_SNACKBAR_MESSAGE)
             peopleViewModel.apply {
-                val currentUid = getCurrentUser()?.uid ?: ""
+                val currentUid = this@ProfileDetailFragment.currentUid
                 setBarcodeTime()
                 getMeetingCount(currentUid)
                 countTime()

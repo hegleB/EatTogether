@@ -31,7 +31,7 @@ class ProfileDialogFragment :
 
     private fun initViewModel() {
         binding.viewmodel = peopleViewModel
-        chatViewModel.getUserInfo(peopleViewModel.currentUid)
+        chatViewModel.getUserInfo(currentUid)
         chatViewModel.getUserInfo(args.peopleOtherPersonUid)
         chatViewModel.getAllChatRoom()
     }

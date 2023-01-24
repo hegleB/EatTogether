@@ -8,10 +8,12 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
 
 abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: Int) : Fragment() {
 
     lateinit var binding: T
+    val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     override fun onCreateView(
         inflater: LayoutInflater,

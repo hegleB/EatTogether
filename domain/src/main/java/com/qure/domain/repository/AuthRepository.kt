@@ -11,7 +11,6 @@ interface AuthRepository {
 
     fun signInWithGoogle(credential: AuthCredential): Task<AuthResult>
     fun signInWithFacebook(token: AccessToken): Task<AuthResult>
-    fun getCurrentUser(): FirebaseUser?
     fun signOutUser()
     suspend fun geMessageToken(): Task<String>
 }

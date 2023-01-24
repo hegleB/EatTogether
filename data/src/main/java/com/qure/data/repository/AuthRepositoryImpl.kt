@@ -21,11 +21,6 @@ class AuthRepositoryImpl @Inject constructor(
         return firebaseAuth.signInWithCredential(FacebookAuthProvider.getCredential(token.token))
     }
 
-
-    override fun getCurrentUser(): FirebaseUser? {
-        return firebaseAuth.currentUser
-    }
-
     override fun signOutUser() {
         firebaseAuth.signOut()
     }
