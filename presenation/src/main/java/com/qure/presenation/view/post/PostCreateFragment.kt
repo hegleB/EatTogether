@@ -1,5 +1,6 @@
 package com.qure.presenation.view.post
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -41,7 +42,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
             getUserInfo()
         }
     }
-
+    
     private fun initAdapter() {
         binding.recyclerViewFragmentPostCreateImage.adapter = adapter
     }
@@ -67,6 +68,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
 
         postViewModel.createPostImage.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            adapter.notifyDataSetChanged()
         }
 
         postViewModel.updatedState.observe(viewLifecycleOwner) {
