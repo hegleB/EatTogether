@@ -2,6 +2,7 @@ package com.qure.presenation.view.login
 
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.gun0912.tedpermission.PermissionListener
 import com.quer.presenation.base.BaseFragment
 import com.qure.domain.utils.Resource
@@ -32,7 +33,7 @@ class ProfileSettingFragment :
         binding.viewmodel = authViewModel
 
         authViewModel.apply {
-            getCurrentUser()
+            getCurrentUser(FirebaseAuth.getInstance().currentUser ?: return)
             getMessageToken()
         }
     }

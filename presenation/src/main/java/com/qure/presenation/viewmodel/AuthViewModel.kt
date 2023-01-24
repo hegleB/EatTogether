@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.facebook.AccessToken
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -137,7 +138,7 @@ class AuthViewModel @Inject constructor(
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
                     hideProgress()
-                    _users.value = it.data
+                    _users.value = it.data!!
                 }
                 is Resource.Error -> ErrorMessage.print(it.message ?: "")
             }
@@ -175,8 +176,8 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUser() {
-        _currentUser.value = userUseCase.getCurrentUser()
+    fun getCurrentUser(user: FirebaseUser) {
+        _currentUser.value = user
     }
 
     fun getImageUri(uri: Uri) {
@@ -211,9 +212,21 @@ class AuthViewModel @Inject constructor(
         addSetting = setSettingUseCase(currentUser.value?.uid ?: "", Setting(true, true, true, now))
     }
 
+    fun setUserProfile(): User = User(
+        currentUser.value?.email ?: "",
+        currentUser.value?.uid ?: "",
+        settingName.value ?: "",
+        _userMessageToken.value ?: "",
+        _settingImageUri.value ?: "",
+        settingMessage.value ?: ""
+    )
+
     fun setUser() = viewModelScope.launch {
+        val user = User(
+            _currentUser.value?.uid ?: ""
+        )
         setUser = Resource.Loading()
-        setUser = userUseCase.setUser(currentUser.value?.uid ?: "", User())
+        setUser = userUseCase.setUser(currentUser.value?.uid ?: "", setUserProfile())
     }
 
     fun setMeeting() = viewModelScope.launch {
