@@ -2,6 +2,7 @@ package com.qure.presenation.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.qure.data.repository.*
 import com.qure.domain.repository.*
 import dagger.Module
@@ -31,8 +32,9 @@ object RepositoryModule {
     @Provides
     fun providePostRepository(
         firestore: FirebaseFirestore,
+        firebaseStorage: FirebaseStorage,
     ): PostRepository {
-        return PostRepositoryImpl(firestore)
+        return PostRepositoryImpl(firestore, firebaseStorage)
     }
 
     @Provides

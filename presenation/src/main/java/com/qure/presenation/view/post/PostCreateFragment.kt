@@ -1,7 +1,7 @@
 package com.qure.presenation.view.post
 
-import android.annotation.SuppressLint
 import android.net.Uri
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.gun0912.tedpermission.PermissionListener
@@ -42,7 +42,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
             getUserInfo()
         }
     }
-    
+
     private fun initAdapter() {
         binding.recyclerViewFragmentPostCreateImage.adapter = adapter
     }
@@ -73,10 +73,12 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
 
         postViewModel.updatedState.observe(viewLifecycleOwner) {
             when (it) {
+                is Resource.Loading -> binding.spinKitViewFragmentPostCreateLoading.visibility = View.VISIBLE
                 is Resource.Success -> {
                     findNavController().popBackStack()
                     postViewModel.setUpdatedState(Resource.Empty(""))
                 }
+                is Resource.Error -> binding.spinKitViewFragmentPostCreateLoading.visibility = View.INVISIBLE
             }
         }
     }
@@ -124,5 +126,10 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
             list.add(uri.toString())
         }
         return list
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        postViewModel.initWritedPost()
     }
 }

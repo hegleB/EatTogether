@@ -1,5 +1,6 @@
 package com.qure.presenation.viewmodel
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -407,7 +408,7 @@ class PostViewModel @Inject constructor(
         val replyId = FirebaseId.create(COMMENTS_COLLECTION_PATH)
         if (writer.value != null) {
             val writer = writer.value!!
-            val comments = getComments(writer, content, commentId, 1, "replyId")
+            val comments = getComments(writer, content, commentId, 1, replyId)
             addReComments = Resource.Loading()
             addReComments = commentUseCase.setReComments(comments)
         }
@@ -445,7 +446,6 @@ class PostViewModel @Inject constructor(
         )
         addPost = Resource.Loading()
         addPost = postUseCase.setPost(post)
-        initWritedPost()
     }
 
     fun initWritedPost() {
@@ -466,13 +466,12 @@ class PostViewModel @Inject constructor(
     }
 
     fun createPost() = viewModelScope.launch {
+        _updatedState.value = Resource.Loading()
         val key = FirebaseId.create(POSTS_COLLECTION_PATH)
         val createImages = createPostImage.value ?: arrayListOf()
         val imageList = arrayListOf<String>()
         if (createImages.isNotEmpty()) {
-            showProgress()
             setPost(key, imageList)
-            _updatedState.value = Resource.Loading()
             uploadImages(createImages, key)
         } else {
             setPost(key, imageList)
@@ -496,16 +495,36 @@ class PostViewModel @Inject constructor(
                 }
             }
         }
-        hideProgress()
+        _updatedState.value = Resource.Success("성공")
     }
 
-    private suspend fun downloadImage(key: String, index: Int) {
+    private fun downloadImage(key: String, index: Int) = viewModelScope.launch {
         postUseCase.downloadImage(key, index).collect {
             when (it) {
                 is Resource.Success -> {
-                    FirebaseFirestore.getInstance().collection(POSTS_COLLECTION_PATH)
-                        .document(key).update(POST_IMAGES_FIELD, FieldValue.arrayUnion(it.data))
+                    updateDownloadImageUri(it.data ?: Uri.EMPTY, key)
+                    setDownloadImage(PostModel.PostImage(key, it.data.toString()))
                 }
+                is Resource.Error -> hideProgress()
+            }
+        }
+    }
+
+    private fun updateDownloadImageUri(uri: Uri, key: String) = viewModelScope.launch {
+        postUseCase.updateDownloadImageUri(uri, key).collect {
+            when (it) {
+                is Resource.Loading -> showProgress()
+                is Resource.Success -> hideProgress()
+                is Resource.Error -> hideProgress()
+            }
+        }
+    }
+
+    private fun setDownloadImage(postImage: PostModel.PostImage) = viewModelScope.launch {
+        postUseCase.setDownloadImage(postImage).collect {
+            when (it) {
+                is Resource.Loading -> showProgress()
+                is Resource.Success -> hideProgress()
                 is Resource.Error -> hideProgress()
             }
         }
