@@ -54,12 +54,12 @@ class ReCommentsAdapter(
                     LIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
                         element.comments_replyKey,
-                        FieldValue.arrayRemove(postViewModel.currentUid),
+                        FieldValue.arrayRemove(postViewModel.currentUid.value),
                     )
                     UNLIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
                         element.comments_replyKey,
-                        FieldValue.arrayUnion(postViewModel.currentUid),
+                        FieldValue.arrayUnion(postViewModel.currentUid.value),
                     )
                 }
             }

@@ -86,14 +86,17 @@ class CommentsAdapter(
         private fun clickCommentLike(element: Comments) {
             binding.textViewItemCommentsLike.setOnClickListener {
                 when (binding.textViewItemCommentsLike.currentTextColor) {
-                    LIKE_COLOR -> updateLikeCount(
-                        element.comments_commentskey,
-                        FieldValue.arrayRemove(postViewModel.currentUid),
-                    )
+                    LIKE_COLOR -> FirebaseFirestore.getInstance()
+                        .collection(COMMENTS_COLLECTION_PATH)
+                        .document(element.comments_commentskey)
+                        .update(
+                            "comments_likeCount",
+                            FieldValue.arrayRemove(postViewModel.currentUid.value),
+                        )
 
                     UNLIKE_COLOR -> updateLikeCount(
                         element.comments_commentskey,
-                        FieldValue.arrayUnion(postViewModel.currentUid),
+                        FieldValue.arrayUnion(postViewModel.currentUid.value),
                     )
                 }
             }
