@@ -71,7 +71,7 @@ class BarcodeDiaglogFragment :
     }
 
     private fun createBarcode() {
-        peopleViewModel.getCurrentUser(currentUid)
+        peopleViewModel.getCurrentUid(currentUid)
         val random_num = (Math.random() * RANDOM_VALUE).toString()
         val random_barcode = currentUid + "_" + random_num
         peopleViewModel.setBarcode(random_barcode)

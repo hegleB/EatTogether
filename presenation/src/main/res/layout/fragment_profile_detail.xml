@@ -243,7 +243,7 @@
             android:id="@+id/spinKitViwe_fragmentProfile_loading"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:visibility="invisible"
+            android:visibility="@{viewmodel.isLoading() ? View.VISIBLE : View.INVISIBLE}"
             app:SpinKit_Color="@color/black"
             app:SpinKit_Style="FadingCircle"
             app:layout_constraintBottom_toBottomOf="parent"

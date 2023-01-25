@@ -32,10 +32,6 @@ class PeopleViewModel @Inject constructor(
     private val barcodeUseCase: BarcodeUseCase,
 ) : BaseViewModel() {
 
-    private val _currentUid: MutableLiveData<String> = MutableLiveData()
-    val currentUid: LiveData<String>
-        get() = _currentUid
-
     private val _myProfileImage: MutableLiveData<Event<Unit>> = MutableLiveData()
     val myProfileImage: LiveData<Event<Unit>>
         get() = _myProfileImage
@@ -201,10 +197,6 @@ class PeopleViewModel @Inject constructor(
     var updateUser by mutableStateOf<UpdateUser>(Resource.Success(false))
         private set
 
-    fun getCurrentUser(currentUid: String) {
-        _currentUid.value = currentUid
-    }
-
     fun getAllUser(user: User) = viewModelScope.launch {
         userUseCase.getAllUser()
             .collect {
@@ -249,7 +241,7 @@ class PeopleViewModel @Inject constructor(
     fun updateMeetingCount() = viewModelScope.launch {
         val count = meetingCount.value?.toInt()?.plus(1) ?: meetingCount.value!!.toInt()
         updateMeetingCount = Resource.Loading()
-        updateMeetingCount = userUseCase.updateMeetingCount(_currentUid.value ?: "", count)
+        updateMeetingCount = userUseCase.updateMeetingCount(currentUid.value ?: "", count)
     }
 
     fun getMeetingCount(uid: String) = viewModelScope.launch {
@@ -273,27 +265,27 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun deleteBarcode() = viewModelScope.launch {
-        deleteBarcodeInfo = barcodeUseCase.deleteBarcodeInfo(_currentUid.value ?: "")
+        deleteBarcodeInfo = barcodeUseCase.deleteBarcodeInfo(currentUid.value ?: "")
     }
 
     fun deleteBarcodeTime() = viewModelScope.launch {
-        deleteBarcodeTime = barcodeUseCase.deleteBarcodeTime(_currentUid.value ?: "")
+        deleteBarcodeTime = barcodeUseCase.deleteBarcodeTime(currentUid.value ?: "")
     }
 
     fun setBarcode(randomBarcode: String) = viewModelScope.launch {
-        addBarcodeInfo = barcodeUseCase.setBarcodeInfo(_currentUid.value ?: "", randomBarcode)
+        addBarcodeInfo = barcodeUseCase.setBarcodeInfo(currentUid.value ?: "", randomBarcode)
     }
 
     fun setBarcodeTime() = viewModelScope.launch {
-        addBarcodeTime = barcodeUseCase.setBarcodeTime(_currentUid.value ?: "")
+        addBarcodeTime = barcodeUseCase.setBarcodeTime(currentUid.value ?: "")
     }
 
     fun checkBarcodeTime() = viewModelScope.launch {
-        checkBarcodeTime = barcodeUseCase.checkBarcodeTime(_currentUid.value ?: "")
+        checkBarcodeTime = barcodeUseCase.checkBarcodeTime(currentUid.value ?: "")
     }
 
     fun getBarcodeTime() = viewModelScope.launch {
-        barcodeUseCase.getBarcodeTime(_currentUid.value ?: "").collect {
+        barcodeUseCase.getBarcodeTime(currentUid.value ?: "").collect {
             when (it) {
                 is Resource.Success -> _barcodeTimeRemaining.value = getCurrentBarcodeTime(it)
                 is Resource.Error -> ErrorMessage.print(it.message ?: "")
@@ -311,10 +303,10 @@ class PeopleViewModel @Inject constructor(
     fun uploadImage() = viewModelScope.launch {
         val riverRef: StorageReference =
             FirebaseStorage.getInstance().getReference()
-                .child("profile_image/" + currentUid + ".jpg")
+                .child("profile_image/" + currentUid.value + ".jpg")
         try {
             if (myUri.value != null) {
-                _updatedState.value = Resource.Loading()
+                showProgress()
                 val uploadTask: UploadTask = riverRef.putFile(myImage.value!!.toUri())
                 uploadTakListener(uploadTask, riverRef)
             } else {
@@ -332,16 +324,18 @@ class PeopleViewModel @Inject constructor(
         uploadTask.addOnSuccessListener {
             riverRef.downloadUrl.addOnSuccessListener {
                 _myImage.value = it.toString()
+                hideProgress()
                 _updatedState.value = Resource.Success("업로드 성공")
             }
         }.addOnFailureListener {
+            hideProgress()
             _updatedState.value = Resource.Success("")
         }
     }
 
     fun chageProfile() = viewModelScope.launch {
         updateUser = userUseCase.updateUser(
-            _currentUid.value ?: "",
+            currentUid.value ?: "",
             myName.value ?: "",
             myMsg.value ?: "",
             myImage.value ?: "",

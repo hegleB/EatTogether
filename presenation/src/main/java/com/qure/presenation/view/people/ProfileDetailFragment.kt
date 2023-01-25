@@ -61,6 +61,7 @@ class ProfileDetailFragment :
     private fun initViewModel() {
         binding.viewmodel = peopleViewModel
         peopleViewModel.apply {
+            getCurrentUid(this@ProfileDetailFragment.currentUid)
             getLikeCount(args.uid)
             getMeetingCount(args.uid)
             getPostCount(args.uid)
@@ -78,7 +79,7 @@ class ProfileDetailFragment :
     private fun observeViewModel() {
         peopleViewModel.profileClose.observe(this) {
             if (it.consumed) return@observe
-            if (args.uid.equals(currentUid)) {
+            if (args.uid.equals(this@ProfileDetailFragment.currentUid)) {
                 updateProfile()
             } else {
                 findNavController().popBackStack()

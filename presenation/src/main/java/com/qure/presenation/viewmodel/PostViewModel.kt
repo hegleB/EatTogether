@@ -1,6 +1,5 @@
 package com.qure.presenation.viewmodel
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,11 +7,8 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel
 import com.qure.domain.model.PostModel.Post
@@ -24,6 +20,7 @@ import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
+import com.qure.presenation.utils.FirebaseId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,10 +31,6 @@ class PostViewModel @Inject constructor(
     private val postUseCase: PostUseCase,
     private val userUseCase: UserUseCase,
 ) : BaseViewModel() {
-
-    private val _currentUid: MutableLiveData<String> = MutableLiveData("")
-    val currentUid: LiveData<String>
-        get() = _currentUid
 
     private val _post: MutableLiveData<Post> = MutableLiveData()
     val post: LiveData<Post>
@@ -250,7 +243,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun getUserInfo() = viewModelScope.launch {
-        userUseCase.getUser(_currentUid.value ?: "").collect {
+        userUseCase.getUser(currentUid.value ?: "").collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> {
@@ -338,7 +331,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun checkCommentLike(likeList: ArrayList<String>) {
-        _isCommentLike.value = likeList.contains(_currentUid.value ?: "")
+        _isCommentLike.value = likeList.contains(currentUid.value ?: "")
     }
 
     fun updateLikeState() {
@@ -369,14 +362,14 @@ class PostViewModel @Inject constructor(
 
     fun addlikeCount() = viewModelScope.launch {
         val likeList = _likeList.value ?: arrayListOf()
-        likeList.add(_currentUid.value ?: "")
+        likeList.add(currentUid.value ?: "")
         updateLike = Resource.Loading()
         updateLike = postUseCase.updateLike(likeList, _postKey.value ?: "")
     }
 
     fun addCommentlikeCount() = viewModelScope.launch {
         val likeList = _commentsLikeList.value ?: arrayListOf()
-        likeList.add(_currentUid.value ?: "")
+        likeList.add(currentUid.value ?: "")
         if (commentKey.value != null) {
             updateCommentsLike = Resource.Loading()
             updateCommentsLike = commentUseCase.updateCommentLike(_commentKey.value ?: "", likeList)
@@ -385,14 +378,14 @@ class PostViewModel @Inject constructor(
 
     fun removeLikeCount() = viewModelScope.launch {
         val likeList = _likeList.value ?: arrayListOf()
-        likeList.remove(_currentUid.value ?: "")
+        likeList.remove(currentUid.value ?: "")
         updateLike = Resource.Loading()
         updateLike = postUseCase.updateLike(likeList, _postKey.value ?: "")
     }
 
     fun removeCommentLikeCount() = viewModelScope.launch {
         val likeList = _commentsLikeList.value ?: arrayListOf()
-        likeList.remove(_currentUid.value ?: "")
+        likeList.remove(currentUid.value ?: "")
         if (_commentKey.value != null) {
             updateCommentsLike = Resource.Loading()
             updateCommentsLike = commentUseCase.updateCommentLike(_commentKey.value ?: "", likeList)
@@ -400,10 +393,10 @@ class PostViewModel @Inject constructor(
     }
 
     fun writeComments(content: String) = viewModelScope.launch {
-//        val commentId = firestore.collection(COMMENTS_COLLECTION_PATH).document().id
+        val commentId = FirebaseId.create(COMMENTS_COLLECTION_PATH)
         if (writer.value != null) {
             val writer = writer.value!!
-            val recomments = getComments(writer, content, "commentId", 0)
+            val recomments = getComments(writer, content, commentId, 0)
             addComments = Resource.Loading()
             addComments = commentUseCase.setComments(recomments)
         }
@@ -411,7 +404,7 @@ class PostViewModel @Inject constructor(
 
     fun writeReComments(content: String) = viewModelScope.launch {
         val commentId = _recomment.value?.comments_commentskey ?: ""
-//        val replyId = firestore.collection(COMMENTS_COLLECTION_PATH).document().id
+        val replyId = FirebaseId.create(COMMENTS_COLLECTION_PATH)
         if (writer.value != null) {
             val writer = writer.value!!
             val comments = getComments(writer, content, commentId, 1, "replyId")
@@ -441,14 +434,14 @@ class PostViewModel @Inject constructor(
         _createPostKey.value = key
 
         val post = Post(
-            uid = _currentUid.value ?: "",
+            uid = currentUid.value ?: "",
             writer = _writer.value?.usernm ?: "",
             title = createPostTitle.value ?: "",
             category = category.value ?: "",
             content = createPostContent.value ?: "",
             userimage = _writer.value?.userphoto ?: "",
             key = _createPostKey.value ?: "",
-            postImages =  postImages,
+            postImages = postImages,
         )
         addPost = Resource.Loading()
         addPost = postUseCase.setPost(post)
@@ -473,72 +466,48 @@ class PostViewModel @Inject constructor(
     }
 
     fun createPost() = viewModelScope.launch {
-//        val key = firestore.collection(POSTS_COLLECTION_PATH).document().id
+        val key = FirebaseId.create(POSTS_COLLECTION_PATH)
         val createImages = createPostImage.value ?: arrayListOf()
         val imageList = arrayListOf<String>()
         if (createImages.isNotEmpty()) {
             showProgress()
+            setPost(key, imageList)
             _updatedState.value = Resource.Loading()
-            uploadImages(createImages, "key", imageList)
+            uploadImages(createImages, key)
         } else {
-            setPost("key", imageList)
+            setPost(key, imageList)
             _updatedState.value = Resource.Success("성공")
         }
     }
 
     private fun uploadImages(
-        createImages: java.util.ArrayList<String>,
+        createImages: ArrayList<String>,
         key: String,
-        imageList: ArrayList<String>
-    ) {
-        for (image in createImages.indices) {
-//            val riverRef =
-//                uploadImages()
-//                firebaseStorage.getReference().child("post_image/" + key + "/" + image + ".jpg")
-//            val uploadTask: UploadTask = riverRef.putFile(createImages[image].toUri())
-//            uploadTaskListener(uploadTask, riverRef, key, imageList)
-        }
-    }
-
-    private fun uploadTaskListener(
-        uploadTask: UploadTask,
-        riverRef: StorageReference,
-        key: String,
-        imageList: ArrayList<String>
-    ) {
-        uploadTask.addOnSuccessListener {
-            riverRef.downloadUrl.addOnSuccessListener { uri ->
-                setPostImages(key, uri, imageList)
+    ) = viewModelScope.launch {
+        for (index in createImages.indices) {
+            postUseCase.uploadImage(key, index, createImages[index].toUri()).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        downloadImage(key, index)
+                    }
+                    is Resource.Error -> {
+                        hideProgress()
+                    }
+                }
             }
         }
-//        firestore.collection(POSTS_COLLECTION_PATH).document(key).set(post)
-        uploadTask.addOnProgressListener {
-            uploadProgress(it, key, imageList)
-        }
+        hideProgress()
     }
 
-    private fun setPostImages(
-        key: String,
-        uri: Uri,
-        imageList: ArrayList<String>,
-    ) {
-//        firestore.collection(POSTS_COLLECTION_PATH).document(key).collection(IMAGES_COLLECTION_GROUP)
-//            .document().set(PostModel.PostImage(key, uri.toString()))
-//        imageList.add(uri.toString())
-//        firestore.collection(POSTS_COLLECTION_PATH).document(key)
-//            .update(POST_IMAGES_FIELD, imageList)
-    }
-
-    private fun uploadProgress(
-        uploadTask: UploadTask.TaskSnapshot,
-        key: String,
-        imageList: ArrayList<String>,
-    ) {
-        val progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
-        if (progress == 100.0) {
-            setPost(key, imageList)
-            _updatedState.value = Resource.Success("성공")
-            hideProgress()
+    private suspend fun downloadImage(key: String, index: Int) {
+        postUseCase.downloadImage(key, index).collect {
+            when (it) {
+                is Resource.Success -> {
+                    FirebaseFirestore.getInstance().collection(POSTS_COLLECTION_PATH)
+                        .document(key).update(POST_IMAGES_FIELD, FieldValue.arrayUnion(it.data))
+                }
+                is Resource.Error -> hideProgress()
+            }
         }
     }
 
@@ -613,9 +582,5 @@ class PostViewModel @Inject constructor(
 
     fun setUpdatedState(resource: Resource<String, String>) {
         _updatedState.value = resource
-    }
-    
-    fun getCurrentUid(uid: String) {
-        _currentUid.value = uid
     }
 }
