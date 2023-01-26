@@ -17,6 +17,7 @@ class TestDataUtils {
                 likecount = arrayListOf("a", "b"),
                 timestamp = "1",
                 postImages = arrayListOf("0", "1"),
+                commentsCount = "1"
             ),
             PostModel.Post(
                 uid = "a",
@@ -59,14 +60,14 @@ class TestDataUtils {
                 comments_usernm = "abs",
                 comments_timestamp = "1",
                 comments_postkey = "abs",
-                comments_commentskey = "absa"
+                comments_commentskey = "absa",
             ),
             Comments(
                 comments_uid = "abs",
                 comments_usernm = "abs",
                 comments_timestamp = "2",
                 comments_postkey = "absa",
-                comments_commentskey = "aa"
+                comments_commentskey = "aa",
             ),
             Comments(
                 comments_uid = "abs",
@@ -74,6 +75,30 @@ class TestDataUtils {
                 comments_timestamp = "3",
                 comments_postkey = "b",
                 comments_commentskey = "absb"
+            ),
+        )
+
+        val recomments = listOf(
+            Comments(
+                comments_uid = "a",
+                comments_usernm = "a",
+                comments_timestamp = "3",
+                comments_postkey = "abs",
+                comments_commentskey = "absa",
+                comments_replyKey = "absaa",
+                comments_replyTimeStamp = "1",
+                comments_depth = 1
+            ),
+
+            Comments(
+                comments_uid = "abs",
+                comments_usernm = "abs",
+                comments_timestamp = "3",
+                comments_postkey = "abs",
+                comments_commentskey = "absa",
+                comments_replyKey = "absab",
+                comments_replyTimeStamp = "2",
+                comments_depth = 1
             ),
         )
     }

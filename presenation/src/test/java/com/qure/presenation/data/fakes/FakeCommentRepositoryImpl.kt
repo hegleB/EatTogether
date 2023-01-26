@@ -1,51 +1,57 @@
 package com.qure.presenation.data.fakes
 
 import com.qure.domain.model.Comments
+import com.qure.domain.model.PostModel
 import com.qure.domain.repository.*
 import com.qure.domain.utils.Resource
+import com.qure.presenation.data.utils.TestDataUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOf
 
-class FakeCommentRepositoryImpl: CommentRepository {
+class FakeCommentRepositoryImpl : CommentRepository {
+
+    private val posts = TestDataUtils.posts
+    private val comments = TestDataUtils.comments
+    private val recomments = TestDataUtils.recomments
     override suspend fun getComments(postKey: String): Flow<CommentsResource> {
-        return callbackFlow {
-            if (postKey.isNullOrBlank()) {
-                Resource.Success(false)
-            } else {
-                Resource.Success(true)
-            }
-        }
+        val comments = TestDataUtils.comments.filter { it.isSamePostKey(postKey) }
+        return flowOf(Resource.Success(comments))
     }
 
-    override suspend fun setComments(comments: Comments): AddComments {
-        return if (comments == null) {
-            Resource.Success(false)
-        } else {
+    override suspend fun setComments(comment: Comments): AddComments {
+        val addedComments = comments.toMutableList()
+        addedComments.add(comment)
+        return if (comments.size + 1 == addedComments.size) {
             Resource.Success(true)
-        }
-    }
-
-    override suspend fun getReComments(recomments: Comments): Flow<ReCommentsResource> {
-        return callbackFlow {
-            if (recomments == null) {
-                Resource.Success(false)
-            } else {
-                Resource.Success(true)
-            }
-        }
-    }
-
-    override suspend fun setReComments(recomments: Comments): AddReComments {
-        return if (recomments == null) {
-            Resource.Success(false)
         } else {
+            Resource.Success(false)
+        }
+    }
+
+    override suspend fun getReComments(recomment: Comments): Flow<ReCommentsResource> {
+        val recomments =
+            TestDataUtils.recomments.filter {
+                it.isSamePostKey(recomment.comments_postkey)
+                        && it.comments_depth == 1
+                        && it.isSameCommentKey(recomment.comments_commentskey)
+            }.sortedByDescending { it.comments_replyTimeStamp }
+        return flowOf(Resource.Success(recomments))
+    }
+
+    override suspend fun setReComments(recomment: Comments): AddReComments {
+        val addedReComments = recomments.toMutableList()
+        addedReComments.add(recomment)
+        return if (recomments.size + 1 == addedReComments.size) {
             Resource.Success(true)
+        } else {
+            Resource.Success(false)
         }
     }
 
     override suspend fun checkComment(commentKey: String): Flow<CheckComments> {
         return callbackFlow {
-            if (commentKey.isNullOrBlank()) {
+            if (comments.filter { it.isSameCommentKey(commentKey) }.isEmpty()) {
                 Resource.Success(false)
             } else {
                 Resource.Success(true)
@@ -53,9 +59,9 @@ class FakeCommentRepositoryImpl: CommentRepository {
         }
     }
 
-    override suspend fun checkReComment(recomments: Comments): Flow<CheckReComments> {
+    override suspend fun checkReComment(recomment: Comments): Flow<CheckReComments> {
         return callbackFlow {
-            if (recomments == null) {
+            if (recomments.contains(recomment)) {
                 Resource.Success(false)
             } else {
                 Resource.Success(true)
@@ -67,29 +73,35 @@ class FakeCommentRepositoryImpl: CommentRepository {
         commentKey: String,
         commentLikeList: ArrayList<String>
     ): UpdateCommentsLike {
-        return if (commentKey.isNullOrBlank()) {
-            Resource.Success(false)
-        } else {
+        val foundComment = comments.find { it.isSameCommentKey(commentKey) } ?: Comments()
+        val updatedComment = foundComment.copy(comments_likeCount = commentLikeList)
+        return if (updatedComment.comments_likeCount == commentLikeList) {
             Resource.Success(true)
+        } else {
+            Resource.Success(false)
         }
     }
 
     override suspend fun updateRecommentLike(
-        comments: Comments,
+        recomment: Comments,
         count: ArrayList<String>
     ): UpdateReCommentsLike {
-        return if (comments == null) {
-            Resource.Success(false)
-        } else {
+        val foundRecomment = recomments.find { it.isSameRecommentsKey(recomment.comments_replyKey) } ?: Comments()
+        val updatedRecomment = foundRecomment.copy(comments_likeCount = recomment.comments_likeCount)
+        return if (updatedRecomment.comments_likeCount == recomment.comments_likeCount) {
             Resource.Success(true)
+        } else {
+            Resource.Success(false)
         }
     }
 
     override suspend fun updateCommentsCount(postKey: String, count: String): UpdateCommentsCount {
-        return if (postKey.isNullOrBlank()) {
-            Resource.Success(false)
-        } else {
+        val foundPost = posts.find { it.isSameKey(postKey) } ?: PostModel.Post()
+        val updatedRecomment = foundPost.copy(commentsCount = count)
+        return if (updatedRecomment.commentsCount == count) {
             Resource.Success(true)
+        } else {
+            Resource.Success(false)
         }
     }
 }

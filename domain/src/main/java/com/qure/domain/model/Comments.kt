@@ -17,4 +17,11 @@ data class Comments(
 ) : Serializable {
     fun isSameCommentUid(uid: String) =
         this.comments_uid == uid
+
+    fun isSamePostKey(postKey: String) =
+        this.comments_postkey == postKey
+
+    fun isSameCommentKey(commentsKey: String) =
+        this.comments_commentskey == commentsKey
+
 }

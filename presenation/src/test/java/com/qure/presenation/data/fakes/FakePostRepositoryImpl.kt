@@ -1,14 +1,19 @@
 package com.qure.presenation.data.fakes
 
+import android.net.Uri
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel
 import com.qure.domain.repository.*
 import com.qure.domain.utils.Resource
 import com.qure.presenation.data.utils.TestDataUtils
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.tasks.await
 
 class FakePostRepositoryImpl : PostRepository {
 
@@ -94,5 +99,29 @@ class FakePostRepositoryImpl : PostRepository {
             images.add(PostModel.PostImage( postKey, image))
         }
         return flowOf(Resource.Success(images))
+    }
+
+    override suspend fun uploadImage(
+        key: String,
+        imageId: Int,
+        imageUri: Uri
+    ): UploadTask.TaskSnapshot {
+        val post = posts.find { it.isSameKey(key) } ?: PostModel.Post()
+        return FirebaseStorage.getInstance().getReference().putFile(imageUri).await()
+    }
+
+    override suspend fun downloadImage(key: String, imageId: Int): Uri {
+        return Uri.EMPTY
+    }
+
+    override suspend fun updateDownloadImageUri(
+        uri: Uri,
+        key: String
+    ): Flow<UpdateDownloadImageResource> {
+       return flowOf()
+    }
+
+    override suspend fun setDownloadImage(postImage: PostModel.PostImage): Flow<SetDownLoadImages> {
+        return flowOf()
     }
 }
