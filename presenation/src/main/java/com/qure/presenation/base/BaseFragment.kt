@@ -12,7 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: Int) : Fragment() {
 
-    lateinit var binding: T
+    private var _binding: T? = null
+    val binding get() = _binding!!
     val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     override fun onCreateView(
@@ -20,11 +21,21 @@ abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutResInt: In
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layoutResInt, container, false)
-        init()
+        _binding = DataBindingUtil.inflate(inflater, layoutResInt, container, false)
         binding.lifecycleOwner = this
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     abstract fun init()
+
 }
