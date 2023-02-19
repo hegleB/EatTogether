@@ -29,12 +29,14 @@ abstract class BaseTest {
     lateinit var fakeMeetingRepositoryImpl: FakeMeetingRepositoryImpl
     lateinit var fakePostRepositoryImpl: FakePostRepositoryImpl
     lateinit var fakeSettingRepositoryImpl: FakeSettingRepositoryImpl
+    lateinit var fakeFirebaseStorageImpl: FakeFirebaseStorageImpl
     lateinit var userUseCase: UserUseCase
     lateinit var postUseCase: PostUseCase
     lateinit var authUseCase: AuthUseCase
     lateinit var barcodeUseCase: BarcodeUseCase
     lateinit var chatUseCase: ChatUseCase
     lateinit var commentUseCase: CommentUseCase
+    lateinit var uploadUseCase: UploadUseCase
     lateinit var firebaseUser: FirebaseUser
 
     @Before
@@ -47,12 +49,14 @@ abstract class BaseTest {
         fakeMeetingRepositoryImpl = FakeMeetingRepositoryImpl()
         fakePostRepositoryImpl = FakePostRepositoryImpl()
         fakeSettingRepositoryImpl = FakeSettingRepositoryImpl()
+        fakeFirebaseStorageImpl = FakeFirebaseStorageImpl()
         userUseCase = UserUseCase(fakeUserRepositoryImpl, fakeAuthRepositoryImpl, fakeMeetingRepositoryImpl)
         postUseCase = PostUseCase(fakePostRepositoryImpl)
         authUseCase = AuthUseCase(fakeAuthRepositoryImpl)
         barcodeUseCase = BarcodeUseCase(fakeBarcodeRepositoryImpl)
         chatUseCase = ChatUseCase(fakeChatRepositoryImpl)
         commentUseCase = CommentUseCase(fakeCommentRepositoryImpl)
+        uploadUseCase = UploadUseCase(fakeFirebaseStorageImpl)
         init()
         firebaseUser = initFirebaseUser()
     }

@@ -25,7 +25,7 @@ class PostViewModelTest : BaseTest() {
 
     private lateinit var viewModel: PostViewModel
     override fun init() {
-        viewModel = PostViewModel(commentUseCase, postUseCase, userUseCase)
+        viewModel = PostViewModel(commentUseCase, postUseCase, userUseCase, uploadUseCase)
         with(viewModel) {
             getCategoryName("양식")
             getProfileUid("abs")

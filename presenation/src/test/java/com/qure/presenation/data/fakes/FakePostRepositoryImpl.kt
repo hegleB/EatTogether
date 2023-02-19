@@ -96,32 +96,8 @@ class FakePostRepositoryImpl : PostRepository {
         val postImages = posts.find { it.isSameKey(postKey) }?.postImages ?: arrayListOf()
         val images = mutableListOf<PostModel.PostImage>()
         for (image in postImages) {
-            images.add(PostModel.PostImage( postKey, image))
+            images.add(PostModel.PostImage(postKey, image))
         }
         return flowOf(Resource.Success(images))
-    }
-
-    override suspend fun uploadImage(
-        key: String,
-        imageId: Int,
-        imageUri: Uri
-    ): UploadTask.TaskSnapshot {
-        val post = posts.find { it.isSameKey(key) } ?: PostModel.Post()
-        return FirebaseStorage.getInstance().getReference().putFile(imageUri).await()
-    }
-
-    override suspend fun downloadImage(key: String, imageId: Int): Uri {
-        return Uri.EMPTY
-    }
-
-    override suspend fun updateDownloadImageUri(
-        uri: Uri,
-        key: String
-    ): Flow<UpdateDownloadImageResource> {
-       return flowOf()
-    }
-
-    override suspend fun setDownloadImage(postImage: PostModel.PostImage): Flow<SetDownLoadImages> {
-        return flowOf()
     }
 }
