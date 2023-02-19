@@ -1,8 +1,6 @@
 package com.qure.presenation.data.utils
 
-import com.qure.domain.model.BarcodeScan
-import com.qure.domain.model.Comments
-import com.qure.domain.model.PostModel
+import com.qure.domain.model.*
 
 class TestDataUtils {
 
@@ -110,6 +108,41 @@ class TestDataUtils {
 
         val barcode = mapOf(
             "abs" to "barcode_a"
+        )
+
+        val chatRoom = listOf(
+            ChatRoom(
+                roomId = "abs",
+                lastmsg = "abs",
+                userCount = 2,
+                users = arrayListOf("abs", "a"),
+                unreadCount = mutableMapOf("abs" to 1, "a" to 1)
+            ),
+            ChatRoom(
+                roomId = "a",
+                lastmsg = "a",
+                userCount = 3,
+                users = arrayListOf("abs", "a", "b"),
+                unreadCount = mutableMapOf("abs" to 0, "a" to 0, "b" to 0)
+            )
+        )
+
+        val message = listOf(
+            ChatMessage(
+                roomId = "a",
+                message = "a",
+                timestamp = "0"
+            ),
+            ChatMessage(
+                roomId = "a",
+                message = "b",
+                timestamp = "0"
+            ),
+            ChatMessage(
+                roomId = "a",
+                message = "ab",
+                timestamp = "0"
+            )
         )
     }
 }

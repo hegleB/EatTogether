@@ -33,4 +33,7 @@ data class ChatRoom(
     private fun getChatRoomUsers(chatusers: MutableList<User>, user: String): MutableList<User> =
         chatusers.filter { !it.isSameUid(user) }.toMutableList()
 
+    fun isSameRoomId(roomId: String) =
+        this.roomId == roomId
+
 }

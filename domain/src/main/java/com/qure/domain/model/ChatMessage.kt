@@ -15,4 +15,7 @@ data class ChatMessage(
 
     fun isNotcontainUid(currentUser: String) =
         !this.readUsers.containsKey(currentUser)
+
+    fun isSameChatRoomId(chatRoomId: String) =
+        this.roomId == chatRoomId
 }

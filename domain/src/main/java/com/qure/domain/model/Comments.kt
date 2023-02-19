@@ -24,4 +24,8 @@ data class Comments(
     fun isSameCommentKey(commentsKey: String) =
         this.comments_commentskey == commentsKey
 
+    fun isSameRecommentsKey(commentsReplykey: String): Boolean =
+        this.comments_replyKey == commentsReplykey
+
+
 }
