@@ -92,3 +92,7 @@ const val USER_IMAGE_FIELD = "userimage"
 
 // Collection Group
 const val IMAGES_COLLECTION_GROUP = "images"
+
+// Upload Field
+const val POST_IMAGE_PATH = "post_image/"
+const val PROFILE_IMAGE_PATH = "profile_image/"

@@ -24,34 +24,4 @@ class PostUseCase @Inject constructor(
     suspend fun setPost(post: PostModel.Post) = postRepository.setPost(post)
     suspend fun updateLike(likeList: ArrayList<String>, postKey: String) =
         postRepository.updateLike(likeList, postKey)
-    suspend fun uploadImage(key: String, imageId: Int, imageUri: Uri) = flow {
-        emit(Resource.Loading())
-        try {
-            val response = postRepository.uploadImage(key, imageId, imageUri)
-            if (response != null) {
-                emit(Resource.Success(response))
-            } else {
-                emit(Resource.Error("response is null"))
-            }
-        } catch (e: Exception) {
-
-        }
-
-    }
-    suspend fun downloadImage(key: String, imageId: Int) = flow {
-        emit(Resource.Loading())
-        try {
-            val response = postRepository.downloadImage(key, imageId)
-            if (response != null) {
-                emit(Resource.Success(response))
-            } else {
-                emit(Resource.Error("response is null"))
-            }
-        } catch (e: Exception) {
-
-        }
-    }
-
-    suspend fun updateDownloadImageUri(uri: Uri, key: String) = postRepository.updateDownloadImageUri(uri, key)
-    suspend fun setDownloadImage(postImage: PostModel.PostImage) = postRepository.setDownloadImage(postImage)
 }

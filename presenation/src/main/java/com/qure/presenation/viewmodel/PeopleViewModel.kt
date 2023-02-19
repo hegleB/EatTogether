@@ -1,6 +1,7 @@
 package com.qure.presenation.viewmodel
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,17 +9,14 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
+import com.qure.domain.model.PostModel
 import com.qure.domain.model.User
 import com.qure.domain.repository.*
 import com.qure.domain.usecase.BarcodeUseCase
 import com.qure.domain.usecase.PostUseCase
+import com.qure.domain.usecase.UploadUseCase
 import com.qure.domain.usecase.UserUseCase
-import com.qure.domain.utils.ErrorMessage
-import com.qure.domain.utils.Resource
+import com.qure.domain.utils.*
 import com.qure.presenation.Event
 import com.qure.presenation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +28,7 @@ class PeopleViewModel @Inject constructor(
     private val userUseCase: UserUseCase,
     private val postUseCase: PostUseCase,
     private val barcodeUseCase: BarcodeUseCase,
+    private val uploadUseCase: UploadUseCase,
 ) : BaseViewModel() {
 
     private val _myProfileImage: MutableLiveData<Event<Unit>> = MutableLiveData()
@@ -301,38 +300,44 @@ class PeopleViewModel @Inject constructor(
     }
 
     fun uploadImage() = viewModelScope.launch {
-        val riverRef: StorageReference =
-            FirebaseStorage.getInstance().getReference()
-                .child("profile_image/" + currentUid.value + ".jpg")
-        try {
-            if (myUri.value != null) {
-                showProgress()
-                val uploadTask: UploadTask = riverRef.putFile(myImage.value!!.toUri())
-                uploadTakListener(uploadTask, riverRef)
-            } else {
-                _updatedState.value = Resource.Success("")
+
+        uploadUseCase.uploadImage(
+            PROFILE_IMAGE_PATH,
+            currentUid.value!!,
+            -1,
+            myImage.value!!.toUri()
+        ).collect {
+            when (it) {
+                is Resource.Loading -> {
+                    showProgress()
+                    _updatedState.value = Resource.Loading()
+                }
+                is Resource.Success -> {
+                    downloadImage(currentUid.value!!)
+                    hideProgress()
+                }
+                is Resource.Error -> {
+                    hideProgress()
+                    _updatedState.value = Resource.Success("")
+                }
             }
-        } catch (e: Exception) {
-            _updatedState.value = Resource.Error(e.message)
         }
     }
 
-    private fun uploadTakListener(
-        uploadTask: UploadTask,
-        riverRef: StorageReference
-    ) {
-        uploadTask.addOnSuccessListener {
-            riverRef.downloadUrl.addOnSuccessListener {
-                _myImage.value = it.toString()
-                hideProgress()
-                _updatedState.value = Resource.Success("업로드 성공")
+    private fun downloadImage(key: String) = viewModelScope.launch {
+        uploadUseCase.downloadImage(PROFILE_IMAGE_PATH, key, -1).collect {
+            when (it) {
+                is Resource.Success -> {
+                    _myImage.value = it.data.toString()
+                    _updatedState.value = Resource.Success("")
+                }
+                is Resource.Error -> {
+                    hideProgress()
+                    _updatedState.value = Resource.Success("")
+                }
             }
-        }.addOnFailureListener {
-            hideProgress()
-            _updatedState.value = Resource.Success("")
         }
     }
-
     fun chageProfile() = viewModelScope.launch {
         updateUser = userUseCase.updateUser(
             currentUid.value ?: "",

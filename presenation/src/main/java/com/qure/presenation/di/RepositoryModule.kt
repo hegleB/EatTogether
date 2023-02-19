@@ -71,4 +71,12 @@ object RepositoryModule {
     ): ChatRepository {
         return ChatRepositoryImpl(firestore)
     }
+
+    @Provides
+    fun provideFirebaseStorageRepository(
+        firestore: FirebaseFirestore,
+        firebaseStorage: FirebaseStorage
+    ): FirebaseStorageRepository {
+        return FirebaseStorageRepositoryImpl(firestore, firebaseStorage)
+    }
 }

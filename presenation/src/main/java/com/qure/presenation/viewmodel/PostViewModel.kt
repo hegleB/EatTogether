@@ -17,6 +17,7 @@ import com.qure.domain.model.User
 import com.qure.domain.repository.*
 import com.qure.domain.usecase.CommentUseCase
 import com.qure.domain.usecase.PostUseCase
+import com.qure.domain.usecase.UploadUseCase
 import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.*
 import com.qure.presenation.Event
@@ -31,6 +32,7 @@ class PostViewModel @Inject constructor(
     private val commentUseCase: CommentUseCase,
     private val postUseCase: PostUseCase,
     private val userUseCase: UserUseCase,
+    private val uploadUseCase: UploadUseCase
 ) : BaseViewModel() {
 
     private val _post: MutableLiveData<Post> = MutableLiveData()
@@ -484,7 +486,7 @@ class PostViewModel @Inject constructor(
         key: String,
     ) = viewModelScope.launch {
         for (index in createImages.indices) {
-            postUseCase.uploadImage(key, index, createImages[index].toUri()).collect {
+            uploadUseCase.uploadImage(POST_IMAGE_PATH,key, index, createImages[index].toUri()).collect {
                 when (it) {
                     is Resource.Success -> {
                         downloadImage(key, index)
@@ -499,7 +501,7 @@ class PostViewModel @Inject constructor(
     }
 
     private fun downloadImage(key: String, index: Int) = viewModelScope.launch {
-        postUseCase.downloadImage(key, index).collect {
+        uploadUseCase.downloadImage(POST_IMAGE_PATH, key, index).collect {
             when (it) {
                 is Resource.Success -> {
                     updateDownloadImageUri(it.data ?: Uri.EMPTY, key)
@@ -511,7 +513,7 @@ class PostViewModel @Inject constructor(
     }
 
     private fun updateDownloadImageUri(uri: Uri, key: String) = viewModelScope.launch {
-        postUseCase.updateDownloadImageUri(uri, key).collect {
+        uploadUseCase.updateDownloadImageUri(POSTS_COLLECTION_PATH,POST_IMAGES_FIELD, uri, key).collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> hideProgress()
@@ -521,7 +523,7 @@ class PostViewModel @Inject constructor(
     }
 
     private fun setDownloadImage(postImage: PostModel.PostImage) = viewModelScope.launch {
-        postUseCase.setDownloadImage(postImage).collect {
+        uploadUseCase.setDownloadImage(postImage).collect {
             when (it) {
                 is Resource.Loading -> showProgress()
                 is Resource.Success -> hideProgress()

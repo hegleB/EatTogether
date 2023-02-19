@@ -42,15 +42,10 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(R.layout.frag
         BottomNavigationEvent().hideBottomNavigation(activity!!)
         OnBackPressedListener().back(requireActivity(), findNavController())
         initPost()
-    }
-
-    override fun onStart() {
-        super.onStart()
         initViewModel()
         observeViewModel()
         initAdapter()
     }
-
     private fun initViewModel() {
         binding.viewmodel = postViewModel
 
