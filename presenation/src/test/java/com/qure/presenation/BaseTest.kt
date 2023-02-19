@@ -1,5 +1,6 @@
 package com.qure.presenation
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseUser
@@ -20,6 +21,10 @@ abstract class BaseTest {
     @ExperimentalCoroutinesApi
     @get: Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    @Rule
+    @JvmField
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     lateinit var fakeAuthRepositoryImpl: FakeAuthRepositoryImpl
     lateinit var fakeUserRepositoryImpl: FakeUserRepositoryImpl

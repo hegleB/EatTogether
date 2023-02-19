@@ -1,5 +1,6 @@
 package com.qure.presenation.data.utils
 
+import com.qure.domain.model.BarcodeScan
 import com.qure.domain.model.Comments
 import com.qure.domain.model.PostModel
 
@@ -100,6 +101,15 @@ class TestDataUtils {
                 comments_replyTimeStamp = "2",
                 comments_depth = 1
             ),
+        )
+
+        val meeting = mapOf(
+            "abs" to 1,
+            "a" to 2
+        )
+
+        val barcode = mapOf(
+            "abs" to "barcode_a"
         )
     }
 }

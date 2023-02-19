@@ -19,10 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantTaskExecutorExtension::class, CoroutinesTestExtension::class)
 class PostViewModelTest : BaseTest() {
 
-    @Rule
-    @JvmField
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
-
     private lateinit var viewModel: PostViewModel
     override fun init() {
         viewModel = PostViewModel(commentUseCase, postUseCase, userUseCase, uploadUseCase)
