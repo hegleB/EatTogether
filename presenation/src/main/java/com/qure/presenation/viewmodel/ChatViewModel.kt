@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.qure.domain.model.ChatRoom
 import com.qure.domain.model.User
 import com.qure.domain.repository.AddChatRoom
@@ -16,14 +14,13 @@ import com.qure.domain.usecase.UserUseCase
 import com.qure.domain.utils.CHATROOMS_COLLECTION_PATH
 import com.qure.domain.utils.Resource
 import com.qure.presenation.base.BaseViewModel
+import com.qure.presenation.utils.FirebaseId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
     private val userUseCase: UserUseCase,
     private val chatUseCase: ChatUseCase,
 ) : BaseViewModel() {
@@ -33,8 +30,6 @@ class ChatViewModel @Inject constructor(
         get() = _user
 
     private val _otherUser: MutableLiveData<User> = MutableLiveData()
-
-    val curruntUid = firebaseAuth.currentUser?.uid ?: ""
 
     private val _chatRooms: MutableLiveData<List<ChatRoom>> = MutableLiveData(emptyList())
     val chatRooms: LiveData<List<ChatRoom>>
@@ -59,16 +54,16 @@ class ChatViewModel @Inject constructor(
         userUseCase.getUser(uid).collect {
             when (it) {
                 is Resource.Success -> {
-                    if (uid == curruntUid) _user.value = it.data else _otherUser.value = it.data
+                    if (uid == currentUid.value) _user.value = it.data else _otherUser.value = it.data
                 }
             }
         }
     }
 
-    private fun isCurrentUser(uid: String) = uid == curruntUid
+    private fun isCurrentUser(uid: String) = uid == currentUid.value
 
     fun getAllChatRoom() = viewModelScope.launch {
-        chatUseCase.getAllChatRoom(curruntUid)
+        chatUseCase.getAllChatRoom(currentUid.value ?: "")
             .collect {
                 when (it) {
                     is Resource.Success -> _chatRooms.value = it.data
@@ -83,12 +78,13 @@ class ChatViewModel @Inject constructor(
             ?: throw IllegalArgumentException("존재하지 않는 채팅방입니다.")
 
     fun setChatRoom(otherUid: String): ChatRoom {
-        val chatRoomId = firestore.collection(CHATROOMS_COLLECTION_PATH).document().id
-        val users = arrayListOf(otherUid, curruntUid)
+        val uid = currentUid.value ?: ""
+        val chatRoomId = FirebaseId.create(CHATROOMS_COLLECTION_PATH)
+        val users = arrayListOf(otherUid, uid)
         val userPhoto = user.value?.userphoto ?: ""
         val otherUserPhoto = _otherUser.value?.userphoto ?: ""
-        val photos = mutableMapOf(curruntUid to userPhoto, otherUid to otherUserPhoto)
-        val unreadUsers = mutableMapOf(curruntUid to 0, otherUid to 0)
+        val photos = mutableMapOf(uid to userPhoto, otherUid to otherUserPhoto)
+        val unreadUsers = mutableMapOf(uid to 0, otherUid to 0)
         val chatRoom = ChatRoom(
             roomId = chatRoomId,
             photo = photos,

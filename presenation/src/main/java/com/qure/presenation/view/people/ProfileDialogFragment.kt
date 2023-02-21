@@ -28,9 +28,9 @@ class ProfileDialogFragment :
         initViewModel()
         observeViewModel()
     }
-
     private fun initViewModel() {
         binding.viewmodel = peopleViewModel
+        chatViewModel.getCurrentUid(currentUid)
         chatViewModel.getUserInfo(currentUid)
         chatViewModel.getUserInfo(args.peopleOtherPersonUid)
         chatViewModel.getAllChatRoom()
