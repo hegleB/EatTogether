@@ -4,6 +4,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.quer.presenation.base.BaseFragment
+import com.qure.domain.model.User
 import com.qure.presenation.R
 import com.qure.presenation.adapter.ChatUserAdapter
 import com.qure.presenation.databinding.FragmentUserChatRoomAddBinding
@@ -46,7 +47,8 @@ class UserChatRoomAddFragment :
         }
 
         peopleViewModel.userList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            val users = removeChatRoomUsers(it)
+            adapter.submitList(users)
         }
 
         messageViewModel.buttonAddUsers.observe(viewLifecycleOwner) {
@@ -57,5 +59,13 @@ class UserChatRoomAddFragment :
             findNavController().popBackStack()
             it.consume()
         }
+    }
+
+    private fun removeChatRoomUsers(allUsers: List<User>): MutableList<User> {
+        val users = allUsers.toMutableList()
+        args.chatroom.users.forEach { uid ->
+            users.removeAll { it.isSameUid(uid) }
+        }
+        return users
     }
 }

@@ -14,6 +14,7 @@ class ChatUserAdapter :
     BaseAdapter<User>(itemCallback) {
 
     var onItemSelectionChangeListener: ((MutableList<User>) -> Unit)? = null
+    private val seletedUsers = mutableListOf<User>()
 
     companion object {
         private val itemCallback = object : DiffUtil.ItemCallback<User>() {
@@ -51,11 +52,10 @@ class ChatUserAdapter :
         override fun bind(element: User) {
             super.bind(element)
             binding.user = element
-            val seletedUsers = mutableListOf<User>()
-            selectChatRoomAddUser(seletedUsers, element)
+            selectChatRoomAddUser(element)
         }
 
-        private fun selectChatRoomAddUser(seletedUsers: MutableList<User>, element: User) {
+        private fun selectChatRoomAddUser(element: User) {
             binding.root.setOnClickListener {
                 when (seletedUsers.contains(element)) {
                     true -> removeSelectedUser(seletedUsers, element)
@@ -65,12 +65,18 @@ class ChatUserAdapter :
             }
         }
 
-        private fun addSelectedUser(seletedUsers: MutableList<User>, element: User) {
+        private fun addSelectedUser(
+            seletedUsers: MutableList<User>,
+            element: User
+        ) {
             seletedUsers.add(element)
             binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.orange1))
         }
 
-        private fun removeSelectedUser(seletedUsers: MutableList<User>, element: User) {
+        private fun removeSelectedUser(
+            seletedUsers: MutableList<User>,
+            element: User
+        ) {
             seletedUsers.remove(element)
             binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.white))
         }
