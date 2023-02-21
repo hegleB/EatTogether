@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="user"
+            type="com.qure.domain.model.User" />
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout_item_chat_people"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="10dp">
+
+        <CheckBox
+            android:id="@+id/checkBox_itemChatUser_peopleProfile"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/shape_custom_checkbox"
+            android:button="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/circleImageView_itemChatUser_peopleProfile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/circleImageView_itemChatUser_peopleProfile" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circleImageView_itemChatUser_peopleProfile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            app:layout_constraintStart_toEndOf="@+id/checkBox_itemChatUser_peopleProfile"
+            app:layout_constraintTop_toTopOf="parent"
+            app:userImage="@{user.userphoto}" />
+
+        <TextView
+            android:id="@+id/textView_itemChatUser_peopleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{user.usernm}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.071"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView_itemChatUser_peopleProfile"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

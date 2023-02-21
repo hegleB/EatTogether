@@ -9,6 +9,7 @@ import com.qure.presenation.R
 import com.qure.presenation.base.BaseAdapter
 import com.qure.presenation.base.BaseViewHolder
 import com.qure.presenation.databinding.ItemChatPeopleBinding
+import com.qure.presenation.databinding.ItemChatUserBinding
 
 class ChatUserAdapter :
     BaseAdapter<User>(itemCallback) {
@@ -37,12 +38,12 @@ class ChatUserAdapter :
         viewType: Int,
     ): BaseViewHolder<out ViewDataBinding, User> {
         return ChatViewHolder(
-            ItemChatPeopleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemChatUserBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
-    inner class ChatViewHolder(binding: ItemChatPeopleBinding) :
-        BaseViewHolder<ItemChatPeopleBinding, User>(binding) {
+    inner class ChatViewHolder(binding: ItemChatUserBinding) :
+        BaseViewHolder<ItemChatUserBinding, User>(binding) {
 
         init {
             binding.apply {
@@ -57,9 +58,12 @@ class ChatUserAdapter :
 
         private fun selectChatRoomAddUser(element: User) {
             binding.root.setOnClickListener {
+                binding.checkBoxItemChatUserPeopleProfile.isChecked =
+                    if (binding.checkBoxItemChatUserPeopleProfile.isChecked) false else true
                 when (seletedUsers.contains(element)) {
                     true -> removeSelectedUser(seletedUsers, element)
                     else -> addSelectedUser(seletedUsers, element)
+
                 }
                 onItemSelectionChangeListener?.let { it(seletedUsers) }
             }
@@ -70,7 +74,6 @@ class ChatUserAdapter :
             element: User
         ) {
             seletedUsers.add(element)
-            binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.orange1))
         }
 
         private fun removeSelectedUser(
@@ -78,7 +81,6 @@ class ChatUserAdapter :
             element: User
         ) {
             seletedUsers.remove(element)
-            binding.constraintLayoutItemChatPeople.setBackgroundColor(context.resources.getColor(R.color.white))
         }
     }
 }

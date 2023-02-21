@@ -70,6 +70,10 @@ class MessageViewModel @Inject constructor(
     var addChatMessage by mutableStateOf<AddChatMessage>(Resource.Success(false))
         private set
 
+    private val _toolbarBack: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val toolbarBack: LiveData<Event<Unit>>
+        get() = _toolbarBack
+
     fun getUserInfo() = viewModelScope.launch {
         userUseCase.getUser(currentUser).collect {
             when (it) {
@@ -232,5 +236,9 @@ class MessageViewModel @Inject constructor(
 
     fun setSelectedUsers(users: MutableList<User>) {
         _selectedUsers.value = users
+    }
+
+    fun backUsersAddition() {
+        _toolbarBack.value = Event(Unit)
     }
 }

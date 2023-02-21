@@ -42,6 +42,12 @@ class UserChatRoomAddFragment :
     }
 
     private fun observeViewModel() {
+
+        messageViewModel.toolbarBack.observe(viewLifecycleOwner) {
+            if (it.consumed) return@observe
+            findNavController().popBackStack()
+            it.consume()
+        }
         messageViewModel.user.observe(viewLifecycleOwner) {
             peopleViewModel.getAllUser(it)
         }
