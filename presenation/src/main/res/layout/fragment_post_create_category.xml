@@ -27,7 +27,7 @@
             app:titleCentered="true"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             app:navigationIcon="@drawable/ic_back"
-            setNavigationOnClick="@{() -> viewmodel.backPostCategory()}"
+            setNavigationOnClick="@{() -> viewmodel.moveBack()}"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

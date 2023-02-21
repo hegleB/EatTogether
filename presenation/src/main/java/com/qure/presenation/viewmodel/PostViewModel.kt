@@ -143,10 +143,6 @@ class PostViewModel @Inject constructor(
     val editTextPostComment: MutableLiveData<String>
         get() = _editTextPostComment
 
-    private val _toolbarBack: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val toolbarBack: LiveData<Event<Unit>>
-        get() = _toolbarBack
-
     private val _buttonCategory: MutableLiveData<Event<Unit>> = MutableLiveData()
     val buttonCategory: LiveData<Event<Unit>>
         get() = _buttonCategory
@@ -534,18 +530,6 @@ class PostViewModel @Inject constructor(
 
     fun showPostCreate() {
         _postCreate.value = Event((Unit))
-    }
-
-    fun backPostDetail() {
-        _toolbarBack.value = Event(Unit)
-    }
-
-    fun backPostCreat() {
-        _toolbarBack.value = Event(Unit)
-    }
-
-    fun backPostCategory() {
-        _toolbarBack.value = Event(Unit)
     }
 
     fun sendComment(commentText: String) {

@@ -26,7 +26,6 @@ import javax.inject.Inject
 class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_message) {
 
     private val messageViewModel: MessageViewModel by activityViewModels()
-    private val peopleViewModel: PeopleViewModel by activityViewModels()
     private val args by navArgs<MessageFragmentArgs>()
     private val adapter: ChatAdapter by lazy {
         ChatAdapter(args.chatroom.userCount, currentUid)
@@ -58,6 +57,12 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
     }
 
     private fun observeViewModel() {
+        messageViewModel.toolbarBack.observe(viewLifecycleOwner) {
+            if (it.consumed) return@observe
+            findNavController().popBackStack()
+            it.consume()
+        }
+
         messageViewModel.buttonSendMessage.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
             KeyboardEvent(requireContext()).hideKeyboard()

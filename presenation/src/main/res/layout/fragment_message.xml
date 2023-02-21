@@ -23,6 +23,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolBar_fragmentMessage"
+            setNavigationOnClick="@{() -> viewmodel.moveBack()}"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/orange2"
