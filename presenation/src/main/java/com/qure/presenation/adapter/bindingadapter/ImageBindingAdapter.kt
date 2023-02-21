@@ -47,6 +47,13 @@ object ImageBindingAdapter {
         }
     }
 
+    @BindingAdapter("setNavigationIcon")
+    @JvmStatic
+    fun MaterialToolbar.setNavigationIcon(isVisiable: Boolean) {
+        if (isVisiable) {
+            setNavigationIcon(R.drawable.ic_back)
+        }
+    }
     @BindingAdapter(value = ["deleteCreateImage", "item"], requireAll = false)
     @JvmStatic
     fun deleteCreateImage(imageView: ImageView, imageList: ArrayList<String>, item: String) {

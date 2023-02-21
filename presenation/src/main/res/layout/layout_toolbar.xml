@@ -6,6 +6,16 @@
         <variable
             name="titleText"
             type="String"/>
+
+        <variable
+            name="viewModel"
+            type="com.qure.presenation.base.BaseViewModel"/>
+
+        <variable
+            name="isVisiableBack"
+            type="Boolean" />
+
+        <import type="com.qure.presenation.R"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +23,9 @@
         android:layout_height="?attr/actionBarSize">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolBar_fragmentChat"
+            android:id="@+id/toolBar"
+            setNavigationOnClick="@{() -> viewModel.moveBack()}"
+            setNavigationIcon="@{isVisiableBack}"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/orange2"

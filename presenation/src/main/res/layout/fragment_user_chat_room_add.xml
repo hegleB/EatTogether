@@ -27,18 +27,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.google.android.material.appbar.MaterialToolbar
+                <include
                     android:id="@+id/toolBar_fragmentUserChatRoomAdd"
-                    setNavigationOnClick="@{() -> viewmodel.moveBack()}"
-                    android:layout_width="0dp"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/orange2"
-                    app:title="상대방 초대"
-                    app:titleCentered="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:navigationIcon="@drawable/ic_back" />
+                    layout="@layout/layout_toolbar"
+                    app:viewModel="@{viewmodel}"
+                    app:isVisiableBack="@{true}"
+                    app:titleText="@{`상대방 추가`}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_fragmentUserChatRoomAdd"

@@ -19,18 +19,12 @@
         tools:context=".view.post.CreatePostCategoryFragment">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <include
             android:id="@+id/toolBar_fragmentPostCreateCategory"
-            android:layout_width="match_parent"
-            android:background="@color/orange2"
-            app:title="카테고리 선택"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            app:navigationIcon="@drawable/ic_back"
-            setNavigationOnClick="@{() -> viewmodel.moveBack()}"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            layout="@layout/layout_toolbar"
+            app:viewModel="@{viewmodel}"
+            app:isVisiableBack="@{true}"
+            app:titleText="@{`카테고리 선택`}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_fragmentPostCreateCategory"

@@ -123,18 +123,15 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
     }
 
     private fun setMessageToolbar() {
-        binding.toolBarFragmentMessage.apply {
+        binding.toolBarFragmentMessage.toolBar.apply {
             inflateMenu(R.menu.chat_navigation)
-            setNavigationIcon(R.drawable.ic_back)
-            setNavigationOnClickListener {
-                findNavController().popBackStack()
-            }
             clickAddUserMenu()
         }
     }
 
+
     private fun clickAddUserMenu() {
-        binding.toolBarFragmentMessage.setOnMenuItemClickListener(object :
+        binding.toolBarFragmentMessage.toolBar.setOnMenuItemClickListener(object :
             Toolbar.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 when (item!!.itemId) {
@@ -144,6 +141,7 @@ class MessageFragment : BaseFragment<FragmentMessageBinding>(R.layout.fragment_m
             }
         })
     }
+
 
     private fun moveToAddChatRoomUser() {
         findNavController().navigate(

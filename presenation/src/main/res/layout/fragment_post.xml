@@ -23,11 +23,8 @@
         tools:context=".view.post.PostFragment">
 
         <include
-            android:id="@+id/layout_post_toolbar"
+            android:id="@+id/toolBar_fragmentPost"
             layout="@layout/layout_toolbar"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:titleText="@{`게시물`}" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -39,7 +36,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_post_toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentPost" />
 
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

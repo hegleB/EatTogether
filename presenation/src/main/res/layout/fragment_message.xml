@@ -20,18 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <com.google.android.material.appbar.MaterialToolbar
+        <include
             android:id="@+id/toolBar_fragmentMessage"
-            setNavigationOnClick="@{() -> viewmodel.moveBack()}"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/orange2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="@{viewmodel.chatroom.title}"
-            app:titleCentered="true" />
-
+            layout="@layout/layout_toolbar"
+            app:viewModel="@{viewmodel}"
+            app:isVisiableBack="@{true}"
+            app:titleText="@{viewmodel.chatroom.title}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_fragmentMessage"

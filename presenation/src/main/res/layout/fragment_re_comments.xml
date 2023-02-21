@@ -24,17 +24,12 @@
         tools:context=".view.post.ReCommentsFragment">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <include
             android:id="@+id/toolBar_fragmentReComment"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/orange2"
-            app:title="댓글쓰기"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            layout="@layout/layout_toolbar"
+            app:viewModel="@{viewmodel}"
+            app:isVisiableBack="@{true}"
+            app:titleText="@{`댓글쓰기`}" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

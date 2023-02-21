@@ -84,7 +84,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
     }
 
     private fun menuItemClick() {
-        binding.toolBarFragmentPostCreate.setOnMenuItemClickListener {
+        binding.toolBarFragmentPostCreate.toolBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_create -> {
                     postViewModel.createPost()

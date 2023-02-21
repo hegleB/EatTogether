@@ -18,11 +18,8 @@
         tools:context=".view.chat.ChatFragment">
 
         <include
-            android:id="@+id/layout_chat_toolbar"
+            android:id="@+id/toolBar_fragmentChat"
             layout="@layout/layout_toolbar"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:titleText="@{`채팅`}" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -33,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_chat_toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentChat"
             tools:listitem="@layout/item_chat" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

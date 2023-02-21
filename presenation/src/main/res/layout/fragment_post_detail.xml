@@ -28,17 +28,12 @@
         tools:context=".view.post.DetailPostFragment">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <include
             android:id="@+id/toolBar_fragmentPostDetail"
-            setNavigationOnClick="@{() -> viewmodel.moveBack()}"
-            setOnMenuItemClick=""
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/orange2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_back" />
+            layout="@layout/layout_toolbar"
+            app:viewModel="@{viewmodel}"
+            app:isVisiableBack="@{true}"
+            app:titleText="@{`게시물 작성`}" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView_fragmentPostDetail"

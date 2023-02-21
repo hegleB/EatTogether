@@ -19,15 +19,12 @@
         tools:context=".view.login.ProfileSettingFragment">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/orange2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="프로필 설정"
-            app:titleCentered="true" />
+        <include
+            android:id="@+id/toolBar_fragmentMessage"
+            layout="@layout/layout_toolbar"
+            app:viewModel="@{viewmodel}"
+            app:isVisiableBack="@{true}"
+            app:titleText="@{`프로필 작성`}" />
 
 
         <de.hdodenhof.circleimageview.CircleImageView

@@ -23,20 +23,12 @@
         tools:context=".view.post.CreatePostFragment">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <include
             android:id="@+id/toolBar_fragmentPostCreate"
-            setNavigationOnClick="@{() -> viewmodel.moveBack()}"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/orange2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/create_post_menu"
-            app:navigationIcon="@drawable/ic_back"
-            app:title="게시글 작성"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+            layout="@layout/layout_toolbar"
+            app:viewModel="@{viewmodel}"
+            app:isVisiableBack="@{true}"
+            app:titleText="@{`게시물 작성`}" />
 
 
         <EditText
