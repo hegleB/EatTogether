@@ -93,7 +93,7 @@ class ChatRoomAdapter(val uid: String, val itemClick: (ChatRoom) -> Unit) :
         }
 
         private fun setMessageCount(element: ChatRoom) {
-            var cnt = element.unreadCount.get(uid)
+            var cnt = element.unreadCount.get(uid) ?: 0
             binding.apply {
                 textViewItemChatMsgCount.visibility = if (cnt == 0) View.INVISIBLE else View.VISIBLE
                 textViewItemChatMsgCount.text = if (cnt != 0) cnt.toString() else MIN_MESSAGE_COUNT

@@ -16,7 +16,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     private val chatViewModel: ChatViewModel by activityViewModels()
     private val adapter: ChatRoomAdapter by lazy {
-        ChatRoomAdapter(currentUid, {
+        ChatRoomAdapter(chatViewModel.currentUid.value ?: "", {
             val direction = ChatFragmentDirections.actionChatFragmentToMessageFragment(
                 it,
                 "",
@@ -29,14 +29,14 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
     override fun init() {
         OnBackPressedListener().finish(requireActivity(), requireActivity())
         BottomNavigationEvent().showBottomNavigation(activity!!)
-        initAdapter()
-        observeViewModel()
         initViewModel()
+        observeViewModel()
+        initAdapter()
     }
 
     private fun initViewModel() {
-        chatViewModel.getAllChatRoom()
         chatViewModel.getCurrentUid(currentUid)
+        chatViewModel.getAllChatRoom()
     }
 
     private fun initAdapter() {
