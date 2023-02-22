@@ -1,8 +1,11 @@
 package com.qure.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 
 sealed class PostModel {
+    @Parcelize
     data class Post(
         val uid: String = "",
         val writer: String = "",
@@ -15,7 +18,7 @@ sealed class PostModel {
         var likecount: ArrayList<String> = arrayListOf(),
         val commentsCount: String = "",
         val postImages: ArrayList<String> = arrayListOf()
-    ) : Serializable {
+    ) : Parcelable {
         fun isSameKey(otherKey: String): Boolean =
             this.key == otherKey
 
@@ -38,8 +41,9 @@ sealed class PostModel {
 
     }
 
+    @Parcelize
     data class PostImage(
         val postkey: String = "",
         val postImage: String = ""
-    ) : Serializable
+    ) : Parcelable
 }

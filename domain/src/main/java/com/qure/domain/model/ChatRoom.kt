@@ -1,8 +1,9 @@
 package com.qure.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 data class ChatRoom(
     var room: Boolean = false,
     val roomId: String = "",
@@ -14,7 +15,7 @@ data class ChatRoom(
     var unreadCount: MutableMap<String, Int> = mutableMapOf(),
     var users: ArrayList<String> = arrayListOf()
 
-) : Serializable {
+) : Parcelable {
 
     fun isContainUid(uid: String): Boolean =
         this.users.contains(uid)

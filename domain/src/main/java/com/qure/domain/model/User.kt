@@ -1,8 +1,9 @@
 package com.qure.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 data class User(
     var userid: String = "",
     var uid: String = "",
@@ -10,7 +11,7 @@ data class User(
     var token: String = "",
     var userphoto: String = "",
     var usermsg: String = ""
-) : Serializable {
+) : Parcelable {
     fun isSameUid(currentUid: String): Boolean =
         this.uid == currentUid
 }

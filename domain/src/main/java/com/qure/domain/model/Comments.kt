@@ -1,7 +1,9 @@
 package com.qure.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Comments(
     val comments_uid: String = "",
     val comments_usernm: String = "",
@@ -14,7 +16,7 @@ data class Comments(
     val comments_commentskey: String = "",
     val comments_depth: Int = 0,
     val comments_replyKey: String = ""
-) : Serializable {
+) : Parcelable {
     fun isSameCommentUid(uid: String) =
         this.comments_uid == uid
 
