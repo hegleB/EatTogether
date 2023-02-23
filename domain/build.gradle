@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -59,4 +60,7 @@ dependencies {
     implementation (Coroutines.COROUTINES)
     implementation (Coroutines.COROUTINES_SERVICES)
     implementation (Coroutines.COROUTINES_ANDROID)
+
+    implementation (Paging.PAGING_COMMON)
+    implementation (Paging.PAGING_RUNTIME)
 }

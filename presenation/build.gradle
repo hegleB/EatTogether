@@ -138,6 +138,24 @@ dependencies {
     implementation (Preference.PREFERENCE)
 
     implementation (Zxing.ZXING)
+
+    implementation (ExoPlayer.EXOPLAYER_CORE)
+    implementation (ExoPlayer.EXOPLAYER_DASH)
+    implementation (ExoPlayer.EXOPLAYER_UI)
+
+    implementation (YoutubeExtractor.YOUBUTE_EXTRACTOR)
+
+    implementation (GoogleApi.YOUBUBE)
+    implementation (GoogleApi.HTTP_CLIENT)
+    implementation (GoogleApi.API_CLIENT)
+    implementation (GoogleApi.API_CLIENT_GSON)
+
+    implementation (Retrofit.RETROFIT)
+    implementation (Retrofit.CONVERTER_GSON)
+    implementation (Retrofit.CONVERTER_JAXB)
+
+    implementation (OkHttp.OKHTTP)
+    implementation (OkHttp.LOGGING_INTERCEPTOR)
 }
 
 task ktlint(type: JavaExec, group: "verification") {

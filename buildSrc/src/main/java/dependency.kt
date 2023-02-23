@@ -1,8 +1,11 @@
+import Versions.EXOPLAYER_VERSION
 import Versions.GLIDE_VERSION
 import Versions.JUNIT_VERSION
 import Versions.MOCKK_VERSION
 import Versions.NAV_VERSION
+import Versions.OKHTTP_VERRSION
 import Versions.PAGING_VERSION
+import Versions.RETROFIT_VERSION
 
 object Versions {
     const val NAV_VERSION = "2.4.0-alpha10"
@@ -10,7 +13,9 @@ object Versions {
     const val GLIDE_VERSION = "4.11.0"
     const val MOCKK_VERSION = "1.9.1"
     const val JUNIT_VERSION = "5.8.2"
-
+    const val EXOPLAYER_VERSION = "2.15.0"
+    const val RETROFIT_VERSION = "2.9.0"
+    const val OKHTTP_VERRSION = "4.9.1"
 }
 
 object NavComponent {
@@ -53,7 +58,7 @@ object Paging {
 object Glide {
     const val GLIDE = "com.github.bumptech.glide:glide:$GLIDE_VERSION"
     const val GLIDE_COMPILER = "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
-    const val GLIDE_BLUR =  "jp.wasabeef:glide-transformations:4.3.0"
+    const val GLIDE_BLUR = "jp.wasabeef:glide-transformations:4.3.0"
 }
 
 object DaggerHilt {
@@ -66,7 +71,7 @@ object DaggerHilt {
 object Coroutines {
     const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
     const val COROUTINES_SERVICES = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.2"
-    const val COROUTINES_ANDROID =  "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
+    const val COROUTINES_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
 }
 
 object SpinKit {
@@ -98,7 +103,7 @@ object Preference {
 object Testing {
     const val ASSERTJ = "org.assertj:assertj-core:3.21.0"
 
-    const val JUNIT_JUPITER_API =  "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
+    const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
     const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
     const val JUNIT_JUPITER_PARAMS = "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
     const val JUNIT_VINTAGE = "org.junit.vintage:junit-vintage-engine:$JUNIT_VERSION"
@@ -111,3 +116,30 @@ object Testing {
     const val MOCKK_ANDROID = "io.mockk:mockk-android:$MOCKK_VERSION"
 }
 
+object ExoPlayer {
+    const val EXOPLAYER_CORE = "com.google.android.exoplayer:exoplayer-core:${EXOPLAYER_VERSION}"
+    const val EXOPLAYER_DASH = "com.google.android.exoplayer:exoplayer-dash:${EXOPLAYER_VERSION}"
+    const val EXOPLAYER_UI = "com.google.android.exoplayer:exoplayer-ui:${EXOPLAYER_VERSION}"
+}
+
+object Retrofit {
+    const val RETROFIT = "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    const val CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+    const val CONVERTER_JAXB = "com.squareup.retrofit2:converter-jaxb:${RETROFIT_VERSION}"
+}
+
+object OkHttp {
+    const val OKHTTP = "com.squareup.okhttp3:okhttp:${OKHTTP_VERRSION}"
+    const val LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERRSION}"
+}
+
+object YoutubeExtractor {
+    const val YOUBUTE_EXTRACTOR = "com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT"
+}
+
+object GoogleApi {
+    const val YOUBUBE = "com.google.apis:google-api-services-youtube:v3-rev183-1.22.0"
+    const val HTTP_CLIENT = "com.google.http-client:google-http-client-android:1.38.1"
+    const val API_CLIENT =  "com.google.api-client:google-api-client-android:1.31.2"
+    const val API_CLIENT_GSON = "com.google.api-client:google-api-client-gson:1.31.2"
+}

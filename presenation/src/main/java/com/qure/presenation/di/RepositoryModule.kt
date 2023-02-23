@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.qure.data.repository.*
+import com.qure.data.service.YoutubeService
 import com.qure.domain.repository.*
 import dagger.Module
 import dagger.Provides
@@ -78,5 +79,12 @@ object RepositoryModule {
         firebaseStorage: FirebaseStorage
     ): FirebaseStorageRepository {
         return FirebaseStorageRepositoryImpl(firestore, firebaseStorage)
+    }
+
+    @Provides
+    fun provideYoutubeVideoeRepository(
+        youtubeService: YoutubeService,
+    ): YoutubeVideoRepository {
+        return YoutubeVideoRepositoryImpl(youtubeService)
     }
 }

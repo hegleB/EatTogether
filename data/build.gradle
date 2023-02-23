@@ -66,4 +66,14 @@ dependencies {
     implementation (Coroutines.COROUTINES_SERVICES)
     implementation (Coroutines.COROUTINES_ANDROID)
 
+    implementation (Retrofit.RETROFIT)
+    implementation (Retrofit.CONVERTER_GSON)
+    implementation (Retrofit.CONVERTER_JAXB)
+
+    implementation (OkHttp.OKHTTP)
+    implementation (OkHttp.LOGGING_INTERCEPTOR)
+
+    implementation (Coroutines.COROUTINES)
+    implementation (Coroutines.COROUTINES_SERVICES)
+    implementation (Coroutines.COROUTINES_ANDROID)
 }
