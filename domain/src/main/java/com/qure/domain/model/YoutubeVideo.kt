@@ -35,6 +35,7 @@ data class Snippet(
     val publishTime: String,
     val channelTitle: String,
     val resourceId: ResourceId,
+    val videoOwnerChannelTitle: String,
 ) : Parcelable
 
 @Parcelize

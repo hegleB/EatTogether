@@ -350,4 +350,9 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.qure.presenation.view.video.VideoFragment"
+        android:label="fragment_videoFragment"
+        tools:layout="@layout/fragment_video"/>
 </navigation>

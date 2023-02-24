@@ -21,6 +21,11 @@
         android:icon="@drawable/ic_baseline_chat_24" />
 
     <item
+        android:id="@+id/videoFragment"
+        android:title="@string/video_text"
+        android:icon="@drawable/ic_baseline_video_library_24" />
+
+    <item
         android:id="@+id/settingFragment"
         android:title="@string/settings_text"
         android:icon="@drawable/ic_baseline_settings_24" />

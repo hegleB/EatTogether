@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.video.VideoFragment">
+
+        <include
+            android:id="@+id/toolBar_fragmentVideo"
+            layout="@layout/layout_toolbar"
+            app:titleText="@{`영상`}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_fragmentVideo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentVideo"
+            tools:listitem="@layout/item_video" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spinKitView_fragmentVideo_progressbar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:SpinKit_Color="@color/black"
+            app:SpinKit_Style="FadingCircle"
+            app:layout_constraintBottom_toBottomOf="@+id/recyclerView_fragmentVideo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolBar_fragmentVideo" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

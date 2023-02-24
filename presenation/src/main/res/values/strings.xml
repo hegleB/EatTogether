@@ -7,6 +7,7 @@
     <string name="people_text">People</string>
     <string name="post_text">Post</string>
     <string name="chat_text">Chat</string>
+    <string name="video_text">Video</string>
     <string name="settings_text">Settings</string>
     <string name="msg_token_fmt">messagingToken</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
