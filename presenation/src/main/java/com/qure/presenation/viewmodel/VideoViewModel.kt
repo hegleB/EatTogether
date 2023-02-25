@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -30,9 +29,9 @@ class VideoViewModel @Inject constructor(
     val mediaSource : LiveData<MediaSource>
         get() = _mediaSource
 
-    private val _isFullsreen : MutableLiveData<Boolean> = MutableLiveData()
+    private val _isFullscreen : MutableLiveData<Boolean> = MutableLiveData()
     val isFullsreen : LiveData<Boolean>
-        get() = _isFullsreen
+        get() = _isFullscreen
     suspend fun getYoutubeVideo(): Flow<PagingData<Items>> {
         return videoUseCase.getYoutubeVideo()
             .cachedIn(viewModelScope)
@@ -52,7 +51,7 @@ class VideoViewModel @Inject constructor(
             .createMediaSource(MediaItem.fromUri(Uri.parse(uri)))
     }
 
-    fun isFullscreen(enable: Boolean) {
-        _isFullsreen.value = enable
+    fun setFullscreen(enable: Boolean) {
+        _isFullscreen.value = enable
     }
 }

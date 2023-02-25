@@ -110,7 +110,7 @@ class VideoDetailFragment :
         val params: ConstraintLayout.LayoutParams = setLayoutParams()
         binding.playViewFragmentVideoDetailVideo.setLayoutParams(params)
         setBottomNavigation()
-        videoViewModel.isFullscreen(fullScreen)
+        videoViewModel.setFullscreen(fullScreen)
         fullScreen = !fullScreen
     }
 
