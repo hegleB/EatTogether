@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -72,10 +73,8 @@ class VideoDetailFragment :
     private fun observeViewModel() {
         videoViewModel.toolbarBack.observe(viewLifecycleOwner) {
             if (it.consumed) return@observe
-            if (fullScreen) {
-                setPortaritScreen()
-                fullScreen = !fullScreen
-                videoViewModel.isFullscreen(fullScreen)
+            if (!fullScreen) {
+                setVideoScreen()
             } else {
                 findNavController().popBackStack()
             }
@@ -100,78 +99,91 @@ class VideoDetailFragment :
     }
 
     private fun playFullSrcreen() {
-        if (fullScreen) {
-            setPortaritScreen()
-        } else {
-            setLandscapeScreen()
-        }
+        setVideoScreen()
         binding.playViewFragmentVideoDetailVideo.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-        fullScreen = !fullScreen
-        videoViewModel.isFullscreen(fullScreen)
-
     }
 
-    private fun setLandscapeScreen() {
-        fullScreenButton.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_baseline_fullscreen_exit_24
-            )
-        )
-        activity!!.setRequestedOrientation(
-            if (Build.VERSION.SDK_INT < 9) {
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            } else {
-                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+    private fun setVideoScreen() {
+        changeFullscreenIcon()
+        rotateScreen()
+        setActionBar()
+        val params: ConstraintLayout.LayoutParams = setLayoutParams()
+        binding.playViewFragmentVideoDetailVideo.setLayoutParams(params)
+        setBottomNavigation()
+        videoViewModel.isFullscreen(fullScreen)
+        fullScreen = !fullScreen
+    }
+
+    private fun setBottomNavigation() {
+        if (fullScreen) {
+            return BottomNavigationEvent().hideBottomNavigation(activity!!)
+        }
+        return BottomNavigationEvent().showBottomNavigation(activity!!)
+    }
+
+    private fun setLayoutParams(): ConstraintLayout.LayoutParams {
+        val params: ConstraintLayout.LayoutParams =
+            binding.playViewFragmentVideoDetailVideo.getLayoutParams() as ConstraintLayout.LayoutParams
+        params.apply {
+            if (fullScreen) {
+                width = ConstraintLayout.LayoutParams.WRAP_CONTENT
+                height = ConstraintLayout.LayoutParams.WRAP_CONTENT
+                startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                return params
             }
-        )
+            width = ViewGroup.LayoutParams.MATCH_PARENT
+            height =
+                (300 * getApplicationContext().getResources().getDisplayMetrics().density).toInt()
+        }
+        return params
+    }
+
+    private fun setActionBar() {
         activity!!.apply {
-            window.decorView.setSystemUiVisibility(
+            setWindowDecorView()
+            if (actionBar != null) {
+                setActionbar()
+            }
+        }
+    }
+
+    private fun FragmentActivity.setActionbar() {
+        if (fullScreen) {
+            return actionBar!!.hide()
+        }
+        return actionBar!!.show()
+    }
+
+    private fun FragmentActivity.setWindowDecorView() {
+        if (fullScreen) {
+            return window.decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             )
-            if (actionBar != null) {
-                actionBar!!.hide();
-            }
         }
-        val params: ConstraintLayout.LayoutParams =
-            binding.playViewFragmentVideoDetailVideo.getLayoutParams() as ConstraintLayout.LayoutParams
-        params.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
-        params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
-        params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-        binding.playViewFragmentVideoDetailVideo.setLayoutParams(params)
-        BottomNavigationEvent().hideBottomNavigation(activity!!)
+        return window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
     }
 
-    private fun setPortaritScreen() {
+    private fun rotateScreen() {
+        activity!!.setRequestedOrientation(
+            if (Build.VERSION.SDK_INT < 9) {
+                if (fullScreen) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            } else {
+                if (fullScreen) ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            }
+        )
+    }
+
+    private fun changeFullscreenIcon() {
         fullScreenButton.setImageDrawable(
             ContextCompat.getDrawable(
                 requireContext(),
-                R.drawable.ic_baseline_fullscreen_24
+                if (fullScreen) R.drawable.ic_baseline_fullscreen_exit_24 else R.drawable.ic_baseline_fullscreen_24
             )
         )
-        activity!!.setRequestedOrientation(
-            if (Build.VERSION.SDK_INT < 9) {
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            } else {
-                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            }
-        )
-        activity!!.apply {
-            window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
-            if (actionBar != null) {
-                actionBar!!.show();
-            }
-        }
-        val params: ConstraintLayout.LayoutParams =
-            binding.playViewFragmentVideoDetailVideo.getLayoutParams() as ConstraintLayout.LayoutParams
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT
-        params.height = (300 * getApplicationContext().getResources().getDisplayMetrics().density).toInt()
-        binding.playViewFragmentVideoDetailVideo.setLayoutParams(params)
-        BottomNavigationEvent().showBottomNavigation(activity!!)
     }
 
     override fun onResume() {
