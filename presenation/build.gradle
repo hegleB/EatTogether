@@ -8,6 +8,9 @@ plugins {
     id("de.mannodermaus.android-junit5") version "1.8.2.1"
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
 
     compileSdkVersion 32
@@ -28,6 +31,11 @@ android {
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "YOUTUBE_API_KEY", properties['youtube_api_key']
+        buildConfigField "String", "PLAYLIST_ID_KEY", properties['playlist_id_key']
+        buildConfigField "String", "FACEBOOK_APP_ID", properties['facebook_app_id']
+        buildConfigField "String", "FB_LOGIN_PROTOCOL_SCHEME", properties['fb_login_protocol_scheme']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

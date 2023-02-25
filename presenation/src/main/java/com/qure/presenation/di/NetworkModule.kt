@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.qure.data.service.YoutubeService
+import com.qure.presenation.BuildConfig
 import com.qure.presenation.R
 import dagger.Module
 import dagger.Provides
@@ -76,8 +77,8 @@ object NetworkModule {
 
             request.url(
                 originalHttpUrl.newBuilder()
-                    .addQueryParameter("key", "AIzaSyCIWXL4iuXkzrwBTldYqpal2jMmTyrZn38")
-                    .addQueryParameter("playlistId", "PLDy9iek5QK0Xzg6uXNisMyGrlzy4thDly")
+                    .addQueryParameter("key", "${BuildConfig.YOUTUBE_API_KEY}")
+                    .addQueryParameter("playlistId", "${BuildConfig.PLAYLIST_ID_KEY}")
                     .addQueryParameter("maxResults","50")
                     .addQueryParameter("part","snippet")
                     .build()
