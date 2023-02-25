@@ -1,8 +1,10 @@
 package com.qure.presenation.view.video
 
+import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quer.presenation.base.BaseFragment
@@ -29,7 +31,10 @@ class VideoFragment : BaseFragment<FragmentVideoBinding>(R.layout.fragment_video
 
     private fun observeViewModel() {
         manager = LinearLayoutManager(requireContext())
-        adapter = VideoAdapter()
+        adapter = VideoAdapter {
+            val direction = VideoFragmentDirections.actionVideoFragmentToVideoDetailFragment(it)
+            findNavController().navigate(direction)
+        }
         binding.recyclerViewFragmentVideo.layoutManager = manager
 
         viewLifecycleOwner.lifecycleScope.launch {

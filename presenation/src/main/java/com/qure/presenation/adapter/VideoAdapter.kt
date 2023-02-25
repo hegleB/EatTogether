@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.qure.domain.model.Items
+import com.qure.presenation.R
 import com.qure.presenation.base.BaseViewHolder
 import com.qure.presenation.databinding.ItemVideoBinding
 
-class VideoAdapter :
+class VideoAdapter(val onItemClick: (Items) -> Unit) :
     PagingDataAdapter<Items, BaseViewHolder<ItemVideoBinding, Items>>(VideoDiffiUtil) {
 
     companion object {
@@ -22,6 +23,10 @@ class VideoAdapter :
             }
 
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return R.layout.item_video
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<ItemVideoBinding, Items>, position: Int) {
@@ -41,7 +46,11 @@ class VideoAdapter :
         BaseViewHolder<ItemVideoBinding, Items>(binding) {
         init {
             binding.apply {
-
+                itemView.setOnClickListener {
+                    items?.run {
+                        onItemClick(this)
+                    }
+                }
             }
         }
 

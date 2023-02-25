@@ -354,5 +354,25 @@
         android:id="@+id/videoFragment"
         android:name="com.qure.presenation.view.video.VideoFragment"
         android:label="fragment_videoFragment"
-        tools:layout="@layout/fragment_video"/>
+        tools:layout="@layout/fragment_video">
+        <action
+            android:id="@+id/action_videoFragment_to_videoDetailFragment"
+            app:destination="@id/videoDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoDetailFragment"
+        android:name="com.qure.presenation.view.video.VideoDetailFragment"
+        android:label="VideoDetailFragment"
+        tools:layout="@layout/fragment_video_detail">
+        <argument
+            android:name="items"
+            app:argType="com.qure.domain.model.Items" />
+        <action
+            android:id="@+id/action_videoDetailFragment_to_videoFullScreenFragment"
+            app:destination="@id/videoFullScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoFullScreenFragment"
+        android:name="com.qure.presenation.view.video.VideoFullScreenFragment"
+        android:label="VideoFullScreenFragment" />
 </navigation>

@@ -5,6 +5,7 @@ import Versions.MOCKK_VERSION
 import Versions.NAV_VERSION
 import Versions.OKHTTP_VERRSION
 import Versions.PAGING_VERSION
+import Versions.READMORE_VERSION
 import Versions.RETROFIT_VERSION
 
 object Versions {
@@ -16,6 +17,7 @@ object Versions {
     const val EXOPLAYER_VERSION = "2.15.0"
     const val RETROFIT_VERSION = "2.9.0"
     const val OKHTTP_VERRSION = "4.9.1"
+    const val READMORE_VERSION = "1.0.0"
 }
 
 object NavComponent {
@@ -142,4 +144,8 @@ object GoogleApi {
     const val HTTP_CLIENT = "com.google.http-client:google-http-client-android:1.38.1"
     const val API_CLIENT =  "com.google.api-client:google-api-client-android:1.31.2"
     const val API_CLIENT_GSON = "com.google.api-client:google-api-client-gson:1.31.2"
+}
+
+object ReadMore {
+    const val READMORE_TEXTVIEW = "kr.co.prnd:readmore-textview:${READMORE_VERSION}"
 }

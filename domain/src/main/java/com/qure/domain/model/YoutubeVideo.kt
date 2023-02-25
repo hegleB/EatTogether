@@ -21,37 +21,37 @@ data class PageInfo(
 
 @Parcelize
 data class Items(
-    val id: String,
-    val snippet: Snippet,
+    val id: String = "",
+    val snippet: Snippet = Snippet(),
 ) : Parcelable
 
 @Parcelize
 data class Snippet(
-    val publishedAt: String,
-    val channelId: String,
-    val title: String,
-    val description: String,
-    val thumbnails: ThumbNail,
-    val publishTime: String,
-    val channelTitle: String,
-    val resourceId: ResourceId,
-    val videoOwnerChannelTitle: String,
+    val publishedAt: String = "",
+    val channelId: String = "",
+    val title: String = "",
+    val description: String = "",
+    val thumbnails: ThumbNail = ThumbNail(),
+    val publishTime: String = "",
+    val channelTitle: String = "",
+    val resourceId: ResourceId = ResourceId(),
+    val videoOwnerChannelTitle: String = "",
 ) : Parcelable
 
 @Parcelize
 data class ResourceId(
-    val kind: String,
-    val videoId: String
+    val kind: String = "",
+    val videoId: String = "",
 ) : Parcelable
 
 @Parcelize
 data class ThumbNail(
-    val high: High,
+    val high: High = High(),
 ) : Parcelable
 
 @Parcelize
 data class High(
-    val url: String,
-    val width: Int,
-    val height: Int,
+    val url: String = "",
+    val width: Int = 0,
+    val height: Int = 0,
 ) : Parcelable

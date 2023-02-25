@@ -17,5 +17,6 @@
     <color name="like_color">#F3AD0A</color>
     <color name="light_red">@android:color/holo_red_light</color>
     <color name="dark_red">@android:color/holo_red_dark</color>
+    <color name="color_80000000">#80000000</color>
 
 </resources>

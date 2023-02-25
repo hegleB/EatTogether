@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/imageView_itemVideo_thumbnail"
-            userImage="@{items.snippet.thumbnails.high.url}"
+            videoThumbNail="@{items.snippet.thumbnails.high.url}"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:scaleType="fitXY"

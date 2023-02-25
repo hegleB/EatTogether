@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="items"
+            type="com.qure.domain.model.Items" />
+
+        <variable
+            name="viewmodel"
+            type="com.qure.presenation.viewmodel.VideoViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainLayout_fragmentVideoDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        tools:context=".view.video.VideoDetailFragment">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playView_fragmentVideoDetail_video"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:background="@color/black"
+            app:controller_layout_id="@layout/exo_playback_control_view"
+            app:keep_content_on_player_reset="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_min="300dp"
+            app:resize_mode="fit"
+            app:use_controller="true" />
+
+        <ImageView
+            android:id="@+id/imageView_fragmentVideoDetail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/ic_back"
+            android:backgroundTint="@color/white"
+            android:onClick="@{() -> viewmodel.moveBack()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/playView_fragmentVideoDetail_video" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spinKitView_fragmentVideoDetail_progressbar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:visibility="@{viewmodel.isLoading() ? View.VISIBLE : View.INVISIBLE}"
+            app:SpinKit_Color="@color/white"
+            app:SpinKit_Style="FadingCircle"
+            app:layout_constraintBottom_toBottomOf="@+id/playView_fragmentVideoDetail_video"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/playView_fragmentVideoDetail_video" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playView_fragmentVideoDetail_video"
+            tools:ignore="MissingConstraints">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_fragmentVideoDetail_channelTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@{items.snippet.videoOwnerChannelTitle}"
+                    android:visibility="@{viewmodel.isFullsreen() ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/playView_fragmentVideoDetail_video" />
+
+                <TextView
+                    android:id="@+id/textView_fragmentVideoDetail_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@{items.snippet.title}"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="@{viewmodel.isFullsreen() ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chip_fragmentVideoDetail_channelTitle" />
+
+                <kr.co.prnd.readmore.ReadMoreTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@{items.snippet.description}"
+                    android:visibility="@{viewmodel.isFullsreen() ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView_fragmentVideoDetail_title"
+                    app:readMoreColor="@color/com_facebook_blue"
+                    app:readMoreMaxLine="4"
+                    app:readMoreText="…더보기" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

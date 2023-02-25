@@ -78,6 +78,7 @@ object NetworkModule {
                 originalHttpUrl.newBuilder()
                     .addQueryParameter("key", "AIzaSyCIWXL4iuXkzrwBTldYqpal2jMmTyrZn38")
                     .addQueryParameter("playlistId", "PLDy9iek5QK0Xzg6uXNisMyGrlzy4thDly")
+                    .addQueryParameter("maxResults","50")
                     .addQueryParameter("part","snippet")
                     .build()
             )

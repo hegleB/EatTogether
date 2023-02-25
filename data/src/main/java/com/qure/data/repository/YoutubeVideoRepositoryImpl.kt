@@ -1,6 +1,5 @@
 package com.qure.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -15,7 +14,7 @@ class YoutubeVideoRepositoryImpl @Inject constructor(
     private val youtubeService: YoutubeService
 ): YoutubeVideoRepository {
     override suspend fun getYoutubeVideo(): Flow<PagingData<Items>> {
-        return Pager(PagingConfig(10)) {
+        return Pager(PagingConfig(50)) {
             YoutubePagingSource(youtubeService)
         }.flow
     }

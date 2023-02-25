@@ -1,6 +1,5 @@
 package com.qure.data.pagingsource
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.qure.data.service.YoutubeService
@@ -11,7 +10,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
-import java.util.Collections.shuffle
 
 class YoutubePagingSource(
     private val service: YoutubeService,

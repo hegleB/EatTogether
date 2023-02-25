@@ -156,6 +156,8 @@ dependencies {
 
     implementation (OkHttp.OKHTTP)
     implementation (OkHttp.LOGGING_INTERCEPTOR)
+
+    implementation (ReadMore.READMORE_TEXTVIEW)
 }
 
 task ktlint(type: JavaExec, group: "verification") {

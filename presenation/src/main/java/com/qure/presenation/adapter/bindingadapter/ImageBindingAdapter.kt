@@ -17,6 +17,12 @@ object ImageBindingAdapter {
         Glide.with(imageView.context).load(uri).error(R.drawable.ic_user).into(imageView)
     }
 
+    @BindingAdapter("videoThumbNail")
+    @JvmStatic
+    fun videoImage(imageView: ImageView, uri: String?) {
+        Glide.with(imageView.context).load(uri).error(R.color.black).into(imageView)
+    }
+
     @BindingAdapter("postCreateImage")
     @JvmStatic
     fun postCreateImage(imageView: ImageView, uri: String?) {
