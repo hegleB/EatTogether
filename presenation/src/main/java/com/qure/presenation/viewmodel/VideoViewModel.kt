@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -32,9 +33,18 @@ class VideoViewModel @Inject constructor(
     private val _isFullscreen : MutableLiveData<Boolean> = MutableLiveData()
     val isFullsreen : LiveData<Boolean>
         get() = _isFullscreen
+
+    private var currentVideoItems: Flow<PagingData<Items>>? = null
+
     suspend fun getYoutubeVideo(): Flow<PagingData<Items>> {
-        return videoUseCase.getYoutubeVideo()
-            .cachedIn(viewModelScope)
+        var lastResult = currentVideoItems
+        if (lastResult != null) {
+            return lastResult
+        }
+        val newResult : Flow<PagingData<Items>> =  videoUseCase.getYoutubeVideo().cachedIn(viewModelScope)
+        currentVideoItems = newResult
+
+        return newResult
     }
 
     fun getYoutubeVideoId(context: Context, videoId: String) {
