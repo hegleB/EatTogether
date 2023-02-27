@@ -38,8 +38,8 @@
 <br>
 
 <img width="200" alt="2022-04-14_03-37-23" src="https://user-images.githubusercontent.com/39490416/163447847-e44ac533-c5e7-4a43-97fc-c37f9a9f94d4.png">
-<img width="200" alt="2022-04-14_03-37-24" src="https://user-images.githubusercontent.com/39490416/163447871-895b8e68-54d0-4aa6-9773-b289635f1731.png">
 <img width="200" alt="2022-04-14_03-37-28" src="https://user-images.githubusercontent.com/39490416/163447905-f3ace466-2884-4451-a871-12ed28c49ab8.png">
+<img width="200" alt="2022-04-14_03-37-24" src="https://user-images.githubusercontent.com/39490416/221494780-1b584d9d-5be7-4978-855a-3f6955350c71.png">
 </br>
 </p>
 
@@ -54,4 +54,4 @@
 |DB(DataBase)|Firebase|
 |이미지 처리(Image Load & Download)|Glide|
 |JetPack|ViewModel, Data Binding, Lifecycles, LiveData, Navigation|
-|Other|ViewPager2, CardView, RecyclerView|
+|Other|ViewPager2, CardView, RecyclerView, ExoPlayer|
