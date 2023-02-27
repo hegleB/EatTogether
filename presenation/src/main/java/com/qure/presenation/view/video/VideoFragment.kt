@@ -11,6 +11,9 @@ import com.quer.presenation.base.BaseFragment
 import com.qure.presenation.R
 import com.qure.presenation.adapter.VideoAdapter
 import com.qure.presenation.databinding.FragmentVideoBinding
+import com.qure.presenation.utils.BottomNavigationEvent
+import com.qure.presenation.utils.KeyboardEvent
+import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.VideoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,6 +28,7 @@ class VideoFragment : BaseFragment<FragmentVideoBinding>(R.layout.fragment_video
     private lateinit var adapter: VideoAdapter
 
     override fun init() {
+        OnBackPressedListener().finish(activity!!,activity!!)
         observeViewModel()
         initAdatper()
     }

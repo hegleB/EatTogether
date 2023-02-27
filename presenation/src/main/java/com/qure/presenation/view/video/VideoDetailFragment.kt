@@ -3,6 +3,7 @@ package com.qure.presenation.view.video
 
 import android.content.pm.ActivityInfo
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -10,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.facebook.FacebookSdk.getApplicationContext
@@ -21,6 +23,8 @@ import com.quer.presenation.base.BaseFragment
 import com.qure.presenation.R
 import com.qure.presenation.databinding.FragmentVideoDetailBinding
 import com.qure.presenation.utils.BottomNavigationEvent
+import com.qure.presenation.utils.KeyboardEvent
+import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.VideoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,6 +45,7 @@ class VideoDetailFragment :
     private lateinit var fullScreenButton: ImageView
 
     override fun init() {
+        OnBackPressedListener().back(activity!!, findNavController())
         binding.items = args.items
         fullScreenButton =
             binding.playViewFragmentVideoDetailVideo.findViewById(R.id.exo_fullscreen)
