@@ -29,6 +29,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
 
     override fun init() {
         BottomNavigationEvent().hideBottomNavigation(activity!!)
+        initMenu()
         initViewModel()
         initAdapter()
         observeViewModel()
@@ -68,7 +69,6 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
 
         postViewModel.createPostImage.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-            adapter.notifyDataSetChanged()
         }
 
         postViewModel.updatedState.observe(viewLifecycleOwner) {
@@ -81,6 +81,11 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
                 is Resource.Error -> binding.spinKitViewFragmentPostCreateLoading.visibility = View.INVISIBLE
             }
         }
+    }
+
+    private fun initMenu() {
+        binding.toolBarFragmentPostCreate.toolBar.inflateMenu(R.menu.create_post_menu)
+
     }
 
     private fun menuItemClick() {
