@@ -134,60 +134,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_fragmentProfile_message" />
 
-        <com.yy.mobile.rollingtextview.RollingTextView
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="80dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="80dp" />
+
+        <com.qure.presenation.utils.customview.RollingTextView
             android:id="@+id/rollingTextView_fragmentProfile_postCount"
-            style="@style/UserProfileCountRollingTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.151"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5"
-            app:rollingText="@{viewmodel.postCount}" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/rollingTextView_fragmentProfile_meetingCount"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/rollingTextView_fragmentProfile_meetingCount"
+            app:rollingText="@{viewmodel.postCount}"
+            app:rolling_textSize="25sp"
+            app:rolling_type="Post" />
 
-        <TextView
-            android:id="@+id/textView_fragmentProfile_post"
-            android:text="Post"
-            style="@style/UserProfilePostTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.149"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_postCount" />
-
-        <com.yy.mobile.rollingtextview.RollingTextView
+        <com.qure.presenation.utils.customview.RollingTextView
             android:id="@+id/rollingTextView_fragmentProfile_meetingCount"
-            style="@style/UserProfileCountRollingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.295"
-            app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_postCount"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5"
-            app:rollingText="@{viewmodel.meetingCount}" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imageView5"
+            app:rollingText="@{viewmodel.meetingCount}"
+            app:rolling_textSize="25sp"
+            app:rolling_type="Meeting" />
 
-        <TextView
-            android:id="@+id/textView_fragmentProfile_meeting"
-            android:text="Meeting"
-            style="@style/UserProfilePostTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.295"
-            app:layout_constraintStart_toEndOf="@+id/textView_fragmentProfile_post"
-            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_meetingCount" />
-
-        <com.yy.mobile.rollingtextview.RollingTextView
+        <com.qure.presenation.utils.customview.RollingTextView
             android:id="@+id/rollingTextView_fragmentProfile_likeCount"
-            style="@style/UserProfileCountRollingTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.54"
-            app:layout_constraintStart_toEndOf="@+id/rollingTextView_fragmentProfile_meetingCount"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5"
-            app:rollingText="@{viewmodel.likeCount}" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/rollingTextView_fragmentProfile_meetingCount"
+            app:layout_constraintBottom_toBottomOf="@id/rollingTextView_fragmentProfile_meetingCount"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:rollingText="@{viewmodel.likeCount}"
+            app:rolling_textSize="25sp"
+            app:rolling_type="Like" />
 
-
-        <TextView
-            android:id="@+id/textView_fragmentProfile_like"
-            android:text="Like"
-            style="@style/UserProfilePostTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.54"
-            app:layout_constraintStart_toEndOf="@+id/textView_fragmentProfile_meeting"
-            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_likeCount" />
 
         <ImageButton
             android:id="@+id/imageButton_fragmentProfile_profileEdit"
@@ -261,7 +255,7 @@
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_fragmentProfile_meeting"
+            app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentProfile_meetingCount"
             app:tabIndicatorColor="@color/black"
             app:tabSelectedTextColor="@color/black"
             app:tabTextColor="#888888">

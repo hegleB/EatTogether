@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="viewmodel"
@@ -43,7 +43,6 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/shape_user_bg"
-            app:userImage="@{viewmodel.myImage}"
             android:onClick="@{() -> viewmodel.moveMyProfile()}"
             app:civ_border_color="@color/white"
             app:civ_border_overlay="true"
@@ -54,6 +53,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolBar_fragmentPeople"
             app:layout_constraintVertical_bias="0.112"
+            app:userImage="@{viewmodel.myImage}"
             tools:layout_conversion_absoluteHeight="0dp"
             tools:layout_conversion_absoluteWidth="0dp" />
 
@@ -91,62 +91,46 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_fragmentPeople_myMsg">
 
-
-            <com.yy.mobile.rollingtextview.RollingTextView
+            <com.qure.presenation.utils.customview.RollingTextView
                 android:id="@+id/rollingTextView_fragmentPeople_postCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                style="@style/MyProfileCountRollingTextView"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view"
                 app:rollingText="@{viewmodel.postCount}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
+                app:rolling_textSize="20sp"
+                app:rolling_type="Post"
+                app:rolling_type_textSize="15sp" />
 
-            <TextView
-                android:id="@+id/textView_fragmentPeople_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:text="Post"
-                android:textSize="15sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rollingTextView_fragmentPeople_postCount" />
-
-            <com.yy.mobile.rollingtextview.RollingTextView
+            <com.qure.presenation.utils.customview.RollingTextView
                 android:id="@+id/rollingTextView_fragmentPeople_meetingCount"
-                style="@style/MyProfileCountRollingTextView"
-                app:rollingText="@{viewmodel.meetingCount}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
-
-            <TextView
-                android:id="@+id/textView_fragmentPeople_meeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meeting"
-                android:textSize="15sp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rollingTextView_fragmentPeople_meetingCount" />
+                app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view"
+                app:rollingText="@{viewmodel.meetingCount}"
+                app:rolling_textSize="20sp"
+                app:rolling_type="Meeting"
+                app:rolling_type_textSize="15sp" />
 
-            <com.yy.mobile.rollingtextview.RollingTextView
+
+            <com.qure.presenation.utils.customview.RollingTextView
                 android:id="@+id/rollingTextView_fragmentPeople_likeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="50dp"
-                style="@style/MyProfileCountRollingTextView"
-                app:rollingText="@{viewmodel.likeCount}"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/constraintLayout_fragmentPeople_view"
-                app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view" />
-
-            <TextView
-                android:id="@+id/textView_fragmentPeople_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="40dp"
-                android:text="Like"
-                android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rollingTextView_fragmentPeople_likeCount" />
-
+                app:layout_constraintTop_toTopOf="@id/constraintLayout_fragmentPeople_view"
+                app:rollingText="@{viewmodel.likeCount}"
+                app:rolling_textSize="20sp"
+                app:rolling_type="Like"
+                app:rolling_type_textSize="15sp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

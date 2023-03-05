@@ -14,26 +14,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object TextBindingAdapter {
-
-    @BindingAdapter("rollingText")
-    @JvmStatic
-    fun rollingTextCount(rollingTextView: RollingTextView, count: String?) {
-        val animator = ValueAnimator.ofInt(0, 0)
-        rollingTextView.animationDuration = 1000L
-        rollingTextView.charStrategy = Strategy.CarryBitAnimation(Direction.SCROLL_UP)
-        rollingTextView.addCharOrder(CharOrder.Number)
-        rollingTextView.animationInterpolator =
-            AccelerateDecelerateInterpolator()
-        animator.animatedFraction
-        animator.addUpdateListener { animation -> rollingTextView.setText(animation.animatedValue.toString()) }
-        animator.start()
-        val handler = Handler()
-        handler.postDelayed({
-            animator.cancel()
-            rollingTextView.setText(count ?: "0")
-        }, 0)
-    }
-
     @BindingAdapter("countBarcode")
     @JvmStatic
     fun countBarcode(textView: TextView, l: Long?) {

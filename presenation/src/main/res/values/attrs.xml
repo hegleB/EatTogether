@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RollingCountTextView">
+        <attr name="rolling_text" format="reference|string"/>
+        <attr name="rolling_type" format="reference|string"/>
+        <attr name="rolling_textSize" format="dimension"/>
+        <attr name="rolling_type_textSize" format="dimension"/>
+    </declare-styleable>
+</resources>
