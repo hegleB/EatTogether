@@ -16,7 +16,7 @@ sealed class PostModel {
         val timestamp: String = System.currentTimeMillis().toString(),
         val key: String = "",
         var likecount: ArrayList<String> = arrayListOf(),
-        val commentsCount: String = "",
+        val commentsCount: String = "0",
         val postImages: ArrayList<String> = arrayListOf()
     ) : Parcelable {
         fun isSameKey(otherKey: String): Boolean =
