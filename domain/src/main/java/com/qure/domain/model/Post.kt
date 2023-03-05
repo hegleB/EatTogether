@@ -13,7 +13,7 @@ sealed class PostModel {
         val category: String = "",
         val content: String = "",
         val userimage: String = "",
-        val timestamp: String = "",
+        val timestamp: String = System.currentTimeMillis().toString(),
         val key: String = "",
         var likecount: ArrayList<String> = arrayListOf(),
         val commentsCount: String = "",
