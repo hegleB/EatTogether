@@ -33,7 +33,7 @@
             layout="@layout/layout_toolbar"
             app:viewModel="@{viewmodel}"
             app:isVisiableBack="@{true}"
-            app:titleText="@{`게시물 작성`}" />
+            app:titleText="@{post.title}" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView_fragmentPostDetail"
