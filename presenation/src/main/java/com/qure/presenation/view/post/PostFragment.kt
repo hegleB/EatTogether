@@ -38,6 +38,7 @@ class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
         initViewModel()
         observeViewModel()
         initAdapter()
+        refreshAdapter()
     }
 
     private fun initViewModel() {
@@ -50,6 +51,13 @@ class PostFragment : BaseFragment<FragmentPostBinding>(R.layout.fragment_post) {
         binding.apply {
             recyclerViewFragmentPostPost.adapter = postAdapter
             recyclerViewFragmentPostCategory.adapter = postCategoryAdapter
+        }
+    }
+
+    private fun refreshAdapter() {
+        binding.swipeRefreshLayoutFragmentPost.setOnRefreshListener {
+            postAdapter.notifyDataSetChanged()
+            binding.swipeRefreshLayoutFragmentPost.isRefreshing = false
         }
     }
 
