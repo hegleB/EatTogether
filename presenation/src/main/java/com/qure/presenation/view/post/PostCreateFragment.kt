@@ -12,6 +12,7 @@ import com.qure.presenation.adapter.PostCreateImageAdapter
 import com.qure.presenation.databinding.FragmentPostCreateBinding
 import com.qure.presenation.utils.BottomImagePicker
 import com.qure.presenation.utils.BottomNavigationEvent
+import com.qure.presenation.utils.KeyboardEvent
 import com.qure.presenation.utils.OnBackPressedListener
 import com.qure.presenation.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,6 +93,7 @@ class PostCreateFragment : BaseFragment<FragmentPostCreateBinding>(R.layout.frag
         binding.toolBarFragmentPostCreate.toolBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_create -> {
+                    KeyboardEvent(requireContext()).hideKeyboard()
                     postViewModel.createPost()
                     true
                 }
