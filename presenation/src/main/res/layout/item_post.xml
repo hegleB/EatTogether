@@ -114,9 +114,9 @@
                 android:id="@+id/linearLayout_itemPost_images"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:layout_margin="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_margin="10dp"
                 app:layout_constraintTop_toBottomOf="@+id/textView_itemPost_content">
 
 
@@ -137,7 +137,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:scaleType="fitXY"/>
+                            android:scaleType="fitXY" />
 
                     </LinearLayout>
 
@@ -147,22 +147,22 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:weightSum="2"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:weightSum="2">
 
                         <ImageView
                             android:id="@+id/imageView_itemPost_image2"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:scaleType="fitXY"/>
+                            android:scaleType="fitXY" />
 
                         <ImageView
                             android:id="@+id/imageView_itemPost_image3"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:scaleType="fitXY"/>
+                            android:scaleType="fitXY" />
 
                     </LinearLayout>
 
@@ -172,66 +172,28 @@
             </LinearLayout>
 
 
-            <ImageView
-                android:id="@+id/imageView_itemPost_like"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+            <com.qure.presenation.utils.customview.CountItemeView
+                android:id="@+id/countItemeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:src="@drawable/ic_faces"
+                app:bg="@drawable/ic_faces"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout_itemPost_images"
-                app:layout_constraintVertical_bias="1.0"
-                app:tint="#EE686262" />
+                app:text="@{String.valueOf(post.likecount.size())}" />
 
-            <TextView
-                android:id="@+id/textView_itemPost_likeCount"
+            <com.qure.presenation.utils.customview.CountItemeView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@{String.valueOf(post.likecount.size())}"
-                android:textSize="13sp"
-                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                app:bg="@drawable/ic_comments"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.019"
-                app:layout_constraintStart_toEndOf="@+id/imageView_itemPost_like"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout_itemPost_images" />
-
-
-            <ImageView
-                android:id="@+id/imageView_itemPost_comment"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_comments"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.069"
-                app:layout_constraintStart_toEndOf="@+id/textView_itemPost_likeCount"
+                app:layout_constraintStart_toEndOf="@+id/countItemeView"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout_itemPost_images"
-                app:tint="#EE686262" />
-
-
-            <TextView
-                android:id="@+id/textView_itemPost_commentCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@{post.commentsCount}"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.019"
-                app:layout_constraintStart_toEndOf="@+id/imageView_itemPost_comment"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout_itemPost_images" />
+                app:text="@{post.commentsCount}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

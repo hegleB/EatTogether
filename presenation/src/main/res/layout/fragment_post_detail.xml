@@ -31,9 +31,9 @@
         <include
             android:id="@+id/toolBar_fragmentPostDetail"
             layout="@layout/layout_toolbar"
-            app:viewModel="@{viewmodel}"
             app:isVisiableBack="@{true}"
-            app:titleText="@{post.title}" />
+            app:titleText="@{post.title}"
+            app:viewModel="@{viewmodel}" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView_fragmentPostDetail"
@@ -158,69 +158,30 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView_fragmentPostDetail_content"
                             app:layout_constraintVertical_bias="0.119" />
 
-
-                        <ImageView
-                            android:id="@+id/imageView_fragmentPostDetail_like"
-                            android:layout_width="25dp"
+                        <com.qure.presenation.utils.customview.CountItemeView
+                            android:id="@+id/countItemView_fragmentPostDetail_likeCount"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="12dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@{viewmodel.isLike() ? @drawable/ic_fill_faces : @drawable/ic_faces}"
-                            android:backgroundTint="@{viewmodel.isLike() ? @color/orange1 : @color/gray2}"
+                            android:layout_marginBottom="12dp"
                             android:onClick="@{() -> viewmodel.updateLikeState()}"
+                            app:bg="@{viewmodel.isLike() ? @drawable/ic_fill_faces : @drawable/ic_faces}"
+                            app:bgTint="@{viewmodel.isLike() ? @color/orange1 : @color/gray2}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/recyclerView_fragmentPostDetail_image"
-                            app:layout_constraintVertical_bias="0.0"
-                            app:tint="#EE686262" />
+                            app:layout_constraintTop_toBottomOf="@id/recyclerView_fragmentPostDetail_image"
+                            app:text="@{String.valueOf(viewmodel.likeList.size())}" />
 
-                        <TextView
-                            android:id="@+id/textView_fragmentPostDetail_likeCount"
+                        <com.qure.presenation.utils.customview.CountItemeView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="10dp"
-                            android:text="@{String.valueOf(viewmodel.likeList.size())}"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
+                            android:layout_marginStart="21dp"
+                            app:bg="@drawable/ic_comments"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.012"
-                            app:layout_constraintStart_toEndOf="@+id/imageView_fragmentPostDetail_like"
-                            app:layout_constraintTop_toBottomOf="@+id/recyclerView_fragmentPostDetail_image"
-                            app:layout_constraintVertical_bias="0.333" />
-
-                        <ImageView
-                            android:id="@+id/imageView_fragmentPostDetail_comment"
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="8dp"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/ic_comments"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.084"
-                            app:layout_constraintStart_toEndOf="@+id/textView_fragmentPostDetail_likeCount"
-                            app:layout_constraintTop_toBottomOf="@+id/recyclerView_fragmentPostDetail_image"
-                            app:tint="#EE686262" />
-
-                        <TextView
-                            android:id="@+id/textView_fragmentPostDetail_commentCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="10dp"
-                            android:text="@{String.valueOf(viewmodel.commentsList.size())}"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.019"
-                            app:layout_constraintStart_toEndOf="@+id/imageView_fragmentPostDetail_comment"
-                            app:layout_constraintTop_toBottomOf="@+id/recyclerView_fragmentPostDetail_image"
-                            app:layout_constraintVertical_bias="0.333" />
+                            app:layout_constraintStart_toEndOf="@+id/countItemView_fragmentPostDetail_likeCount"
+                            app:layout_constraintTop_toBottomOf="@id/recyclerView_fragmentPostDetail_image"
+                            app:text="@{String.valueOf(viewmodel.commentsList.size())}" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 

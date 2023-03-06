@@ -6,4 +6,10 @@
         <attr name="rolling_textSize" format="dimension"/>
         <attr name="rolling_type_textSize" format="dimension"/>
     </declare-styleable>
+    
+    <declare-styleable name="CountItemView">
+        <attr name="bg" format="reference|integer"/>
+        <attr name="bgTint" format="reference|integer"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
 </resources>
