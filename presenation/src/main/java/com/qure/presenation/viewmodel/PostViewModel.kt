@@ -292,6 +292,7 @@ class PostViewModel @Inject constructor(
                 is Resource.Success -> {
                     _post.value = it.data!!
                     _likeList.value = it.data?.likecount ?: arrayListOf()
+                    _isLike.value = _likeList.value?.contains(currentUid.value ?: "") == true
                     hideProgress()
                 }
                 is Resource.Error -> ErrorMessage.print(it.message ?: "")
